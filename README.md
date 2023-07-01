@@ -33,12 +33,17 @@
 
 ## Modul Sistem Operasi Dasar
 
-- [Shell Scripting, Cron, dan AWK]
-- [Intermezzo]
-  - [Perintah dan Navigasi di Linux]
-  - [Konsep *User* dan *Permission* di Linux]
-  - [Pengenalan Teks Editor (Nano dan Vim)]
-- [1. Shell *Scripting*]
-- [2. Cron Jobs]
-- [3. AWK]
-- [Extras (Bacaan Santai)]
+### Shell Scripting, Cron, dan AWK
+
+### Intermezzo
+  * Perintah dan Navigasi di Linux
+  * Konsep *User* dan *Permission* di Linux
+  * Pengenalan Teks Editor (Nano dan Vim)
+
+### Shell *Scripting*
+
+### Cron Jobs
+
+### AWK
+
+### Extras (Bacaan Santai)
