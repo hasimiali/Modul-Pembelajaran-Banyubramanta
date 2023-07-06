@@ -58,7 +58,7 @@ Robot yang kami develop pada perlombaan ini dinamakan Naru mk II. Berasal dari B
 | bottom_camera | Output gambar dari kamera bawah |
 | obj_focuss | Memberikan state pada controller berdasarkan objek yang dilihat dan jarak |
 | controller | Memberikan output movement dan state aktuator pada comm |
-| lane_planner | Mengolah data gambar dari kamera bawah menjadi perintah movement yang kemudian dikirim ke comm |
+| lane_planner | Mengolah data gambar dari kamera bawah menjadi perintah movement yang kemudian dikirim ke controller |
 | comm | Komunikasi mini pc dan STM |
 | closedloop | Robot akan bergerak secara closed loop berdasarkan perintah yang telah ditulis |
 | aruco_scan | Mendeteksi aruco tag |
@@ -151,7 +151,37 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
 1. Deskripsi:   
    Memberikan output movement dan state aktuator pada comm.
 2. Message:   
-   Image.msg (sensor_msgs)
+   Controller.msg  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 left_x
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 left_y
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 right_x
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 right_y
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 depth
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 yaw
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 pitch
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 roll
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 py
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 iy
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dy
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 pp
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 ip
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dp
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 pr
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 ir
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dr
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 pd
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 id
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dd
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 torpedo
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 cal
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 pid_ops
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dep_ops
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 throttle
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 led_state
+
+   Mission.msg (sebagai feedback)
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 state
+
 3. Penjelasan:   
    Berdasarkan mission state, perintah dari lane_planner, dan obj_focuss controller mengirimkan perintah berupa movement robot pada comm. Controller juga mempunyai kendali untuk merubah mission state
 
@@ -162,6 +192,28 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
    | 2 | pindah misi 4 |
 
 ### F.lane_planner
+1. Deskripsi:   
+   Mengolah data gambar dari kamera bawah menjadi perintah movement yang kemudian dikirim ke controller.
+2. Message:   
+   Lane.msg
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 xcent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 ycent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 heading
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 cmd
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 distance
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 angle 
+
+3. Penjelasan:   
+   Mengolah data gambar dari kamera bawah menggunakan segmentasi warna dan membagi layar menjadi grid 3x3 dan mengirimkan perintah movement berdasarkan grid mana saja yang bernilai true.
+
+   | cmd | Penjelasan  |
+   | ----------- | ----------- |
+   | 1 | maju |
+   | 2 | centering ke kiri |
+   | 3 | centering ke kanan |
+   | 4 | maju |
+   | 5 | diam |
+
 ### G.comm
 ### H.closedloop
 ### I.aruco_scan
@@ -170,145 +222,3 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
 ### L.source_of_msg
 ### M.yaml
    
-## Cara Labeling dengan Roboflow  
-- Membuat akun roboflow terlebih dahulu  
-- Roboflow dpat melakukan labeling secara kolaborasi dengan menginvite email anggota  
-- Upload dataset yang sudah diambil ke roboflow (Utamakan namanya unik :) agar tidak mudah ditemukan oleh tim lawan), batas upload 10 ribu gambar    
-- Membuat project dengan project Bounding Box  
-- Menentukan nama dan index dataset terlebih dahulu  
-- lakukan labeling dengan mendrag gambar yang akan ditrain  
-- Set data train 70%, validation 15%, test 15%  
-- Jika ingin mengubah atau menambahkan dapat mengambil data orang terlebih dahulu kemudian dapat menggunakan fitur preprocessing dengan modified class, menggunakan urutan dan menyesuaikan index di txtnya  
-- Setelah terlabeli untuk menambah dataset dapat menggunakan augmentasi dan lakukan pengecekan terlebih dahulu terhadap dataset  
-- Augmentasi yang pernah dipakai ( Crop: 0% Minimum Zoom, 10% Maximum Zoom   ; Brightness : Between -5% and +5%  ; Blur : Up to 1px)  
-- Cek juga terkait kesehatan dataset atau health dataset , yaitu seimbangnya dataset misalkan 1000 usahakan 900an atau 1000an jangan sampai terlalu jauh perbedaannya 
-
-## Instruksi Penyambungan STM32 dengan ROS  
-1. Pastikan memiliki aplikasi STM32CubeIDE  
-2. Buatlah sebuah workspace jika belum ada
-3. Lakukan git clone pada [Link-ini](https://github.com/BanyubramantaITS/STM32_SAUVC2022_F407) dengan cara  
-   `git clone https://github.com/BanyubramantaITS/STM32_SAUVC2022_F407.git`  
-4. Buka aplikasi STM32CubeIDE  
-5. Lakukan debug dengan menekan tombol serangga di toolbar atas
-6. Nyalakan live ekspresion
-7. Pencet tombol run  
-NB: Untuk info lebih lanjut dapat merujuk pada [link ini](https://github.com/BanyubramantaITS/STM32_SAUVC2022_F407)  
-
-## Instruksi Penyambungan Antara Mini PC dengan Laptop  
-Atur IP Mini PC dan laptop berdasarkan link video [ini](https://www.youtube.com/watch?v=ck6wtrkdjzs&ab_channel=DemonKiller).   
-Jika sudah terkoneksi, sudah dapat dilakukan wake on lan dan remote dekstop.
-
-Penggunaan Wake On Lan:    
-a. Download semua file pada link [ini](https://drive.google.com/drive/folders/1PzbhCUMmDWD-AJTcCxMhVdLwtvLPjTpf?usp=sharing)    
-b. Buka aplikasi WakeMeOnLan.exe  
-c. Lakukan scanning IP dengan tombol play hijau.  
-d. Pilih IP yang sesuai dengan yang telah distel sebelumnya.  
-e. Klik kanan pada IP tersebut dan klik "Wake Up Selected Computer".
-f. Mini PC berhasil dinyalakan apabila terdapat indikator LED biru.  
-f. Tunggu selama 15 - 20 detik agar memberikan waktu mini pc untuk booting. 
-g. Setelah itu, baru boleh menggunakan remote desktop.  
-   
-Remote Desktop:  
-a. Boot dengan Windows 10 atau Windows 11.  
-b. Isikan kolom komputer dengan IP yang telah disetting sebelumnya.  
-c. Jika ingin berjalan lebih ringan, ubah settingan di kolom display pada kolom colors menjadi High Color(15 bit).  
-d. Klik tombol connect  
-e. Masukkan Username dan Password mini pc dengan semuanya huruf kecil.  
-
-Tata Cara Menonaktifkan Mini PC: 
-1. Terminate seluruh tab terminal dengan menekan ctrl+c (Sesuai dengan urutan movement->positioning->vision->master->roscore).   
-2. Hentikan pengoperasian STM32 dengan menekan tombol terminate (kotak merah).  
-3. Exit dari semua aplikasi yang sebelumnya telah dibuka.  
-4. Shutdown dengan cara biasanya.   
-
-## Tata Cara Melakukan Perekaman Data Log Pada ROS
-1. Pastikan telah menjalankan seluruh command pada semua package diatas
-2. Buka tab di terminal baru `rosbag record -a`.  
-3. Jika sudah, dapat melakukan `ctrl+c` pada tab record tadi.
-4. File tadi akan tersimpan dalam ekstensi `.bag`
-5. File ini dapat dimainkan dengan cara `rosbag play [nama file .bag]`
-6. Bukan fungsi `rosnode list` dan `rostopic list`.  
-   
-## Kendala dan Solusi  
-1. Kendala:  
-   ROS dan YOLOv5 tidak mau mem-publish nilai yang benar ketika digunakan oleh node yang berbeda.  
-   Solusi:  
-   Gunakan `rospy.Rate(100)` pada file `detect.py` yang semula hanya bernilai 10.  
-   
-2. Kendala:  
-   Pada `Pip install -r requirements.txt` gagal.  
-   Solusi:  
-   Ulangi lagi proses tersebut dengan koneksi yang lebih stabil.  
-   
-3. Kendala:  
-   Pada Python tidak bisa membaca modul library Serial  
-   Solusi:  
-   Uninstall library tersebut dan ulangi dengan perintah `sudo python -m pip install pyserial`. ([sumber](https://stackoverflow.com/questions/11403932/python-attributeerror-module-object-has-no-attribute-serial)) 
-   
-4. Kendala:  
-   Library python "Keyboard" harus berjalan ketika sudo. Ketika menjalankan perintah `sudo python3 ....` malah justru rospy tidak terdeteksi. 
-   Solusi:  
-   Menggunakan python library "getch"  
-   
-5. Kendala:  
-   Repo ini pernah hilang history semua commit-nya.  
-   Solusi:  
-   Jangan pernah menggunakan `git commit -f` karena akan mereplace history pada repo ini menjadi repo lokal.
-   
-6. Kendala:    
-   Variabel atau message tidak terbaca atau terpublish.    
-   Solusi:    
-   Memastikan semua message atau variabel disesuaikan urutan dan sudah terpublish maaupun tersubscribe. Untuk kendala nomor 6 dapat dicoba        terlebih dahulu sebelum ke tempat trial untuk efisiensi waktu  
-   
-7. Kendala:    
-   Terdapat delay antara program karena subscribing berkali-kali  
-   Solusi:    
-   Keluarkan deklarasi subscriber dari while      
-   
-8. Kendala:  
-   Kamera terlalu tinggi exposure-nya.  
-   Solusi:  
-   Menggunakan ND Filter atau menurunkan dengan obs.  
-   
-9. Kendala:  
-   `Catkin Build` tidak bisa digunakan karena command not found.  
-   Solusi:  
-   Menjalankan command `sudo apt-get install python3-catkin-tools` untuk menginstall catkin-tools.  
-   
-## Kendala dan Solusi di Singapura     
-1. Kendala:  
-   Pembacaan depth sensor mengalami kesalahan ketika 3 digit
-   Solusi:
-   Mencoba semua kemungkinan yang akan ada. Hal ini dapat terjadi karena selama ini depth hanya bisa membaca 2 digit selama di puker.   
-   
-2. Kendala:  
-   Mengganti nilai variabel ketika di samping kolam pas lomba susah  
-   Solusi:  
-   Lebih prepare ketika sebelum berangkat ke main stage atau membuat beberapa program dengan variabel yang berbeda. Membuat program open loop
-   sebagai cadangan.   
-   
-3. Kendala:    
-   Servo kamera putus sehingga tidak bisa mengambil dataset.      
-   Solusi:   
-   Mempersiapkan spare sparepart. Akan tetapi, kami tetap dapat mengambil dataset dari panitia selama 1 menit.    
-
-4. Kendala:  
-   Minimnya link penyelesaian masalah    
-   Solusi:     
-   Menambahkan link yang dapat menyelesaikan permasalahan pada readme.     
-
-5. Kendala:    
-   Hasil pendeteksian tidak valid karena props dari rulebook berbeda dengan real-life.      
-   Solusi:      
-   Mengambil dataset baru ketika hari-h(running test).
-   
-## Rekaman Penurunan Ilmu
-1. ROS:    https://drive.google.com/drive/folders/1meryANbCTKu3QCdOLsgfH-7Zj-HfMsAd?usp=sharing
-2. Vision: https://drive.google.com/file/d/1rsrxlHd_GfA7oRx8_ec4-OzL_cBGpoL8/view?usp=sharing
-
-
-##  Kata Mutiara
-
-Jadi pioneer memang tidak mudah, Tapi akan jadi pijakan kuat buat generasi selanjutnya 🏆
-
-By: Sipaling ...
