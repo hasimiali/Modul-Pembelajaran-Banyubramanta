@@ -1,15 +1,14 @@
 # Workspace Main Stage ROS SAUVC 2022 Banyubramanta ITS
-Repository Banyubramanta ITS untuk perlombaan Singapore Autonomous Underwater Vehicle Challange (SAUVC) 2022 dengan implementasi Robot Operating System (ROS).
+Repository Banyubramanta ITS untuk Kontes Robot Bawah Air (KRBAI) 2023 dengan implementasi Robot Operating System (ROS).
 
 ## Catatan
-Dibuat dan dikembangkan menggunakan ROS Noetic dari Juni 2022 hingga September 2022 dengan sistem operasi Ubuntu 20.04 LTS. Workspace ini dikembangkan oleh Crew 3,4,dan 5 yang terdiri atas:
-1. Muhammad Firman Riyadi  
-2. Husnan  
-3. Muhammad Ghiffari Astaudi  
-4. Azka Bintang Pramudya  
-5. Fadhil Rasyidin Parinduri  
-6. Alfito Bramoda
-7. Rere Arga Dewanata
+Dibuat dan dikembangkan menggunakan ROS2 Foxy dari ... 2023 hingga ... 2023 dengan sistem operasi Ubuntu 20.04 LTS. Workspace ini dikembangkan oleh Crew 4,5,dan 6 yang terdiri atas:
+1. Azka Bintang Pramudya (3 baris code)
+2. Huda
+3. Ali
+4. Hisan
+5. Rizano
+6. Bryan
 
 ## Daftar Isi  
 - [Spesifikasi Robot](#spesifikasi-robot)  
@@ -26,26 +25,27 @@ Dibuat dan dikembangkan menggunakan ROS Noetic dari Juni 2022 hingga September 2
 
   
 ## Spesifikasi Robot
-Robot yang kami develop pada perlombaan ini dinamakan Narudaka. Berasal dari Bahasa Jawa yang terdiri dari kata "Nara = Raja" dan "Udaka = air" ketika digabung melebur menjadi "NARUDAKA" artinya raja perairan. Narudaka memiliki beberapa komponen inti, yaitu:
+Robot yang kami develop pada perlombaan ini dinamakan Naru mk II. Berasal dari Bahasa Jawa yang terdiri dari kata "Nara = Raja" dan "mk II = generasi kedua" ketika digabung melebur menjadi "NARUDAKA" artinya raja generasi kedua. Naru mk II memiliki beberapa komponen inti, yaitu:
 1. Mini PC: Intel NUC11PAHi7 (Intel Core i7 Gen 11)
 2. Mikrokontroller: STM32F407G
-3. Kamera: Rexus Daxa Trusight 
-4. Baterai: Li-Po 4 Sel 5000 MAH 2 buah (untuk selain mini pc) & Li-Ion 5 sel 3000 MAH 1 buah (untuk mini pc)  
-5. Depth Sensor: MS5837 Blue Robotics  
-6. Gyro: GY-25  
+3. Kamera 1: Rexus Daxa Trusight 
+4. Kamera 2: Rexus Daxa Trusight 
+5. Baterai: Li-Po 4 Sel 5000 MAH 2 buah (untuk selain mini pc) & Li-Ion 5 sel 3000 MAH 1 buah (untuk mini pc)  
+6. Depth Sensor: MS5837 Blue Robotics  
+7. Gyro: GY-25  
 
 ## Requirements
-1. Sudah terinstall ROS (caranya lihat [disini](https://wiki.ros.org/Installation/Ubuntu))
-2. Menginstall seluruh library python yang dibutuhkan oleh YoloV5
+1. Sudah terinstall ROS (caranya lihat [disini](https://docs.ros.org/en/foxy/Installation.html)))
+2. Menginstall seluruh library yang dibutuhkan oleh Workspace
    
-   `cd src/cv_package/scripts/yolov5`  
-   `pip install -r requirements.txt`  
+   <!-- `cd src/cv_package/scripts/yolov5`  
+   `pip install -r requirements.txt`   -->
    NB: Pastikan koneksi stabil  
 3. Menghapus build yang telah ada   
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS`    
-   Menghapus build yang pernah ada `catkin clean`  
+   Pastikan berada di directory `KRBAI_2023_Foxy`    
+   Menghapus build yang pernah ada `colcon clean`  
 4. Melakukan catkin build  
-   `catkin build`  
+   `colcon build`  
 
   
 ## Daftar Package di Dalam ROS  
@@ -53,18 +53,53 @@ Robot yang kami develop pada perlombaan ini dinamakan Narudaka. Berasal dari Bah
 
 | Nama Package | Fungsi  |
 | ----------- | ----------- |
-| master_package | Memberikan data input dan data output STM32  |
-| cv_package | Penglihatan Komputer |
-| mission_package | Menetukan kondisi misi |
-| positioning_package | Mapping Lokasi Robot |
-| movement_package | Pergerakan Robot |
-| servo_package | Pergerakan servo kamera depan |
+| master | Memberikan output mission state berdasarkan informasi yang diterima |
+| yolo | Memberikan output objek yang dilihat dan atributnya |
+| bottom_camera | Output gambar dari kamera bawah |
+| obj_focuss | Memberikan state pada controller berdasarkan objek yang dilihat dan jarak |
+| controller | Memberikan output movement dan state aktuator pada comm |
+| lane_planner | Mengolah data gambar dari kamera bawah menjadi perintah movement yang kemudian dikirim ke comm |
+| comm | Komunikasi mini pc dan STM |
+| closedloop | Robot akan bergerak secara closed loop berdasarkan perintah yang telah ditulis |
+| aruco_scan | Mendeteksi aruco tag |
+| odometry | Visual odometry berdasarkan perbedan pola pada gambar |
+| visual_localisation | Lokalisasi visual berdasarkan pre defined map |
+| source_of_msg | Kumpulan custom msg |
+| yaml | Kumpulan file yaml |
 
 
 ## Penjelasan Tiap Package
 Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan program harus sesuai urutan):  
 
-### A.master_package
+### A.master
+1. Deskripsi:   
+   Memberikan output mission state berdasarkan informasi yang diterima
+2. Message:   
+   Mission.msg  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 state
+3. Penjelasan:   
+   menerima data hampir dari semua package dan menentukan robot sedang berada pada mission state berapa. Juga mengatur perpindahan mission state.
+
+   | State | Penjelasan  |
+   | ----------- | ----------- |
+   | 0 | selesai |
+   | 1 | jalan 10m |
+   | 2 | inspeksi pipa |
+   | 3 | menembak torpedo |
+   | 4 | masuk docking station |
+
+### B.yolo
+### C.bottom_camera
+### D.obj_focuss
+### E.controller
+### F.lane_planner
+### G.comm
+### H.closedloop
+### I.aruco_scan
+### J.odometry
+### K.visual_localisation
+### L.source_of_msg
+### M.yaml
 1. Deskripsi:   
    Package yang digunakan untuk memberikan data input output STM32  
 2. Message:   
