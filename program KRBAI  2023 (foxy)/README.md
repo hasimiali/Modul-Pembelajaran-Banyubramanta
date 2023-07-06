@@ -73,7 +73,7 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
 
 ### A.master
 1. Deskripsi:   
-   Memberikan output mission state berdasarkan informasi yang diterima
+   Memberikan output mission state berdasarkan informasi yang diterima.
 2. Message:   
    Mission.msg  
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 state
@@ -89,9 +89,78 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
    | 4 | masuk docking station |
 
 ### B.yolo
+1. Deskripsi:   
+   Memberikan output objek yang dilihat dan atributnya.
+2. Message:   
+   Objprop.msg  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string obj
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 xcent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 ycent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 width
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 height
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 dist
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float64 prob
+3. Penjelasan:   
+   Mendeteksi objek yang sedang dilihat dan menentukan center point dari objek, serta tinggi dan lebar dalam pixel.
+
 ### C.bottom_camera
+1. Deskripsi:   
+   Output gambar dari kamera bawah.
+2. Message:   
+   Image.msg (sensor_msgs)
+3. Penjelasan:   
+   Output gambar dari kamera bawah.
+
 ### D.obj_focuss
+1. Deskripsi:   
+   Memberikan state pada controller berdasarkan objek yang dilihat dan jarak.
+2. Message:   
+   Objective.msg  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 xcent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 state
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 ycent
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 scan
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float64 width
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float64 height
+
+   Mission.msg (sebagai feedback)
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 state
+
+3. Penjelasan:   
+   Memberikan state pada controller berdasarkan objek yang dilihat dan jarak.
+
+   | State | Penjelasan  |
+   | ----------- | ----------- |
+   | 0 | standby |
+   | 1 | bergerak menuju objective yang dikirimkan |
+   | 2 | bergerak ke kanan karena objek sudah dekat |
+   | 3 | bergerak ke kiri karena objek sudah dekat |
+   | 4 | GASPOL |
+   | 5 | scanning |
+   | 6 | ready tembak torpedo |
+   | 7 | siap docking |
+
+   Memberikan feedback pada master.
+
+   | Feedback | Penjelasan  |
+   | ----------- | ----------- |
+   | 0 | initial |
+   | 1 | pindah misi 2 |
+
 ### E.controller
+1. Deskripsi:   
+   Memberikan output movement dan state aktuator pada comm.
+2. Message:   
+   Image.msg (sensor_msgs)
+3. Penjelasan:   
+   Berdasarkan mission state, perintah dari lane_planner, dan obj_focuss controller mengirimkan perintah berupa movement robot pada comm. Controller juga mempunyai kendali untuk merubah mission state
+
+   | Feedback | Penjelasan  |
+   | ----------- | ----------- |
+   | 0 | initial |
+   | 1 | pindah misi 3 |
+   | 2 | pindah misi 4 |
+
 ### F.lane_planner
 ### G.comm
 ### H.closedloop
@@ -100,108 +169,6 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
 ### K.visual_localisation
 ### L.source_of_msg
 ### M.yaml
-1. Deskripsi:   
-   Package yang digunakan untuk memberikan data input output STM32  
-2. Message:   
-   master_ros.msg  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string ros_movement  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int16 ros_servo_kamera  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 servo_kamera  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 servo_gripper  
-   master_stm32.msg    
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string stm32_movement  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 stm32_heading  
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 stm32_depth  
-3. Penjelasan:   
-   Pengiriman dan penerimaan data menggunakan PySerial. Dalam penggunaan PySerial, diwajibkan untuk melakukan encode ASCII agar didapatkan nilai yang benar.  
-4. Penggunaan:  
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS`  
-   Jalankan command `source devel/setup.bash`  
-   Jalankan command `rosrun master_package master_node.py`  
-   
-### B.cv_package
-1. Deskripsi:  
-   Package yang digunakan untuk penglihatan komputer untuk mengenali objek rintangan  
-2. Message:   
-   BoundingBox.msg    
-      -  string object_label -> label objek yang terdeteksi  
-      -  float64 probability -> probabilitas keyakinan objek yang di-predict oleh model  
-      -  int64 xmin_cv -> xmin pada bounding box    
-      -  int64 ymin_cv -> ymin pada bounding box  
-      -  int64 xmax_cv -> xmax pada bounding box    
-      -  int64 ymax_cv -> ymax pada bounding box    
-      -  float64 xcenter_cv ->  (xmin_cv + xmax_cv) / 2 untuk mengetahui titik tengah dari bounding box pada sumbu x  
-      -  float64 ycenter_cv ->  (ymin_cv + ymax_cv) / 2 untuk mengetahui titik tengah dari bounding box pada sumbu y    
-      -  int64 width -> Panjang bounding box (xmax_cv - xmin_cv)  
-      -  int64 height -> Lebar bounding box (ymax_cv - ymin_cv)   
-3. Penjelasan:    
-   Menggunakan YoloV5 untuk mendeteksi objek. Dataset diambil secara manual menggunakan kamera yang diletakkan pada robot. Dataset yang awalnya berupa      video dipecah per frame menjadi beberapa gambar menggunakan python. Setelah dipecah menjadi beberapa gambar, dilakukan labeling menggunakan website      roboflow.   
-   Berikut adalah data tabel performa model yang telah dibuat [tabel grafik ini](https://docs.google.com/spreadsheets/d/1157I22orbFMWEaR6L0gVjATIULxJ4jFFhGWhwDqeAGY/edit#gid=0)  
-   Robot kita tidak begitu memerlukan FPS yang tinggi karena pergerakan robot kita cukup pelan karena terpengaruh tekanan dan arus bawah air (10-15 FPS itu cukup)
-4. Penggunaan:   
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS/src/cv_package/scripts/yolov5`  
-   Jalankan command `python3 detect.py`   
-   
-### C.positioning_package     
-1. Deskripsi:  
-   Package yang digunakan untuk mnentukan posisi robot ketika di kolam  
-2. Message:
-   positioning.msg  
-     int16 posisi_x
-     int16 posisi_z  
-3. Penjelaasan:  
-   Menggunakan algoritma odometry buatan sendiri untuk menentukan posisi robot saat ini.    
-4. Penggunaan:    
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS`  
-   Jalankan command `source devel/setup.bash`  
-   Jalankan command `rosrun positioning_package positioning.py`   
-
-### D. mission_package
-1. Deskripsi:  
-   Package yang digunakan untuk menentukan keadaan misi.  
-2. Message:  
-   misi.msg
-      int64 misi
-      int64 submisi
-3. Penjelasan:  
-   Menggunakan hasil dari odometry untuk menentukan keadaan misi.   
-4. Penggunaan:  
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS`  
-   Jalankan command `source devel/setup.bash`  
-   Jalankan command `rosrun mission_package mission_node.py`  
-   
-### E.movement_package
-1. Deskripsi:  
-   Package yang digunakan untuk pergerakan robot menggunakan kode huruf satu karakter.
-2. Penjelasan:
-   case sensitive ya jadi pastikan dalam ros menggunakan HURUF KAPITAL untuk heading: (-) negatif itu ke kanan | (+) positif itu ke kiri
-   | Nama Gerakan | Huruf       |
-   | -----------  | ----------- |
-   | maju 			|A	           |		 
-   | mundur			|B            |
-   | kanan			|C            |
-   | kiri			|D            |
-   | pivot45R		|E            |
-   | pivot90R		|F            |
-   | pivot45L  |G            |
-   | pivot90L	|H            |
-   | depth40			|I            |
-   | depth100		|J            |
-   | depth150		|K            |
-   | depth180		|L            |
-   | stop			|M            |
-   | surfacing		|N            |
-   | scanning  |S              |
-   !!! APABILA PERPINDAHAN GERAKAN WAJIB STOP TERLEBIH DAHULU AGAR THRUSTER AWET !!! 
-   
-   Terdapat pergerakan membuat persegi sesuai request Bapak pembina kita. Untuk menjalankan program tersebut `rosrun movement kotak_movement.py`
-   
-3. Penggunaan:  
-   Pastikan berada di directory `ROS_SAUVC_2022_Main_WS`
-   Jalankan command `source devel/setup.bash`  
-   Jalankan command `rosrun movement_package movement_node.py`  -> Autonomous
-   Jalankan command `rosrun movement_package keyboard.py`  -> Keyboard
-   
    
 ## Cara Labeling dengan Roboflow  
 - Membuat akun roboflow terlebih dahulu  
