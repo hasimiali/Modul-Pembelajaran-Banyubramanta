@@ -215,6 +215,16 @@ Berikut adalah penjelasan tiap - tiap package yang digunakan (urutan penjalanan 
    | 5 | diam |
 
 ### G.comm
+1. Deskripsi:   
+   Komunikasi mini pc dan STM.
+2. Message:   
+   Sensor.msg  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 act_depth
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 act_yaw
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int64 act_em
+3. Penjelasan:   
+   Komunikasi mini pc dan STM.
+
 ### H.closedloop
 ### I.aruco_scan
 ### J.odometry
