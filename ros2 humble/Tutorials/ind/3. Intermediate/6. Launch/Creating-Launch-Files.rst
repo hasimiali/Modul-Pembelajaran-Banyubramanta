@@ -1,349 +1,347 @@
-Creating a launch file
+Membuat file peluncuran
 ======================
 
-**Goal:** Create a launch file to run a complex ROS 2 system.
+**Sasaran:** Membuat file peluncuran untuk menjalankan sistem ROS 2 yang kompleks.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 10 minutes
+**Waktu:** 10 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Prerequisites
+Prasyarat
 -------------
 
-This tutorial uses the :doc:`rqt_graph and turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` packages.
+Tutorial ini menggunakan paket :doc:`rqt_graph dan turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>`.
 
-You will also need to use a text editor of your preference.
+Anda juga perlu menggunakan editor teks pilihan Anda.
 
-As always, don’t forget to source ROS 2 in :doc:`every new terminal you open <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
 
-Background
+Latar belakang
 ----------
 
-The launch system in ROS 2 is responsible for helping the user describe the configuration of their system and then execute it as described.
-The configuration of the system includes what programs to run, where to run them, what arguments to pass them, and ROS-specific conventions which make it easy to reuse components throughout the system by giving them each a different configuration.
-It is also responsible for monitoring the state of the processes launched, and reporting and/or reacting to changes in the state of those processes.
+Sistem peluncuran di ROS 2 bertanggung jawab untuk membantu pengguna menjelaskan konfigurasi sistem mereka dan kemudian menjalankannya seperti yang dijelaskan.
+Konfigurasi sistem mencakup program apa yang akan dijalankan, di mana menjalankannya, argumen apa yang akan diteruskan, dan konvensi khusus ROS yang memudahkan untuk menggunakan kembali komponen di seluruh sistem dengan memberi masing-masing konfigurasi yang berbeda.
+Ia juga bertanggung jawab untuk memantau status proses yang diluncurkan, dan melaporkan dan/atau bereaksi terhadap perubahan status proses tersebut.
 
-Launch files written in Python, XML, or YAML can start and stop different nodes as well as trigger and act on various events.
-See :doc:`../../../How-To-Guides/Launch-file-different-formats` for a description of the different formats.
-The package providing this framework is ``launch_ros``, which uses the non-ROS-specific ``launch`` framework underneath.
+Luncurkan file yang ditulis dengan Python, XML, atau YAML dapat memulai dan menghentikan node yang berbeda serta memicu dan bertindak pada berbagai peristiwa.
+Lihat :doc:`../../../How-To-Guides/Launch-file-different-formats` untuk deskripsi format yang berbeda.
+Paket yang menyediakan framework ini adalah ``launch_ros``, yang menggunakan framework ``launch`` non-ROS-spesifik di bawahnya.
 
-The `design document <https://design.ros2.org/articles/roslaunch.html>`__ details the goal of the design of ROS 2's launch system (not all functionality is currently available).
+`Dokumen desain <https://design.ros2.org/articles/roslaunch.html>`__ merinci tujuan desain sistem peluncuran ROS 2 (tidak semua fungsi tersedia saat ini).
 
-Tasks
+Tugas
 -----
 
-1 Setup
+1 Pengaturan
 ^^^^^^^
 
-Create a new directory to store your launch files:
+Buat direktori baru untuk menyimpan file peluncuran Anda:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  mkdir launch
+   peluncuran mkdir
 
-2 Write the launch file
-^^^^^^^^^^^^^^^^^^^^^^^
+2 Tulis file peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let’s put together a ROS 2 launch file using the ``turtlesim`` package and its executables.
-As mentioned above, this can either be in Python, XML, or YAML.
+Mari kumpulkan file peluncuran ROS 2 menggunakan paket ``turtlesim`` dan file yang dapat dieksekusi.
+Seperti disebutkan di atas, ini bisa dalam Python, XML, atau YAML.
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Python
+   .. grup-tab :: Python
 
-    Copy and paste the complete code into the ``launch/turtlesim_mimic_launch.py`` file:
+     Salin dan tempel kode lengkap ke file ``launch/turtlesim_mimic_launch.py``:
 
-    .. code-block:: python
+     .. blok kode :: python
 
-      from launch import LaunchDescription
-      from launch_ros.actions import Node
+       dari peluncuran impor LaunchDescription
+       dari launch_ros.actions impor Node
 
-      def generate_launch_description():
-          return LaunchDescription([
-              Node(
-                  package='turtlesim',
-                  namespace='turtlesim1',
-                  executable='turtlesim_node',
-                  name='sim'
-              ),
-              Node(
-                  package='turtlesim',
-                  namespace='turtlesim2',
-                  executable='turtlesim_node',
-                  name='sim'
-              ),
-              Node(
-                  package='turtlesim',
-                  executable='mimic',
-                  name='mimic',
-                  remappings=[
-                      ('/input/pose', '/turtlesim1/turtle1/pose'),
-                      ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
-                  ]
-              )
+       def generate_launch_description():
+           kembali LaunchDescription([
+               Simpul(
+                   package='turtlesim',
+                   namespace='turtlesim1',
+                   dapat dieksekusi='turtlesim_node',
+                   nama='sim'
+               ),
+               Simpul(
+                   package='turtlesim',
+                   namespace='turtlesim2',
+                   dapat dieksekusi='turtlesim_node',
+                   nama='sim'
+               ),
+               Simpul(
+                   package='turtlesim',
+                   dapat dieksekusi = 'meniru',
+                   nama='meniru',
+                   pemetaan ulang=[
+                       ('/input/pose', '/turtlesim1/turtle1/pose'),
+                       ('/keluaran/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
+                   ]
+               )
+           ])
+
+   .. grup-tab :: XML
+
+     Salin dan tempel kode lengkap ke file ``launch/turtlesim_mimic_launch.xml``:
+
+     .. blok kode :: xml
+
+       <peluncuran>
+         <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim1"/>
+         <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim2"/>
+         <node pkg="turtlesim" exec="mimic" name="mimic">
+           <remap from="/input/pose" ke="/turtlesim1/turtle1/pose"/>
+           <remap from="/output/cmd_vel" to="/turtlesim2/turtle1/cmd_vel"/>
+         </simpul>
+       </peluncuran>
+
+   .. grup-tab:: YAML
+
+     Salin dan tempel kode lengkap ke file ``launch/turtlesim_mimic_launch.yaml``:
+
+     .. blok kode :: yaml
+
+       meluncurkan:
+
+       - simpul:
+           pkg: "kura-kura"
+           exec: "turtlesim_node"
+           nama: "sim"
+           namespace: "turtlesim1"
+
+       - simpul:
+           pkg: "kura-kura"
+           exec: "turtlesim_node"
+           nama: "sim"
+           namespace: "turtlesim2"
+
+       - simpul:
+           pkg: "kura-kura"
+           eksekusi: "meniru"
+           nama: "meniru"
+           memetakan ulang:
+           -
+               dari: "/input/pose"
+               ke: "/turtlesim1/turtle1/pose"
+           -
+               dari: "/keluaran/cmd_vel"
+               ke: "/turtlesim2/turtle1/cmd_vel"
+
+
+2.1 Periksa file peluncuran
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Semua file peluncuran di atas meluncurkan sistem tiga node, semuanya dari paket ``turtlesim``.
+Tujuan dari sistem ini adalah untuk meluncurkan dua jendela turtlesim, dan satu kura-kura meniru gerakan yang lain.
+
+Saat meluncurkan dua node turtlesim, satu-satunya perbedaan di antara keduanya adalah nilai namespace-nya.
+Ruang nama unik memungkinkan sistem untuk memulai dua node tanpa konflik nama node atau nama topik.
+Kedua kura-kura dalam sistem ini menerima perintah tentang topik yang sama dan mempublikasikan pose mereka tentang topik yang sama.
+Dengan ruang nama yang unik, pesan yang dimaksudkan untuk kura-kura yang berbeda dapat dibedakan.Node terakhir juga dari paket ``turtlesim``, tetapi dapat dieksekusi berbeda: ``mimic``.
+Node ini telah menambahkan detail konfigurasi dalam bentuk pemetaan ulang.
+Topik ``mimic`` ``/input/pose`` dipetakan ulang ke ``/turtlesim1/turtle1/pose`` dan topik ``/output/cmd_vel`` menjadi ``/turtlesim2/turtle1/cmd_vel` `.
+Ini berarti ``mimic`` akan berlangganan ke topik pose ``/turtlesim1/sim`` dan memublikasikannya kembali untuk topik perintah kecepatan ``/turtlesim2/sim`` untuk berlangganan.
+Dengan kata lain, ``turtlesim2`` akan meniru gerakan ``turtlesim1``.
+
+.. tab::
+
+   .. grup-tab :: Python
+
+     Pernyataan import ini menarik beberapa modul Python ``launch``.
+
+     .. blok kode :: python
+
+       dari peluncuran impor LaunchDescription
+       dari launch_ros.actions impor Node
+
+     Selanjutnya, deskripsi peluncuran itu sendiri dimulai:
+
+     .. blok kode :: python
+
+       def generate_launch_description():
+          kembali LaunchDescription([
+
           ])
 
-  .. group-tab:: XML
+     Dua tindakan pertama dalam deskripsi peluncuran meluncurkan dua jendela turtlesim:
 
-    Copy and paste the complete code into the ``launch/turtlesim_mimic_launch.xml`` file:
+     .. blok kode :: python
 
-    .. code-block:: xml
+       Simpul(
+           package='turtlesim',
+           namespace='turtlesim1',
+           dapat dieksekusi='turtlesim_node',
+           nama='sim'
+       ),
+       Simpul(
+           package='turtlesim',
+           namespace='turtlesim2',
+           dapat dieksekusi='turtlesim_node',
+           nama='sim'
+       ),
 
-      <launch>
-        <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim1"/>
-        <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim2"/>
-        <node pkg="turtlesim" exec="mimic" name="mimic">
-          <remap from="/input/pose" to="/turtlesim1/turtle1/pose"/>
-          <remap from="/output/cmd_vel" to="/turtlesim2/turtle1/cmd_vel"/>
-        </node>
-      </launch>
+     Tindakan terakhir meluncurkan simpul mimik dengan remaps:
 
-  .. group-tab:: YAML
+     .. blok kode :: python
 
-    Copy and paste the complete code into the ``launch/turtlesim_mimic_launch.yaml`` file:
+       Simpul(
+           package='turtlesim',
+           dapat dieksekusi = 'meniru',
+           nama='meniru',
+           pemetaan ulang=[
+             ('/input/pose', '/turtlesim1/turtle1/pose'),
+             ('/keluaran/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
+           ]
+       )
 
-    .. code-block:: yaml
+   .. grup-tab :: XML
 
-      launch:
+     Dua tindakan pertama meluncurkan dua jendela turtlesim:
 
-      - node:
-          pkg: "turtlesim"
-          exec: "turtlesim_node"
-          name: "sim"
-          namespace: "turtlesim1"
+     .. blok kode :: xml
 
-      - node:
-          pkg: "turtlesim"
-          exec: "turtlesim_node"
-          name: "sim"
-          namespace: "turtlesim2"
+       <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim1"/>
+       <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim2"/>
 
-      - node:
-          pkg: "turtlesim"
-          exec: "mimic"
-          name: "mimic"
-          remap:
-          -
-              from: "/input/pose"
-              to: "/turtlesim1/turtle1/pose"
-          -
-              from: "/output/cmd_vel"
-              to: "/turtlesim2/turtle1/cmd_vel"
+     Tindakan terakhir meluncurkan simpul mimik dengan remaps:
 
+     .. blok kode :: xml
 
-2.1 Examine the launch file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       <node pkg="turtlesim" exec="mimic" name="mimic">
+         <remap from="/input/pose" ke="/turtlesim1/turtle1/pose"/>
+         <remap from="/output/cmd_vel" to="/turtlesim2/turtle1/cmd_vel"/>
+       </simpul>
 
-All of the launch files above are launching a system of three nodes, all from the ``turtlesim`` package.
-The goal of the system is to launch two turtlesim windows, and have one turtle mimic the movements of the other.
+   .. grup-tab:: YAML
 
-When launching the two turtlesim nodes, the only difference between them is their namespace values.
-Unique namespaces allow the system to start two nodes without node name or topic name conflicts.
-Both turtles in this system receive commands over the same topic and publish their pose over the same topic.
-With unique namespaces, messages meant for different turtles can be distinguished.
+     Dua tindakan pertama meluncurkan dua jendela turtlesim:
 
-The final node is also from the ``turtlesim`` package, but a different executable: ``mimic``.
-This node has added configuration details in the form of remappings.
-``mimic``'s ``/input/pose`` topic is remapped to ``/turtlesim1/turtle1/pose`` and it's ``/output/cmd_vel`` topic to ``/turtlesim2/turtle1/cmd_vel``.
-This means ``mimic`` will subscribe to ``/turtlesim1/sim``'s pose topic and republish it for ``/turtlesim2/sim``'s velocity command topic to subscribe to.
-In other words, ``turtlesim2`` will mimic ``turtlesim1``'s movements.
+     .. blok kode :: yaml
 
-.. tabs::
+       - simpul:
+           pkg: "kura-kura"
+           exec: "turtlesim_node"
+           nama: "sim"
+           namespace: "turtlesim1"
 
-  .. group-tab:: Python
+       - simpul:
+           pkg: "kura-kura"
+           exec: "turtlesim_node"
+           nama: "sim"
+           namespace: "turtlesim2"
 
-    These import statements pull in some Python ``launch`` modules.
 
-    .. code-block:: python
+     Tindakan terakhir meluncurkan simpul mimik dengan remaps:
 
-      from launch import LaunchDescription
-      from launch_ros.actions import Node
+     .. blok kode :: yaml
 
-    Next, the launch description itself begins:
+       - simpul:
+           pkg: "kura-kura"
+           eksekusi: "meniru"
+           nama: "meniru"
+           memetakan ulang:
+           -
+               dari: "/input/pose"
+               ke: "/turtlesim1/turtle1/pose"
+           -
+               dari: "/keluaran/cmd_vel"
+               ke: "/turtlesim2/turtle1/cmd_vel"
 
-    .. code-block:: python
 
-      def generate_launch_description():
-         return LaunchDescription([
+3 peluncuran ros2
+^^^^^^^^^^^^^^^
 
-         ])
+Untuk menjalankan file peluncuran yang dibuat di atas, masuk ke direktori yang Anda buat sebelumnya dan jalankan perintah berikut:
 
-    The first two actions in the launch description launch the two turtlesim windows:
+.. tab::
 
-    .. code-block:: python
+   .. grup-tab :: Python
 
-      Node(
-          package='turtlesim',
-          namespace='turtlesim1',
-          executable='turtlesim_node',
-          name='sim'
-      ),
-      Node(
-          package='turtlesim',
-          namespace='turtlesim2',
-          executable='turtlesim_node',
-          name='sim'
-      ),
+     .. blok kode :: konsol
 
-    The final action launches the mimic node with the remaps:
+       peluncuran cd
+       ros2 meluncurkan turtlesim_mimic_launch.py
 
-    .. code-block:: python
+   .. grup-tab :: XML
 
-      Node(
-          package='turtlesim',
-          executable='mimic',
-          name='mimic',
-          remappings=[
-            ('/input/pose', '/turtlesim1/turtle1/pose'),
-            ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
-          ]
-      )
+     .. blok kode :: konsol
 
-  .. group-tab:: XML
+       peluncuran cd
+       ros2 meluncurkan turtlesim_mimic_launch.xml
 
-    The first two actions launch the two turtlesim windows:
+   .. grup-tab:: YAML
 
-    .. code-block:: xml
+     .. blok kode :: konsol
 
-      <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim1"/>
-      <node pkg="turtlesim" exec="turtlesim_node" name="sim" namespace="turtlesim2"/>
+       peluncuran cd
+       ros2 meluncurkan turtlesim_mimic_launch.yaml
 
-    The final action launches the mimic node with the remaps:
+.. catatan::
 
-    .. code-block:: xml
+   Dimungkinkan untuk meluncurkan file peluncuran secara langsung (seperti yang kami lakukan di atas), atau disediakan oleh sebuah paket.
+   Ketika disediakan oleh sebuah paket, sintaksnya adalah:
 
-      <node pkg="turtlesim" exec="mimic" name="mimic">
-        <remap from="/input/pose" to="/turtlesim1/turtle1/pose"/>
-        <remap from="/output/cmd_vel" to="/turtlesim2/turtle1/cmd_vel"/>
-      </node>
+   .. blok kode :: konsol
 
-  .. group-tab:: YAML
+       ros2 luncurkan <nama_paket> <nama_file_peluncuran>
 
-    The first two actions launch the two turtlesim windows:
+   Anda belajar tentang membuat paket di :doc:`../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package`.
 
-    .. code-block:: yaml
+.. catatan::
 
-      - node:
-          pkg: "turtlesim"
-          exec: "turtlesim_node"
-          name: "sim"
-          namespace: "turtlesim1"
+   Untuk paket dengan file peluncuran, sebaiknya tambahkan dependensi ``exec_depend`` pada paket ``ros2launch`` dalam paket ``package.xml``:
 
-      - node:
-          pkg: "turtlesim"
-          exec: "turtlesim_node"
-          name: "sim"
-          namespace: "turtlesim2"
+   .. blok kode :: xml
 
+     <exec_depend>ros2launch</exec_depend>
 
-    The final action launches the mimic node with the remaps:
+   Ini membantu memastikan bahwa perintah ``ros2 launch`` tersedia setelah membangun paket Anda.
+   Ini juga memastikan bahwa semua :doc:`launch file format <../../../How-To-Guides/Launch-file-different-formats>` dikenali.
 
-    .. code-block:: yaml
+Dua jendela turtlesim akan terbuka, dan Anda akan melihat pesan ``[INFO]`` berikut yang memberi tahu node mana yang telah dimulai oleh file peluncuran Anda:
 
-      - node:
-          pkg: "turtlesim"
-          exec: "mimic"
-          name: "mimic"
-          remap:
-          -
-              from: "/input/pose"
-              to: "/turtlesim1/turtle1/pose"
-          -
-              from: "/output/cmd_vel"
-              to: "/turtlesim2/turtle1/cmd_vel"
+.. blok kode :: konsol
 
+   [INFO] [peluncuran]: Verbositas logging default diatur ke INFO
+   [INFO] [turtlesim_node-1]: proses dimulai dengan pid [11714]
+   [INFO] [turtlesim_node-2]: proses dimulai dengan pid [11715]
+   [INFO] [mimic-3]: proses dimulai dengan pid [11716]
 
-3 ros2 launch
-^^^^^^^^^^^^^
+Untuk melihat sistem beraksi, buka terminal baru dan jalankan perintah ``ros2 topic pub`` pada topik ``/turtlesim1/turtle1/cmd_vel`` untuk menggerakkan turtle pertama:
 
-To run the launch file created above, enter into the directory you created earlier and run the following command:
+.. blok kode :: konsol
 
-.. tabs::
+   ros2 topik pub -r 1 /turtlesim1/turtle1/cmd_vel geometri_msgs/msg/Putar "{linear: {x: 2.0, y: 0.0, z: 0.0}, sudut: {x: 0.0, y: 0.0, z: -1.8}}"
 
-  .. group-tab:: Python
+Anda akan melihat kedua kura-kura mengikuti jalur yang sama.
 
-    .. code-block:: console
+.. gambar:: gambar/mimic.png
 
-      cd launch
-      ros2 launch turtlesim_mimic_launch.py
+4 Introspeksi sistem dengan rqt_graph
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  .. group-tab:: XML
+Saat sistem masih berjalan, buka terminal baru dan jalankan ``rqt_graph`` untuk mendapatkan gambaran yang lebih baik tentang hubungan antara node di file peluncuran Anda.
 
-    .. code-block:: console
+Jalankan perintah:
 
-      cd launch
-      ros2 launch turtlesim_mimic_launch.xml
+.. blok kode :: konsol
 
-  .. group-tab:: YAML
+   rqt_graph
 
-    .. code-block:: console
+.. gambar:: images/mimic_graph.png
 
-      cd launch
-      ros2 launch turtlesim_mimic_launch.yaml
+Node tersembunyi (perintah ``ros2 topic pub`` yang Anda jalankan) menerbitkan data ke topik ``/turtlesim1/turtle1/cmd_vel`` di sebelah kiri, yang menjadi langganan node ``/turtlesim1/sim`` .
+Sisa grafik menunjukkan apa yang dijelaskan sebelumnya: ``mimic`` berlangganan topik pose ``/turtlesim1/sim``, dan menerbitkan topik perintah kecepatan ``/turtlesim2/sim``.
 
-.. note::
-
-  It is possible to launch a launch file directly (as we do above), or provided by a package.
-  When it is provided by a package, the syntax is:
-
-  .. code-block:: console
-
-      ros2 launch <package_name> <launch_file_name>
-
-  You learned about creating packages in :doc:`../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package`.
-
-.. note::
-
-  For packages with launch files, it is a good idea to add an ``exec_depend`` dependency on the ``ros2launch`` package in your package's ``package.xml``:
-
-  .. code-block:: xml
-
-    <exec_depend>ros2launch</exec_depend>
-
-  This helps make sure that the ``ros2 launch`` command is available after building your package.
-  It also ensures that all :doc:`launch file formats <../../../How-To-Guides/Launch-file-different-formats>` are recognized.
-
-Two turtlesim windows will open, and you will see the following ``[INFO]`` messages telling you which nodes your launch file has started:
-
-.. code-block:: console
-
-  [INFO] [launch]: Default logging verbosity is set to INFO
-  [INFO] [turtlesim_node-1]: process started with pid [11714]
-  [INFO] [turtlesim_node-2]: process started with pid [11715]
-  [INFO] [mimic-3]: process started with pid [11716]
-
-To see the system in action, open a new terminal and run the ``ros2 topic pub`` command on the ``/turtlesim1/turtle1/cmd_vel`` topic to get the first turtle moving:
-
-.. code-block:: console
-
-  ros2 topic pub -r 1 /turtlesim1/turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -1.8}}"
-
-You will see both turtles following the same path.
-
-.. image:: images/mimic.png
-
-4 Introspect the system with rqt_graph
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-While the system is still running, open a new terminal and run ``rqt_graph`` to get a better idea of the relationship between the nodes in your launch file.
-
-Run the command:
-
-.. code-block:: console
-
-  rqt_graph
-
-.. image:: images/mimic_graph.png
-
-A hidden node (the ``ros2 topic pub`` command you ran) is publishing data to the ``/turtlesim1/turtle1/cmd_vel`` topic on the left, which the ``/turtlesim1/sim`` node is subscribed to.
-The rest of the graph shows what was described earlier: ``mimic`` is subscribed to ``/turtlesim1/sim``'s pose topic, and publishes to ``/turtlesim2/sim``'s velocity command topic.
-
-Summary
+Ringkasan
 -------
 
-Launch files simplify running complex systems with many nodes and specific configuration details.
-You can create launch files using Python, XML, or YAML, and run them using the ``ros2 launch`` command.
+Luncurkan file menyederhanakan menjalankan sistem yang kompleks dengan banyak node dan detail konfigurasi khusus.
+Anda dapat membuat file peluncuran menggunakan Python, XML, atau YAML, dan menjalankannya menggunakan perintah ``ros2 launch``.
