@@ -63,41 +63,9 @@ You will need to run this command on every new shell you open to have access to 
 If you don't want to have to source the setup file every time you open a new shell (skipping task 1), then you can add the command to your shell startup script:
 
 .. tabs::
+    echo "source /opt/ros/{DISTRO}/setup.bash" >> ~/.bashrc
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-        echo "source /opt/ros/{DISTRO}/setup.bash" >> ~/.bashrc
-
-     To undo this, locate your system's shell startup script and remove the appended source command.
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-        echo "source ~/ros2_install/ros2-osx/setup.bash" >> ~/.bash_profile
-
-      To undo this, locate your system's shell startup script and remove the appended source command.
-
-   .. group-tab:: Windows
-
-      Only for PowerShell users, create a folder in 'My Documents' called 'WindowsPowerShell'.
-      Within 'WindowsPowerShell', create file 'Microsoft.PowerShell_profile.ps1'.
-      Inside the file, paste:
-
-      .. code-block:: console
-
-        C:\dev\ros2_{DISTRO}\local_setup.ps1
-
-      PowerShell will request permission to run this script everytime a new shell is opened.
-      To avoid that issue you can run:
-
-      .. code-block:: console
-
-        Unblock-File C:\dev\ros2_{DISTRO}\local_setup.ps1
-
-      To undo this, remove the new 'Microsoft.PowerShell_profile.ps1' file.
+    # To undo this, locate your system's shell startup script and remove the appended source command.
 
 3 Check environment variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
