@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Understanding-ROS2-Actions
-
 .. _ROS2Actions:
 
 Understanding actions

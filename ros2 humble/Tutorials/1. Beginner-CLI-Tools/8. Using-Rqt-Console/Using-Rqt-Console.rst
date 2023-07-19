@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Rqt-Console/Using-Rqt-Console
-
 .. _rqt_console:
 
 Using ``rqt_console`` to view logs

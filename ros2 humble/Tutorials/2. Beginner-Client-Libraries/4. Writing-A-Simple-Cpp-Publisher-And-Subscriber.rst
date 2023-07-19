@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber
-
 .. _CppPubSub:
 
 Writing a simple publisher and subscriber (C++)
@@ -305,33 +301,9 @@ You could build your package now, source the local setup files, and run it, but 
 Return to ``ros2_ws/src/cpp_pubsub/src`` to create the next node.
 Enter the following code in your terminal:
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-            wget -O subscriber_member_function.cpp https://raw.githubusercontent.com/ros2/examples/{REPOS_FILE_BRANCH}/rclcpp/topics/minimal_subscriber/member_function.cpp
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-            wget -O subscriber_member_function.cpp https://raw.githubusercontent.com/ros2/examples/{REPOS_FILE_BRANCH}/rclcpp/topics/minimal_subscriber/member_function.cpp
-
-   .. group-tab:: Windows
-
-      In a Windows command line prompt:
-
-      .. code-block:: console
-
-            curl -sk https://raw.githubusercontent.com/ros2/examples/{REPOS_FILE_BRANCH}/rclcpp/topics/minimal_subscriber/member_function.cpp -o subscriber_member_function.cpp
-
-      Or in powershell:
-
-      .. code-block:: console
-
-            curl https://raw.githubusercontent.com/ros2/examples/{REPOS_FILE_BRANCH}/rclcpp/topics/minimal_subscriber/member_function.cpp -o subscriber_member_function.cpp
+      wget -O subscriber_member_function.cpp https://raw.githubusercontent.com/ros2/examples/{REPOS_FILE_BRANCH}/rclcpp/topics/minimal_subscriber/member_function.cpp
 
 Entering ``ls`` in the console will now return:
 
@@ -437,66 +409,23 @@ Make sure to save the file, and then your pub/sub system should be ready.
 You likely already have the ``rclcpp`` and ``std_msgs`` packages installed as part of your ROS 2 system.
 It's good practice to run ``rosdep`` in the root of your workspace (``ros2_ws``) to check for missing dependencies before building:
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-            rosdep install -i --from-path src --rosdistro {DISTRO} -y
-
-   .. group-tab:: macOS
-
-      rosdep only runs on Linux, so you can skip ahead to next step.
-
-   .. group-tab:: Windows
-
-      rosdep only runs on Linux, so you can skip ahead to next step.
+      rosdep install -i --from-path src --rosdistro {DISTRO} -y
 
 
 Still in the root of your workspace, ``ros2_ws``, build your new package:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
-
-    .. code-block:: console
-
-      colcon build --packages-select cpp_pubsub
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      colcon build --packages-select cpp_pubsub
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      colcon build --merge-install --packages-select cpp_pubsub
+  colcon build --packages-select cpp_pubsub
 
 Open a new terminal, navigate to ``ros2_ws``, and source the setup files:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
+  . install/setup.bash
 
-    .. code-block:: console
-
-      . install/setup.bash
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      . install/setup.bash
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      call install/setup.bat
 
 Now run the talker node:
 

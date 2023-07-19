@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Custom-ROS2-Interfaces
-
 .. _CustomInterfaces:
 
 Creating custom msg and srv files
@@ -140,25 +136,9 @@ Add the following lines within the ``<package>`` element of ``package.xml``:
 Now that all the parts of your custom interfaces package are in place, you can build the package.
 In the root of your workspace (``~/ros2_ws``), run the following command:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
-
-    .. code-block:: console
-
-      colcon build --packages-select tutorial_interfaces
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      colcon build --packages-select tutorial_interfaces
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      colcon build --merge-install --packages-select tutorial_interfaces
+  colcon build --packages-select tutorial_interfaces
 
 Now the interfaces will be discoverable by other ROS 2 packages.
 
@@ -167,25 +147,10 @@ Now the interfaces will be discoverable by other ROS 2 packages.
 
 In a new terminal, run the following command from within your workspace (``ros2_ws``) to source it:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
+  source install/setup.bash
 
-    .. code-block:: console
-
-      source install/setup.bash
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      . install/setup.bash
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      call install/setup.bat
 
 Now you can confirm that your interface creation worked by using the ``ros2 interface show`` command:
 

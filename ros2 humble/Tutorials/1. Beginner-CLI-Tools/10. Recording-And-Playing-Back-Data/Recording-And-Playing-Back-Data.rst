@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Ros2bag/Recording-And-Playing-Back-Data
-
 .. _ROS2Bag:
 
 Recording and playing back data

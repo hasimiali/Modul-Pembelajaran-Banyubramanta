@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Launch/CLI-Intro
-
 .. _ROS2Launch:
 
 Launching nodes

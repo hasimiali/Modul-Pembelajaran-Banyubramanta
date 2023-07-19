@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Parameters/Understanding-ROS2-Parameters
-
 .. _ROS2Params:
 
 Understanding parameters

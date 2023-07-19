@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Workspace/Creating-A-Workspace
-
 .. _ROS2Workspace:
 
 Creating a workspace
@@ -52,27 +48,9 @@ Your main ROS 2 installation will be your underlay for this tutorial.
 
 Depending on how you installed ROS 2 (from source or binaries), and which platform you're on, your exact source command will vary:
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-        source /opt/ros/{DISTRO}/setup.bash
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-        . ~/ros2_install/ros2-osx/setup.bash
-
-   .. group-tab:: Windows
-
-      Remember to use a ``x64 Native Tools Command Prompt for VS 2019`` for executing the following commands, as we are going to build a workspace.
-
-      .. code-block:: console
-
-        call C:\dev\ros2\local_setup.bat
+  source /opt/ros/{DISTRO}/setup.bash
 
 Consult the :doc:`installation guide <../../../Installation>` you followed if these commands don't work for you.
 
@@ -85,29 +63,10 @@ Best practice is to create a new directory for every new workspace.
 The name doesn't matter, but it is helpful to have it indicate the purpose of the workspace.
 Let's choose the directory name ``ros2_ws``, for "development workspace":
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-        mkdir -p ~/ros2_ws/src
-        cd ~/ros2_ws/src
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-        mkdir -p ~/ros2_ws/src
-        cd ~/ros2_ws/src
-
-   .. group-tab:: Windows
-
-     .. code-block:: console
-
-       md \ros2_ws\src
-       cd \ros2_ws\src
-
+  mkdir -p ~/ros2_ws/src
+  cd ~/ros2_ws/src
 
 Another best practice is to put any packages in your workspace into the ``src`` directory.
 The above code creates a ``src`` directory inside ``ros2_ws`` and then navigates into it.
@@ -147,23 +106,12 @@ You wouldn't want a build to fail after a long wait only to realize that you hav
 
 From the root of your workspace (``ros2_ws``), run the following command:
 
-.. tabs::
+.. code-block:: bash
 
-   .. group-tab:: Linux
+  # cd if you're still in the ``src`` directory with the ``ros_tutorials`` clone
+  cd ..
+  rosdep install -i --from-path src --rosdistro {DISTRO} -y
 
-      .. code-block:: bash
-
-        # cd if you're still in the ``src`` directory with the ``ros_tutorials`` clone
-        cd ..
-        rosdep install -i --from-path src --rosdistro {DISTRO} -y
-
-   .. group-tab:: macOS
-
-      rosdep only runs on Linux, so you can skip ahead to section "5 Build the workspace with colcon".
-
-   .. group-tab:: Windows
-
-      rosdep only runs on Linux, so you can skip ahead to section "5 Build the workspace with colcon".
 
 If you installed ROS 2 on Linux from source or the "fat" archive, you will need to use the rosdep command from their installation instructions.
 Here are the :ref:`from-source rosdep section <linux-development-setup-install-dependencies-using-rosdep>` and the :ref:`"fat" archive rosdep section <linux-install-binary-install-missing-dependencies>`.
@@ -183,27 +131,9 @@ You can learn more about ``rosdep`` in another tutorial (coming soon).
 
 From the root of your workspace (``ros2_ws``), you can now build your packages using the command:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
-
-    .. code-block:: console
-
-      colcon build
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      colcon build
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      colcon build --merge-install
-
-    Windows doesn't allow long paths, so ``merge-install`` will combine all the paths into the ``install`` directory.
+  colcon build
 
 The console will return the following message:
 
@@ -239,71 +169,24 @@ Sourcing an overlay in the same terminal where you built, or likewise building w
 
 In the new terminal, source your main ROS 2 environment as the "underlay", so you can build the overlay "on top of" it:
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
+  source /opt/ros/{DISTRO}/setup.bash
 
-      .. code-block:: console
-
-        source /opt/ros/{DISTRO}/setup.bash
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-        . ~/ros2_install/ros2-osx/setup.bash
-
-   .. group-tab:: Windows
-
-      In this case you can use a normal command prompt, as we are not going to build any workspace in this terminal.
-
-      .. code-block:: console
-
-        call C:\dev\ros2\local_setup.bat
 
 Go into the root of your workspace:
 
-.. tabs::
+.. code-block:: console
 
-   .. group-tab:: Linux
+  cd ~/ros2_ws
 
-      .. code-block:: console
-
-        cd ~/ros2_ws
-
-   .. group-tab:: macOS
-
-      .. code-block:: console
-
-        cd ~/ros2_ws
-
-   .. group-tab:: Windows
-
-     .. code-block:: console
-
-       cd \ros2_ws
 
 In the root, source your overlay:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Linux
+  source install/local_setup.bash
 
-    .. code-block:: console
-
-      source install/local_setup.bash
-
-  .. group-tab:: macOS
-
-    .. code-block:: console
-
-      . install/local_setup.bash
-
-  .. group-tab:: Windows
-
-    .. code-block:: console
-
-      call install\setup.bat
 
 .. note::
 
