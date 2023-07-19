@@ -1,7 +1,3 @@
-.. redirect-from::
-
-    Tutorials/Turtlesim/Introducing-Turtlesim
-
 .. _Turtlesim:
 
 Using ``turtlesim``, ``ros2``, and ``rqt``
@@ -49,23 +45,10 @@ As always, start by sourcing your setup files in a new terminal, as described in
 
 Install the turtlesim package for your ROS 2 distro:
 
-.. tabs::
+.. code-block:: console
+    sudo apt update
 
-   .. group-tab:: Linux
-
-      .. code-block:: console
-
-        sudo apt update
-
-        sudo apt install ros-{DISTRO}-turtlesim
-
-   .. group-tab:: macOS
-
-      As long as the archive you installed ROS 2 from contains the ``ros_tutorials`` repository, you should already have turtlesim installed.
-
-   .. group-tab:: Windows
-
-      As long as the archive you installed ROS 2 from contains the ``ros_tutorials`` repository, you should already have turtlesim installed.
+    sudo apt install ros-{DISTRO}-turtlesim
 
 Check that the package is installed:
 
@@ -143,29 +126,11 @@ Since the goal of this tutorial is only to get a general overview of turtlesim, 
 
 Open a new terminal to install ``rqt`` and its plugins:
 
-.. tabs::
+.. code-block:: console
 
-  .. group-tab:: Ubuntu
+  sudo apt update
 
-    .. code-block:: console
-
-      sudo apt update
-
-      sudo apt install ~nros-{DISTRO}-rqt*
-
-  .. group-tab:: RHEL
-
-    .. code-block:: console
-
-      sudo dnf install ros-{DISTRO}-rqt*
-
-  .. group-tab:: macOS
-
-    The standard archive for installing ROS 2 on macOS contains ``rqt`` and its plugins, so you should already have ``rqt`` installed.
-
-  .. group-tab:: Windows
-
-    The standard archive for installing ROS 2 on Windows contains ``rqt`` and its plugins, so you should already have ``rqt`` installed.
+  sudo apt install ~nros-{DISTRO}-rqt*
 
 To run rqt:
 
