@@ -1,328 +1,154 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Writing-A-Simple-Py-Service-And-Client
+     Tutorial/Menulis-A-Simple-Py-Service-And-Client
 
 .. _PySrvCli:
 
-Writing a simple service and client (Python)
-============================================
+Menulis layanan dan klien sederhana (Python)
+========================================
 
-**Goal:** Create and run service and client nodes using Python.
+**Sasaran:** Membuat dan menjalankan layanan dan node klien menggunakan Python.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 20 minutes
+**Waktu:** 20 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-When :doc:`nodes <../Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` communicate using :doc:`services <../Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services>`, the node that sends a request for data is called the client node, and the one that responds to the request is the service node.
-The structure of the request and response is determined by a ``.srv`` file.
+Ketika :doc:`nodes <../Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` berkomunikasi menggunakan :doc:`services <../Beginner-CLI-Tools/Understanding-ROS2- Services/Understanding-ROS2-Services>`, node yang mengirimkan permintaan data disebut node klien, dan yang merespons permintaan tersebut adalah node layanan.
+Struktur permintaan dan respons ditentukan oleh file ``.srv``.
 
-The example used here is a simple integer addition system; one node requests the sum of two integers, and the other responds with the result.
+Contoh yang digunakan di sini adalah sistem penjumlahan bilangan bulat sederhana; satu node meminta jumlah dari dua bilangan bulat, dan yang lainnya merespons dengan hasilnya.
 
-Prerequisites
+Prasyarat
 -------------
 
-In previous tutorials, you learned how to :doc:`create a workspace <./Creating-A-Workspace/Creating-A-Workspace>` and :doc:`create a package <./Creating-Your-First-ROS2-Package>`.
+Dalam tutorial sebelumnya, Anda telah mempelajari cara :doc:`membuat ruang kerja <./Creating-A-Workspace/Creating-A-Workspace>` dan :doc:`membuat paket <./Creating-Your-First-ROS2- Paket>`.
 
-Tasks
+Tugas
 -----
 
-1 Create a package
-^^^^^^^^^^^^^^^^^^
+1 Buat paket
+^^^^^^^^^^^^^^^^^^^^^^
 
-Open a new terminal and :doc:`source your ROS 2 installation <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` so that ``ros2`` commands will work.
+Buka terminal baru dan :doc:`sumber instalasi ROS 2 Anda <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` sehingga perintah ``ros2`` akan berfungsi.
 
-Navigate into the ``ros2_ws`` directory created in a :ref:`previous tutorial <new-directory>`.
+Arahkan ke direktori ``ros2_ws`` yang dibuat di :ref:`tutorial sebelumnya <new-directory>`.
 
-Recall that packages should be created in the ``src`` directory, not the root of the workspace.
-Navigate into ``ros2_ws/src`` and create a new package:
+Ingatlah bahwa paket harus dibuat di direktori ``src``, bukan di root ruang kerja.
+Arahkan ke ``ros2_ws/src`` dan buat paket baru:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 pkg create --build-type ament_python py_srvcli --dependencies rclpy example_interfaces
+   ros2 pkg buat --build-type ament_python py_srvcli --dependencies rclpy example_interfaces
 
-Your terminal will return a message verifying the creation of your package ``py_srvcli`` and all its necessary files and folders.
+Terminal Anda akan mengembalikan pesan yang memverifikasi pembuatan paket Anda ``py_srvcli`` dan semua file dan folder yang diperlukan.
 
-The ``--dependencies`` argument will automatically add the necessary dependency lines to ``package.xml``.
-``example_interfaces`` is the package that includes `the .srv file <https://github.com/ros2/example_interfaces/blob/{REPOS_FILE_BRANCH}/srv/AddTwoInts.srv>`__ you will need to structure your requests and responses:
+Argumen ``--dependencies`` akan secara otomatis menambahkan baris ketergantungan yang diperlukan ke ``package.xml``.
+``example_interfaces`` adalah paket yang menyertakan `file .srv <https://github.com/ros2/example_interfaces/blob/{REPOS_FILE_BRANCH}/srv/AddTwoInts.srv>`__ Anda perlu menyusun permintaan dan tanggapan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    int64 a
-    int64 b
-    ---
-    int64 sum
+     int64 a
+     int64b
+     ---
+     jumlah int64
 
-The first two lines are the parameters of the request, and below the dashes is the response.
+Dua baris pertama adalah parameter permintaan, dan di bawah tanda hubung adalah responsnya.
 
-1.1 Update ``package.xml``
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+1.1 Perbarui ``package.xml``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because you used the ``--dependencies`` option during package creation, you don't have to manually add dependencies to ``package.xml``.
+Karena Anda menggunakan opsi ``--dependencies`` selama pembuatan paket, Anda tidak perlu menambahkan dependensi secara manual ke ``package.xml``.
 
-As always, though, make sure to add the description, maintainer email and name, and license information to ``package.xml``.
+Namun, seperti biasa, pastikan untuk menambahkan deskripsi, nama dan email pengelola, serta informasi lisensi ke ``package.xml``.
 
-.. code-block:: xml
+.. blok kode :: xml
 
-  <description>Python client server tutorial</description>
-  <maintainer email="you@email.com">Your Name</maintainer>
-  <license>Apache License 2.0</license>
+   <description>Tutorial server klien Python</description>
+   <maintainer email="you@email.com">Nama Anda</maintainer>
+   <lisensi>Lisensi Apache 2.0</lisensi>
 
-1.2 Update ``setup.py``
-~~~~~~~~~~~~~~~~~~~~~~~
+1.2 Perbarui ``setup.py``
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Add the same information to the ``setup.py`` file for the ``maintainer``, ``maintainer_email``, ``description`` and ``license`` fields:
+Tambahkan informasi yang sama ke file ``setup.py`` untuk kolom ``maintainer``, ``maintainer_email``, ``description`` dan ``license``:
 
-.. code-block:: python
+.. blok kode :: python
 
-    maintainer='Your Name',
-    maintainer_email='you@email.com',
-    description='Python client server tutorial',
-    license='Apache License 2.0',
+     pengelola='Nama Anda',
+     pengelola_email='anda@email.com',
+     description='tutorial server klien python',
+     lisensi='Lisensi Apache 2.0',
 
-2 Write the service node
-^^^^^^^^^^^^^^^^^^^^^^^^
+2 Tulis simpul layanan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Inside the ``ros2_ws/src/py_srvcli/py_srvcli`` directory, create a new file called ``service_member_function.py`` and paste the following code within:
+Di dalam direktori ``ros2_ws/src/py_srvcli/py_srvcli``, buat file baru bernama ``service_member_function.py`` dan tempel kode berikut di dalamnya:
 
-.. code-block:: python
+.. blok kode :: python
 
-  from example_interfaces.srv import AddTwoInts
+   dari example_interfaces.srv impor AddTwoInts
 
-  import rclpy
-  from rclpy.node import Node
-
-
-  class MinimalService(Node):
-
-      def __init__(self):
-          super().__init__('minimal_service')
-          self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
-
-      def add_two_ints_callback(self, request, response):
-          response.sum = request.a + request.b
-          self.get_logger().info('Incoming request\na: %d b: %d' % (request.a, request.b))
-
-          return response
+   impor rclpy
+   dari rclpy.node impor Node
 
 
-  def main():
-      rclpy.init()
+   kelas Layanan Minimal (Node):
 
-      minimal_service = MinimalService()
+       def __init__(diri sendiri):
+           super().__init__('minimal_service')
+           self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
 
-      rclpy.spin(minimal_service)
+       def add_two_ints_callback(self, request, response):
+           respon.jumlah = permintaan.a + permintaan.b
+           self.get_logger().info('Permintaan masuk\na: %d b: %d' % (permintaan.a, permintaan.b))
 
-      rclpy.shutdown()
+           respon balik
 
 
-  if __name__ == '__main__':
-      main()
+   def utama():
+       rclpy.init()
 
-2.1 Examine the code
-~~~~~~~~~~~~~~~~~~~~
+       minimal_service = Layanan Minimal()
 
-The first ``import`` statement imports the ``AddTwoInts`` service type from the ``example_interfaces`` package.
-The following ``import`` statement imports the ROS 2 Python client library, and specifically the ``Node`` class.
+       rclpy.spin(layanan_minimal)
 
-.. code-block:: python
+       rclpy.shutdown()
 
-  from example_interfaces.srv import AddTwoInts
 
-  import rclpy
-  from rclpy.node import Node
+   jika __nama__ == '__main__':
+       utama()
 
-The ``MinimalService`` class constructor initializes the node with the name ``minimal_service``.
-Then, it creates a service and defines the type, name, and callback.
-
-.. code-block:: python
-
-  def __init__(self):
-      super().__init__('minimal_service')
-      self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
-
-The definition of the service callback receives the request data, sums it, and returns the sum as a response.
-
-.. code-block:: python
-
-  def add_two_ints_callback(self, request, response):
-      response.sum = request.a + request.b
-      self.get_logger().info('Incoming request\na: %d b: %d' % (request.a, request.b))
-
-      return response
-
-Finally, the main class initializes the ROS 2 Python client library, instantiates the ``MinimalService`` class to create the service node and spins the node to handle callbacks.
-
-2.2 Add an entry point
+2.1 Periksa kodenya
 ~~~~~~~~~~~~~~~~~~~~~~
 
-To allow the ``ros2 run`` command to run your node, you must add the entry point to ``setup.py`` (located in the ``ros2_ws/src/py_srvcli`` directory).
+Pernyataan ``import`` pertama mengimpor jenis layanan ``AddTwoInts`` dari paket ``example_interfaces``.
+Pernyataan ``import`` berikut mengimpor pustaka klien ROS 2 Python, dan khususnya kelas ``Node``.
 
-Add the following line between the ``'console_scripts':`` brackets:
+.. blok kode :: python
 
-.. code-block:: python
+   dari example_interfaces.srv impor AddTwoInts
 
-  'service = py_srvcli.service_member_function:main',
+   impor rclpy
+   dari rclpy.node impor Node
 
-3 Write the client node
-^^^^^^^^^^^^^^^^^^^^^^^
+Konstruktor kelas ``MinimalService`` menginisialisasi node dengan nama ``minimal_service``.
+Kemudian, ia membuat layanan dan menentukan jenis, nama, dan panggilan balik.
 
-Inside the ``ros2_ws/src/py_srvcli/py_srvcli`` directory, create a new file called ``client_member_function.py`` and paste the following code within:
+.. blok kode :: python
 
-.. code-block:: python
+   def __init__(diri sendiri):
+       super().__init__('minimal_service')
+       self.srv = self.create_service(AddTwoInts, 'add_two_ints', self.add_two_ints_callback)
 
-  import sys
+Definisi callback layanan menerima data permintaan, menjumlahkannya, dan mengembalikan jumlah tersebut sebagai respons.
 
-  from example_interfaces.srv import AddTwoInts
-  import rclpy
-  from rclpy.node import Node
+.. blok kode :: python
 
-
-  class MinimalClientAsync(Node):
-
-      def __init__(self):
-          super().__init__('minimal_client_async')
-          self.cli = self.create_client(AddTwoInts, 'add_two_ints')
-          while not self.cli.wait_for_service(timeout_sec=1.0):
-              self.get_logger().info('service not available, waiting again...')
-          self.req = AddTwoInts.Request()
-
-      def send_request(self, a, b):
-          self.req.a = a
-          self.req.b = b
-          self.future = self.cli.call_async(self.req)
-          rclpy.spin_until_future_complete(self, self.future)
-          return self.future.result()
-
-
-  def main():
-      rclpy.init()
-
-      minimal_client = MinimalClientAsync()
-      response = minimal_client.send_request(int(sys.argv[1]), int(sys.argv[2]))
-      minimal_client.get_logger().info(
-          'Result of add_two_ints: for %d + %d = %d' %
-          (int(sys.argv[1]), int(sys.argv[2]), response.sum))
-
-      minimal_client.destroy_node()
-      rclpy.shutdown()
-
-
-  if __name__ == '__main__':
-      main()
-
-
-3.1 Examine the code
-~~~~~~~~~~~~~~~~~~~~
-
-The only different ``import`` statement for the client is ``import sys``.
-The client node code uses `sys.argv <https://docs.python.org/3/library/sys.html#sys.argv>`__ to get access to command line input arguments for the request.
-
-The constructor definition creates a client with the same type and name as the service node.
-The type and name must match for the client and service to be able to communicate.
-
-The ``while`` loop in the constructor checks if a service matching the type and name of the client is available once a second.
-
-Below the constructor is the request definition, followed by ``main``.
-
-The only significant difference in the client's ``main`` is the ``while`` loop.
-The loop checks the ``future`` to see if there is a response from the service, as long as the system is running.
-If the service has sent a response, the result will be written in a log message.
-
-
-3.2 Add an entry point
-~~~~~~~~~~~~~~~~~~~~~~
-
-Like the service node, you also have to add an entry point to be able to run the client node.
-
-The ``entry_points`` field of your ``setup.py`` file should look like this:
-
-.. code-block:: python
-
-  entry_points={
-      'console_scripts': [
-          'service = py_srvcli.service_member_function:main',
-          'client = py_srvcli.client_member_function:main',
-      ],
-  },
-
-4 Build and run
-^^^^^^^^^^^^^^^
-
-It's good practice to run ``rosdep`` in the root of your workspace (``ros2_ws``) to check for missing dependencies before building:
-
-.. code-block:: console
-
-      rosdep install -i --from-path src --rosdistro {DISTRO} -y
-
-Navigate back to the root of your workspace, ``ros2_ws``, and build your new package:
-
-.. code-block:: console
-
-  colcon build --packages-select py_srvcli
-
-Open a new terminal, navigate to ``ros2_ws``, and source the setup files:
-
-.. code-block:: console
-
-  source install/setup.bash
-
-
-Now run the service node:
-
-.. code-block:: console
-
-  ros2 run py_srvcli service
-
-The node will wait for the client's request.
-
-Open another terminal and source the setup files from inside ``ros2_ws`` again.
-Start the client node, followed by any two integers separated by a space:
-
-.. code-block:: console
-
-  ros2 run py_srvcli client 2 3
-
-If you chose ``2`` and ``3``, for example, the client would receive a response like this:
-
-.. code-block:: console
-
-  [INFO] [minimal_client_async]: Result of add_two_ints: for 2 + 3 = 5
-
-Return to the terminal where your service node is running.
-You will see that it published log messages when it received the request:
-
-.. code-block:: console
-
-  [INFO] [minimal_service]: Incoming request
-  a: 2 b: 3
-
-Enter ``Ctrl+C`` in the server terminal to stop the node from spinning.
-
-
-Summary
--------
-
-You created two nodes to request and respond to data over a service.
-You added their dependencies and executables to the package configuration files so that you could build and run them, allowing you to see a service/client system at work.
-
-Next steps
-----------
-
-In the last few tutorials you've been utilizing interfaces to pass data across topics and services.
-Next, you'll learn how to :doc:`create custom interfaces <./Custom-ROS2-Interfaces>`.
-
-Related content
----------------
-
-* There are several ways you could write a service and client in Python; check out the ``minimal_client`` and ``minimal_service`` packages in the `ros2/examples <https://github.com/ros2/examples/tree/{REPOS_FILE_BRANCH}/rclpy/services>`_ repo.
-
-* In this tutorial, you used the ``call_async()`` API in your client node to call the service.
-  There is another service call API available for Python called synchronous calls.
-  We do not recommend using synchronous calls, but if you'd like to learn more about them, read the guide to :doc:`Synchronous vs. asynchronous clients <../../How-To-Guides/Sync-Vs-Async>`.
+   def add_two_int

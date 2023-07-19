@@ -1,138 +1,138 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Rosdep
+     Tutorial/Rosdep
 
 .. _rosdep:
 
-Managing Dependencies with rosdep
+Mengelola Ketergantungan dengan rosdep
 =================================
 
-**Goal:** Manage external dependencies using ``rosdep``.
+**Sasaran:** Kelola dependensi eksternal menggunakan ``rosdep``.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Author: Steve Macenski
+Pengarang: Steve Macenski
 
-This tutorial will explain how to manage external dependencies using ``rosdep``.
+Tutorial ini akan menjelaskan cara mengelola dependensi eksternal menggunakan ``rosdep``.
 
-What is rosdep?
+Apa itu rosdep?
 ---------------
 
-``rosdep`` is ROS's dependency management utility that can work with ROS packages and external libraries.
-``rosdep`` is a command-line utility for identifying and installing dependencies to build or install a package.
-It can be or is invoked when:
+``rosdep`` adalah utilitas manajemen ketergantungan ROS yang dapat bekerja dengan paket ROS dan pustaka eksternal.
+``rosdep`` adalah utilitas baris perintah untuk mengidentifikasi dan menginstal dependensi untuk membangun atau menginstal sebuah paket.
+Itu dapat atau dipanggil ketika:
 
-- Building a workspace and needing appropriate dependencies to build the packages within
-- Install packages (e.g. ``sudo apt install ros-{DISTRO}-demo-nodes-cpp``) to check the dependencies needed for it to execute
-- and more!
+- Membangun ruang kerja dan membutuhkan dependensi yang sesuai untuk membangun paket di dalamnya
+- Instal paket (misalnya ``sudo apt install ros-{DISTRO}-demo-nodes-cpp``) untuk memeriksa dependensi yang diperlukan agar dapat dijalankan
+- dan banyak lagi!
 
-It has the ability to work over a single package or over a directory of packages (e.g. workspace).
+Ini memiliki kemampuan untuk bekerja pada satu paket atau pada direktori paket (mis. ruang kerja).
 
-A little about package.xml files
+Sedikit tentang file package.xml
 --------------------------------
 
-A package's ``package.xml`` file contains a set of dependencies.
-The dependencies in this file are generally referred to as "rosdep keys".
-These are represented in the tags ``<depend>``, ``<test_depend>``, ``<exec_depend>``, ``<build_depend>``, and ``<build_export_depend>``.
-They specify in what situation each of the dependencies are required in.
+File ``package.xml`` paket berisi sekumpulan dependensi.
+Dependensi dalam file ini umumnya disebut sebagai "kunci rosdep".
+Ini diwakili dalam tag ``<depend>``, ``<test_depend>``, ``<exec_depend>``, ``<build_depend>``, dan ``<build_export_depend>``.
+Mereka menentukan dalam situasi apa masing-masing dependensi diperlukan.
 
-- For dependencies only used in testing the code (e.g. ``gtest``), use ``test_depend``.
-- For dependencies only used in building the code, use ``build_depend``.
-- For dependencies needed by headers the code exports, use ``build_export_depend``.
-- For dependencies only used when running the code, use ``exec_depend``.
-- For mixed purposes, use ``depend``, which covers build, export, and execution time dependencies.
+- Untuk dependensi yang hanya digunakan dalam pengujian kode (mis. ``gtest``), gunakan ``test_depend``.
+- Untuk dependensi yang hanya digunakan dalam membuat kode, gunakan ``build_depend``.
+- Untuk dependensi yang dibutuhkan oleh header yang mengekspor kode, gunakan ``build_export_depend``.
+- Untuk dependensi yang hanya digunakan saat menjalankan kode, gunakan ``exec_depend``.
+- Untuk tujuan campuran, gunakan ``depend``, yang mencakup dependensi build, ekspor, dan waktu eksekusi.
 
-These dependencies are manually populated in the ``package.xml`` file by the package's creators and should be an exhaustive list of any non-builtin libraries and packages it requires.
+Ketergantungan ini diisi secara manual dalam file ``package.xml`` oleh pembuat paket dan harus berupa daftar lengkap pustaka dan paket non-builtin yang diperlukan.
 
-How does rosdep work?
+Bagaimana cara kerja rosdep?
 ---------------------
 
-``rosdep`` will check for ``package.xml`` files in its path or for a specific package and find the rosdep keys stored within.
-These keys are then cross-referenced against a central index to find the appropriate ROS package or software library in various package managers.
-Finally, once the packages are found, they are installed and ready to go!
+``rosdep`` akan memeriksa file ``package.xml`` di jalurnya atau untuk paket tertentu dan menemukan kunci rosdep yang tersimpan di dalamnya.
+Kunci-kunci ini kemudian dirujuk silang dengan indeks pusat untuk menemukan paket ROS atau pustaka perangkat lunak yang sesuai di berbagai manajer paket.
+Akhirnya, setelah paket ditemukan, mereka diinstal dan siap digunakan!
 
-The central index is known as ``rosdistro``, which `may be found here <https://github.com/ros/rosdistro>`_.
-We'll explore that more in the next section.
+Indeks pusat dikenal sebagai ``rosdistro``, yang `dapat ditemukan di sini <https://github.com/ros/rosdistro>`_.
+Kami akan menjelajahinya lebih lanjut di bagian selanjutnya.
 
-How do I know what keys to put in my package.xml?
+Bagaimana saya tahu kunci apa yang harus dimasukkan ke dalam package.xml saya?
 -------------------------------------------------
 
-Great question, I'm glad you asked!
+Pertanyaan bagus, saya senang Anda bertanya!
 
-For ROS packages (e.g. ``nav2_bt_navigator``), you may simply place the name of the package.
-You can find a list of all released ROS packages in ``rosdistro`` at ``<distro>/distribution.yaml`` for your given ROS distribution.
+Untuk paket ROS (mis. ``nav2_bt_navigator``), Anda cukup menempatkan nama paket.
+Anda dapat menemukan daftar semua paket ROS yang dirilis di ``rosdistro`` di ``<distro>/distribution.yaml`` untuk distribusi ROS yang Anda berikan.
 
-For non-ROS package system dependencies, we will need to find the keys for a particular library.
-In general, there are two files of interest: ``rosdep/base.yaml`` and ``rosdep/python.yaml``.
-``base.yaml`` in general contains the ``apt`` system dependencies.
-``python.yaml`` in general contains the ``pip`` python dependencies.
+Untuk dependensi sistem paket non-ROS, kita perlu menemukan kunci untuk pustaka tertentu.
+Secara umum, ada dua file yang menarik: ``rosdep/base.yaml`` dan ``rosdep/python.yaml``.
+``base.yaml`` secara umum berisi dependensi sistem ``apt``.
+``python.yaml`` secara umum berisi dependensi ``pip`` python.
 
-To find a key, search for your library in this file and find the name in ``yaml`` that contains it.
-This is the key to put in a ``package.xml`` file.
+Untuk menemukan kunci, cari perpustakaan Anda di file ini dan temukan nama di ``yaml`` yang memuatnya.
+Ini adalah kunci untuk memasukkan file ``package.xml``.
 
-For example, imagine a package had a dependency on ``doxygen`` because it is a great piece of software that cares about quality documentation (hint hint).
-We would search ``base.yaml`` for ``doxygen`` and come across:
+Misalnya, bayangkan sebuah paket memiliki ketergantungan pada ``doxygen`` karena itu adalah perangkat lunak hebat yang memperhatikan dokumentasi kualitas (petunjuk petunjuk).
+Kita akan mencari ``base.yaml`` untuk ``doxygen`` dan menemukan:
 
-.. code-block:: yaml
+.. blok kode :: yaml
 
-  doxygen:
-    arch: [doxygen]
-    debian: [doxygen]
-    fedora: [doxygen]
-    freebsd: [doxygen]
-    gentoo: [app-doc/doxygen]
-    macports: [doxygen]
-    nixos: [doxygen]
-    openembedded: [doxygen@meta-oe]
-    opensuse: [doxygen]
-    rhel: [doxygen]
-    ubuntu: [doxygen]
+   doksigen:
+     lengkungan: [doksigen]
+     debian: [doksigen]
+     fedora: [doksigen]
+     freebsd: [doksigen]
+     gentoo: [app-doc/doksigen]
+     macports: [doksigen]
+     nixos: [doksigen]
+     openembedded: [doxygen@meta-oe]
+     openuse: [doksigen]
+     rhel: [doksigen]
+     ubuntu: [doksigen]
 
-That means our rosdep key is ``doxygen``, which would resolve to those various names in different operating system's package managers for installation.
+Itu berarti kunci rosdep kita adalah ``doxygen``, yang akan menyelesaikan ke berbagai nama tersebut di manajer paket sistem operasi yang berbeda untuk penginstalan.
 
-What if my library isn't in rosdistro?
+Bagaimana jika perpustakaan saya tidak ada di rosdistro?
 --------------------------------------
 
-If your library isn't in ``rosdistro``, you can experience the greatness that is open-source software development: you can add it yourself!
-Pull requests for rosdistro are typically merged well within a week.
+Jika perpustakaan Anda tidak ada di ``rosdistro``, Anda dapat merasakan kehebatan pengembangan perangkat lunak sumber terbuka: Anda dapat menambahkannya sendiri!
+Permintaan tarik untuk rosdistro biasanya digabungkan dengan baik dalam waktu seminggu.
 
-`Detailed instructions may be found here <https://github.com/ros/rosdistro/blob/master/CONTRIBUTING.md#rosdep-rules-contributions>`_ for how to contribute new rosdep keys.
-If for some reason these may not be contributed openly, it is possible to fork rosdistro and maintain a alternate index for use.
+`Petunjuk terperinci dapat ditemukan di sini <https://github.com/ros/rosdistro/blob/master/CONTRIBUTING.md#rosdep-rules-contributions>`_ untuk cara menyumbangkan kunci rosdep baru.
+Jika karena alasan tertentu ini tidak dapat dikontribusikan secara terbuka, dimungkinkan untuk melakukan fork rosdistro dan memelihara indeks alternatif untuk digunakan.
 
 
-How do I use the rosdep tool?
+Bagaimana cara menggunakan alat rosdep?
 -----------------------------
 
-Now that we have some understanding of ``rosdep``, ``package.xml``, and ``rosdistro``, we're ready to use the utility itself!
-Firstly, if this is the first time using ``rosdep``, it must be initialized via:
+Sekarang setelah kita memiliki pemahaman tentang ``rosdep``, ``package.xml``, dan ``rosdistro``, kita siap menggunakan utilitas itu sendiri!
+Pertama, jika ini adalah pertama kalinya menggunakan ``rosdep``, ini harus diinisialisasi melalui:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-    sudo rosdep init
-    rosdep update
+     sudo rosdep init
+     rosdep update
 
-This will initialize rosdep and ``update`` will update the locally cached rosdistro index.
-It is a good idea to ``update`` rosdep on occasion to get the latest index.
+Ini akan menginisialisasi rosdep dan ``update`` akan memperbarui indeks rosdistro yang di-cache secara lokal.
+Merupakan ide bagus untuk ``memperbarui`` rosdep sesekali untuk mendapatkan indeks terbaru.
 
-Finally, we can run ``rosdep install`` to install dependencies.
-Typically, this is run over a workspace with many packages in a single call to install all dependencies.
-A call for that would appear as the following, if in the root of the workspace with directory ``src`` containing source code.
+Terakhir, kita dapat menjalankan ``rosdep install`` untuk menginstal dependensi.
+Biasanya, ini dijalankan di ruang kerja dengan banyak paket dalam satu panggilan untuk menginstal semua dependensi.
+Panggilan untuk itu akan muncul sebagai berikut, jika di root ruang kerja dengan direktori ``src`` yang berisi kode sumber.
 
-.. code-block:: bash
+.. blok kode :: bash
 
-    rosdep install --from-paths src -y --ignore-src
+     rosdep instal --from-paths src -y --ignore-src
 
-Breaking that down:
+Memecah itu:
 
-- ``--from-paths src`` specifies the path to check for ``package.xml`` files to resolve keys for
-- ``-y`` means to default yes to all prompts from the package manager to install without prompts
-- ``--ignore-src`` means to ignore installing dependencies, even if a rosdep key exists, if the package itself is also in the workspace.
+- ``--from-paths src`` menentukan jalur untuk memeriksa file ``package.xml`` untuk menyelesaikan kunci
+- ``-y`` berarti default ya untuk semua petunjuk dari manajer paket untuk menginstal tanpa petunjuk
+- ``--ignore-src`` berarti mengabaikan penginstalan dependensi, meskipun ada kunci rosdep, jika paket itu sendiri juga ada di ruang kerja.
 
-There are additional arguments and options available.
-Use ``rosdep -h`` to see them.
+Ada argumen dan opsi tambahan yang tersedia.
+Gunakan ``rosdep -h`` untuk melihatnya.

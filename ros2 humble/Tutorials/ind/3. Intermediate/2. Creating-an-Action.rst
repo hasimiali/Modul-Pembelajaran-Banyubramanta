@@ -1,214 +1,214 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Actions/Creating-an-Action
+     Tutorial/Tindakan/Membuat-sebuah-Tindakan
 
 .. _ActionCreate:
 
-Creating an action
+Membuat tindakan
 ==================
 
-**Goal:** Define an action in a ROS 2 package.
+**Sasaran:** Menentukan tindakan dalam paket ROS 2.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-You learned about actions previously in the :doc:`../Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions` tutorial.
-Like the other communication types and their respective interfaces (topics/msg and services/srv),
-you can also custom-define actions in your packages.
-This tutorial shows you how to define and build an action that you can use
-with the action server and action client you will write in the next tutorial.
+Anda telah mempelajari tentang tindakan sebelumnya di tutorial :doc:`../Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions`.
+Seperti jenis komunikasi lainnya dan antarmuka masing-masing (topik/pesan dan layanan/srv),
+Anda juga dapat menentukan tindakan khusus dalam paket Anda.
+Tutorial ini menunjukkan cara mendefinisikan dan membuat tindakan yang dapat Anda gunakan
+dengan server tindakan dan klien tindakan yang akan Anda tulis di tutorial berikutnya.
 
-Prerequisites
+Prasyarat
 -------------
 
-You should have :doc:`ROS 2 <../../Installation>` and `colcon <https://colcon.readthedocs.org>`__ installed.
+Anda harus menginstal :doc:`ROS 2 <../../Installation>` dan `colcon <https://colcon.readthedocs.org>`__.
 
-You should know how to set up a :doc:`workspace <../Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace>` and create packages.
+Anda harus tahu cara menyiapkan :doc:`workspace <../Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace>` dan membuat paket.
 
-Remember to :doc:`source your ROS 2 installation <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` first.
+Ingatlah untuk :doc:`sumber instalasi ROS 2 Anda <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` terlebih dahulu.
 
-Tasks
+Tugas
 -----
 
-1 Creating an interface package
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1 Membuat paket antarmuka
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir -p ~/ros2_ws/src # you can reuse an existing workspace with this naming convention
-      cd ~/ros2_ws/src
-      ros2 pkg create --license Apache-2.0 custom_action_interfaces
+       mkdir -p ~/ros2_ws/src # Anda dapat menggunakan kembali ruang kerja yang ada dengan konvensi penamaan ini
+       cd ~/ros2_ws/src
+       ros2 pkg buat --lisensi Apache-2.0 custom_action_interfaces
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir -p ~/ros2_ws/src
-      cd ~/ros2_ws/src
-      ros2 pkg create --license Apache-2.0 custom_action_interfaces
+       mkdir -p ~/ros2_ws/src
+       cd ~/ros2_ws/src
+       ros2 pkg buat --lisensi Apache-2.0 custom_action_interfaces
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      md \ros2_ws\src
-      cd \ros2_ws\src
-      ros2 pkg create --license Apache-2.0 custom_action_interfaces
+       md \ros2_ws\src
+       cd\ros2_ws\src
+       ros2 pkg buat --lisensi Apache-2.0 custom_action_interfaces
 
 
-2 Defining an action
-^^^^^^^^^^^^^^^^^^^^
+2 Mendefinisikan tindakan
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-Actions are defined in ``.action`` files of the form:
+Tindakan didefinisikan dalam file ``.action`` dalam bentuk:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-    # Request
-    ---
-    # Result
-    ---
-    # Feedback
+     # Meminta
+     ---
+     # Hasil
+     ---
+     # Masukan
 
-An action definition is made up of three message definitions separated by ``---``.
+Definisi tindakan terdiri dari tiga definisi pesan yang dipisahkan oleh ``---``.
 
-- A *request* message is sent from an action client to an action server initiating a new goal.
-- A *result* message is sent from an action server to an action client when a goal is done.
-- *Feedback* messages are periodically sent from an action server to an action client with updates about a goal.
+- Pesan *permintaan* dikirim dari klien tindakan ke server tindakan yang memulai tujuan baru.
+- Pesan *hasil* dikirim dari server tindakan ke klien tindakan saat tujuan selesai.
+- Pesan *Umpan Balik* dikirim secara berkala dari server tindakan ke klien tindakan dengan pembaruan tentang tujuan.
 
-An instance of an action is typically referred to as a *goal*.
+Contoh tindakan biasanya disebut sebagai *tujuan*.
 
-Say we want to define a new action "Fibonacci" for computing the `Fibonacci sequence <https://en.wikipedia.org/wiki/Fibonacci_number>`__.
+Misalkan kita ingin mendefinisikan tindakan baru "Fibonacci" untuk menghitung `urutan Fibonacci <https://en.wikipedia.org/wiki/Fibonacci_number>`__.
 
-Create an ``action`` directory in our ROS 2 package ``custom_action_interfaces``:
+Buat direktori ``action`` dalam paket ROS 2 kami ``custom_action_interfaces``:
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd custom_action_interfaces
-      mkdir action
+       cd custom_action_interfaces
+       tindakan mkdir
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd custom_action_interfaces
-      mkdir action
+       cd custom_action_interfaces
+       tindakan mkdir
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd custom_action_interfaces
-      md action
+       cd custom_action_interfaces
+       tindakan md
 
-Within the ``action`` directory, create a file called ``Fibonacci.action`` with the following contents:
+Di dalam direktori ``action``, buat file bernama ``Fibonacci.action`` dengan konten berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  int32 order
-  ---
-  int32[] sequence
-  ---
-  int32[] partial_sequence
+   urutan int32
+   ---
+   urutan int32[].
+   ---
+   int32[] urutan_sebagian
 
-The goal request is the ``order`` of the Fibonacci sequence we want to compute, the result is the final ``sequence``, and the feedback is the ``partial_sequence`` computed so far.
+Permintaan sasaran adalah ``urutan`` dari deret Fibonacci yang ingin kita hitung, hasilnya adalah ``urutan`` akhir, dan umpan baliknya adalah ``urutan_sebagian`` yang dihitung sejauh ini.
 
-3 Building an action
-^^^^^^^^^^^^^^^^^^^^
+3 Membangun tindakan
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before we can use the new Fibonacci action type in our code, we must pass the definition to the rosidl code generation pipeline.
+Sebelum kita dapat menggunakan tipe aksi Fibonacci baru dalam kode kita, kita harus meneruskan definisi ke pipeline pembuatan kode rosidl.
 
-This is accomplished by adding the following lines to our ``CMakeLists.txt`` before the ``ament_package()`` line, in the ``custom_action_interfaces``:
+Hal ini dilakukan dengan menambahkan baris berikut ke ``CMakeLists.txt`` sebelum baris ``ament_package()``, di ``custom_action_interfaces``:
 
-.. code-block:: cmake
+.. blok kode :: cmake
 
-    find_package(rosidl_default_generators REQUIRED)
+     find_package(rosidl_default_generator DIPERLUKAN)
 
-    rosidl_generate_interfaces(${PROJECT_NAME}
-      "action/Fibonacci.action"
-    )
+     rosidl_generate_interfaces(${PROJECT_NAME}
+       "aksi/Fibonacci.aksi"
+     )
 
-We should also add the required dependencies to our ``package.xml``:
+Kita juga harus menambahkan dependensi yang diperlukan ke ``package.xml`` kita:
 
-.. code-block:: xml
+.. blok kode :: xml
 
-    <buildtool_depend>rosidl_default_generators</buildtool_depend>
+     <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
-    <member_of_group>rosidl_interface_packages</member_of_group>
+     <member_of_group>rosidl_interface_packages</member_of_group>
 
-We should now be able to build the package containing the ``Fibonacci`` action definition:
+Kita seharusnya sekarang dapat membuat paket yang berisi definisi aksi ``Fibonacci``:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-    # Change to the root of the workspace
-    cd ~/ros2_ws
-    # Build
-    colcon build
+     # Ubah ke akar ruang kerja
+     cd ~/ros2_ws
+     # Membangun
+     membangun colcon
 
-We're done!
+Dilakukan!
 
-By convention, action types will be prefixed by their package name and the word ``action``.
-So when we want to refer to our new action, it will have the full name ``custom_action_interfaces/action/Fibonacci``.
+Berdasarkan konvensi, jenis tindakan akan diawali dengan nama paketnya dan kata ``action``.
+Jadi ketika kita ingin merujuk ke action baru kita, itu akan memiliki nama lengkap ``custom_action_interfaces/action/Fibonacci``.
 
-We can check that our action built successfully with the command line tool.
-First source our workspace:
+Kami dapat memeriksa apakah tindakan kami berhasil dibuat dengan alat baris perintah.
+Sumber pertama ruang kerja kami:
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      source install/local_setup.bash
+       instal sumber/local_setup.bash
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      source install/local_setup.bash
+       instal sumber/local_setup.bash
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      call install\local_setup.bat
+       panggil install\local_setup.bat
 
-Now check that our action definition exists:
+Sekarang periksa apakah definisi tindakan kita ada:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 interface show custom_action_interfaces/action/Fibonacci
+    antarmuka ros2 menampilkan custom_action_interfaces/action/Fibonacci
 
-You should see the Fibonacci action definition printed to the screen.
+Anda akan melihat definisi aksi Fibonacci tercetak di layar.
 
-Summary
+Ringkasan
 -------
 
-In this tutorial, you learned the structure of an action definition.
-You also learned how to correctly build a new action interface using ``CMakeLists.txt`` and ``package.xml``,
-and how to verify a successful build.
+Dalam tutorial ini, Anda mempelajari struktur definisi tindakan.
+Anda juga mempelajari cara membuat antarmuka tindakan baru dengan benar menggunakan ``CMakeLists.txt`` dan ``package.xml``,
+dan cara memverifikasi build yang berhasil.
 
-Next steps
+Langkah selanjutnya
 ----------
 
-Next, let's utilize your newly defined action interface by creating an action service and client (in :doc:`Python <Writing-an-Action-Server-Client/Py>` or :doc:`C++ <Writing-an-Action-Server-Client/Cpp>`).
+Selanjutnya, mari gunakan antarmuka tindakan yang baru Anda tentukan dengan membuat layanan tindakan dan klien (di :doc:`Python <Writing-an-Action-Server-Client/Py>` atau :doc:`C++ <Writing-an-Action- Server-Klien/Cpp>`).
 
-Related content
+Konten terkait
 ---------------
 
-For more detailed information about ROS actions, please refer to the `design article <http://design.ros2.org/articles/actions.html>`__.
+Untuk informasi lebih rinci tentang tindakan ROS, silakan lihat `artikel desain <http://design.ros2.org/articles/actions.html>`__.

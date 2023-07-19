@@ -1,130 +1,130 @@
 .. _rqt_console:
 
-Using ``rqt_console`` to view logs
+Menggunakan ``rqt_console`` untuk melihat log
 ==================================
 
-**Goal:** Get to know ``rqt_console``, a tool for introspecting log messages.
+**Sasaran:** Mengenal ``rqt_console``, alat untuk mengintrospeksi pesan log.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-``rqt_console`` is a GUI tool used to introspect log messages in ROS 2.
-Typically, log messages show up in your terminal.
-With ``rqt_console``, you can collect those messages over time, view them closely and in a more organized manner, filter them, save them and even reload the saved files to introspect at a different time.
+``rqt_console`` adalah alat GUI yang digunakan untuk mengintrospeksi pesan log di ROS 2.
+Biasanya, pesan log muncul di terminal Anda.
+Dengan ``rqt_console``, Anda dapat mengumpulkan pesan-pesan itu dari waktu ke waktu, melihatnya dengan cermat dan dengan cara yang lebih teratur, memfilternya, menyimpannya, dan bahkan memuat ulang file yang disimpan untuk introspeksi pada waktu yang berbeda.
 
-Nodes use logs to output messages concerning events and status in a variety of ways.
-Their content is usually informational, for the sake of the user.
+Node menggunakan log untuk menampilkan pesan tentang peristiwa dan status dalam berbagai cara.
+Konten mereka biasanya informatif, demi kepentingan pengguna.
 
-Prerequisites
+Prasyarat
 -------------
 
-You will need :doc:`rqt_console and turtlesim <../Introducing-Turtlesim/Introducing-Turtlesim>` installed.
+Anda perlu menginstal :doc:`rqt_console dan turtlesim <../Introducing-Turtlesim/Introducing-Turtlesim>`.
 
-As always, don't forget to source ROS 2 in :doc:`every new terminal you open <../Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../Configuring-ROS2-Environment>`.
 
 
-Tasks
+Tugas
 -----
 
-1 Setup
+1 Pengaturan
 ^^^^^^^
 
-Start ``rqt_console`` in a new terminal with the following command:
+Mulai ``rqt_console`` di terminal baru dengan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run rqt_console rqt_console
+     ros2 jalankan rqt_console rqt_console
 
-The ``rqt_console`` window will open:
+Jendela ``rqt_console`` akan terbuka:
 
-.. image:: images/console.png
+.. gambar:: gambar/konsol.png
 
-The first section of the console is where log messages from your system will display.
+Bagian pertama konsol adalah tempat pesan log dari sistem Anda akan ditampilkan.
 
-In the middle you have the option to filter messages by excluding severity levels.
-You can also add more exclusion filters using the plus-sign button to the right.
+Di bagian tengah, Anda memiliki opsi untuk memfilter pesan dengan mengecualikan tingkat keparahan.
+Anda juga dapat menambahkan lebih banyak filter pengecualian menggunakan tombol tanda tambah di sebelah kanan.
 
-The bottom section is for highlighting messages that include a string you input.
-You can add more filters to this section as well.
+Bagian bawah adalah untuk menyorot pesan yang menyertakan string yang Anda masukkan.
+Anda juga dapat menambahkan lebih banyak filter ke bagian ini.
 
-Now start ``turtlesim`` in a new terminal with the following command:
+Sekarang mulai ``turtlesim`` di terminal baru dengan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtlesim_node
+     ros2 jalankan turtlesim turtlesim_node
 
-2 Messages on rqt_console
-^^^^^^^^^^^^^^^^^^^^^^^^^
+2 Pesan di rqt_console
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To produce log messages for ``rqt_console`` to display, let's have the turtle run into the wall.
-In a new terminal, enter the ``ros2 topic pub`` command (discussed in detail in the :doc:`topics tutorial <../Understanding-ROS2-Topics/Understanding-ROS2-Topics>`) below:
+Untuk menghasilkan pesan log agar ``rqt_console`` ditampilkan, biarkan kura-kura berlari ke dinding.
+Di terminal baru, masukkan perintah ``ros2 topic pub`` (dibahas secara detail di :doc:`topics tutorial <../Understanding-ROS2-Topics/Understanding-ROS2-Topics>`) di bawah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 topic pub -r 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0,y: 0.0,z: 0.0}}"
+     ros2 topik pub -r 1 /turtle1/cmd_vel geometri_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0,y: 0.0,z: 0.0}}"
 
-Since the above command is publishing the topic at a steady rate, the turtle is continuously running into the wall.
-In ``rqt_console`` you will see the same message with the ``Warn`` severity level displayed over and over, like so:
+Karena perintah di atas menerbitkan topik dengan kecepatan tetap, kura-kura terus berlari ke dinding.
+Di ``rqt_console`` Anda akan melihat pesan yang sama dengan tingkat keparahan ``Warn`` ditampilkan berulang kali, seperti:
 
-.. image:: images/warn.png
+.. gambar:: gambar/peringatan.png
 
-Press ``Ctrl+C`` in the terminal where you ran the ``ros2 topic pub`` command to stop your turtle from running into the wall.
+Tekan ``Ctrl+C`` di terminal tempat Anda menjalankan perintah ``ros2 topic pub`` untuk menghentikan kura-kura Anda berlari ke dinding.
 
-3 Logger levels
-^^^^^^^^^^^^^^^
+3 tingkat penebang
+^^^^^^^^^^^^^^^^^^
 
-ROS 2's logger levels are ordered by severity:
+Level logger ROS 2 diurutkan berdasarkan tingkat keparahan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    Fatal
-    Error
-    Warn
-    Info
-    Debug
+     Fatal
+     Kesalahan
+     Memperingatkan
+     Info
+     Debug
 
-There is no exact standard for what each level indicates, but it's safe to assume that:
+Tidak ada standar pasti untuk apa yang ditunjukkan setiap level, tetapi aman untuk berasumsi bahwa:
 
-* ``Fatal`` messages indicate the system is going to terminate to try to protect itself from detriment.
-* ``Error`` messages indicate significant issues that won't necessarily damage the system, but are preventing it from functioning properly.
-* ``Warn`` messages indicate unexpected activity or non-ideal results that might represent a deeper issue, but don't harm functionality outright.
-* ``Info`` messages indicate event and status updates that serve as a visual verification that the system is running as expected.
-* ``Debug`` messages detail the entire step-by-step process of the system execution.
+* Pesan ``Fatal`` menunjukkan sistem akan dihentikan untuk mencoba melindungi diri dari kerusakan.
+* Pesan ``Error`` menunjukkan masalah signifikan yang tidak serta merta merusak sistem, tetapi mencegahnya berfungsi dengan baik.
+* Pesan ``Peringatan`` menunjukkan aktivitas yang tidak terduga atau hasil yang tidak ideal yang mungkin menunjukkan masalah yang lebih dalam, tetapi tidak merusak fungsionalitas secara langsung.
+* Pesan ``Info`` menunjukkan acara dan pembaruan status yang berfungsi sebagai verifikasi visual bahwa sistem berjalan seperti yang diharapkan.
+* Pesan ``Debug`` merinci seluruh proses langkah demi langkah dari eksekusi sistem.
 
-The default level is ``Info``.
-You will only see messages of the default severity level and more-severe levels.
+Level default adalah ``Info``.
+Anda hanya akan melihat pesan dengan tingkat keseriusan default dan tingkat yang lebih parah.
 
-Normally, only ``Debug`` messages are hidden because they're the only level less severe than ``Info``.
-For example, if you set the default level to ``Warn``, you would only see messages of severity ``Warn``, ``Error``, and ``Fatal``.
+Biasanya, hanya pesan ``Debug`` yang disembunyikan karena itu satu-satunya level yang tidak seserius ``Info``.
+Misalnya, jika Anda menyetel level default ke ``Warn``, Anda hanya akan melihat pesan dengan tingkat keparahan ``Warn``, ``Error``, dan ``Fatal``.
 
-3.1 Set the default logger level
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3.1 Tetapkan level logger default
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can set the default logger level when you first run the ``/turtlesim`` node using remapping.
-Enter the following command in your terminal:
+Anda dapat menyetel level logger default saat pertama kali menjalankan node ``/turtlesim`` menggunakan pemetaan ulang.
+Masukkan perintah berikut di terminal Anda:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtlesim_node --ros-args --log-level WARN
+     ros2 jalankan turtlesim turtlesim_node --ros-args --log-level WARN
 
-Now you won't see the initial ``Info`` level messages that came up in the console last time you started ``turtlesim``.
-That's because ``Info`` messages are lower priority than the new default severity, ``Warn``.
+Sekarang Anda tidak akan melihat pesan tingkat ``Info`` awal yang muncul di konsol terakhir kali Anda memulai ``turtlesim``.
+Itu karena pesan ``Info`` berprioritas lebih rendah daripada keparahan default baru, ``Warn``.
 
-Summary
+Ringkasan
 -------
 
-``rqt_console`` can be very helpful if you need to closely examine the log messages from your system.
-You might want to examine log messages for any number of reasons, usually to find out where something went wrong and the series of events leading up to that.
+``rqt_console`` dapat sangat membantu jika Anda perlu memeriksa dengan cermat pesan log dari sistem Anda.
+Anda mungkin ingin memeriksa pesan log untuk sejumlah alasan, biasanya untuk mencari tahu di mana terjadi kesalahan dan rangkaian peristiwa yang mengarah ke sana.
 
-Next steps
+Langkah selanjutnya
 ----------
 
-The next tutorial will teach you about starting multiple nodes at once with :doc:`ROS 2 Launch <../Launching-Multiple-Nodes/Launching-Multiple-Nodes>`.
+Tutorial berikutnya akan mengajarkan Anda tentang memulai beberapa node sekaligus dengan :doc:`ROS 2 Launch <../Launching-Multiple-Nodes/Launching-Multiple-Nodes>`.

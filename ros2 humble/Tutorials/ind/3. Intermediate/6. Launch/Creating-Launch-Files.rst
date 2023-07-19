@@ -1,8 +1,3 @@
-.. redirect-from::
-
-  Tutorials/Launch-Files/Creating-Launch-Files
-  Tutorials/Launch/Creating-Launch-Files
-
 Creating a launch file
 ======================
 

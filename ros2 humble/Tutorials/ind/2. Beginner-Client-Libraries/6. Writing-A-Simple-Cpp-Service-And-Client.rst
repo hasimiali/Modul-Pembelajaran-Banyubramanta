@@ -1,377 +1,135 @@
 .. _CppSrvCli:
 
-Writing a simple service and client (C++)
-=========================================
+Menulis layanan dan klien sederhana (C++)
+=====================================
 
-**Goal:** Create and run service and client nodes using C++.
+**Sasaran:** Membuat dan menjalankan layanan dan node klien menggunakan C++.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 20 minutes
+**Waktu:** 20 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-When :doc:`nodes <../Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` communicate using :doc:`services <../Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services>`, the node that sends a request for data is called the client node, and the one that responds to the request is the service node.
-The structure of the request and response is determined by a ``.srv`` file.
+Ketika :doc:`nodes <../Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` berkomunikasi menggunakan :doc:`services <../Beginner-CLI-Tools/Understanding-ROS2- Services/Understanding-ROS2-Services>`, node yang mengirimkan permintaan data disebut node klien, dan yang merespons permintaan tersebut adalah node layanan.
+Struktur permintaan dan respons ditentukan oleh file ``.srv``.
 
-The example used here is a simple integer addition system; one node requests the sum of two integers, and the other responds with the result.
+Contoh yang digunakan di sini adalah sistem penjumlahan bilangan bulat sederhana; satu node meminta jumlah dari dua bilangan bulat, dan yang lainnya merespons dengan hasilnya.
 
 
-Prerequisites
+Prasyarat
 -------------
 
-In previous tutorials, you learned how to :doc:`create a workspace <./Creating-A-Workspace/Creating-A-Workspace>` and :doc:`create a package <./Creating-Your-First-ROS2-Package>`.
+Dalam tutorial sebelumnya, Anda telah mempelajari cara :doc:`membuat ruang kerja <./Creating-A-Workspace/Creating-A-Workspace>` dan :doc:`membuat paket <./Creating-Your-First-ROS2- Paket>`.
 
-Tasks
+Tugas
 -----
 
-1 Create a package
-^^^^^^^^^^^^^^^^^^
+1 Buat paket
+^^^^^^^^^^^^^^^^^^^^^^
 
-Open a new terminal and :doc:`source your ROS 2 installation <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` so that ``ros2`` commands will work.
+Buka terminal baru dan :doc:`sumber instalasi ROS 2 Anda <../Beginner-CLI-Tools/Configuring-ROS2-Environment>` sehingga perintah ``ros2`` akan berfungsi.
 
-Navigate into the ``ros2_ws`` directory created in a :ref:`previous tutorial <new-directory>`.
+Arahkan ke direktori ``ros2_ws`` yang dibuat di :ref:`tutorial sebelumnya <new-directory>`.
 
-Recall that packages should be created in the ``src`` directory, not the root of the workspace.
-Navigate into ``ros2_ws/src`` and create a new package:
+Ingatlah bahwa paket harus dibuat di direktori ``src``, bukan di root ruang kerja.
+Arahkan ke ``ros2_ws/src`` dan buat paket baru:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 pkg create --build-type ament_cmake cpp_srvcli --dependencies rclcpp example_interfaces
+   ros2 pkg buat --build-type ament_cmake cpp_srvcli --dependencies rclcpp example_interfaces
 
-Your terminal will return a message verifying the creation of your package ``cpp_srvcli`` and all its necessary files and folders.
+Terminal Anda akan mengembalikan pesan yang memverifikasi pembuatan paket Anda ``cpp_srvcli`` dan semua file dan folder yang diperlukan.
 
-The ``--dependencies`` argument will automatically add the necessary dependency lines to ``package.xml`` and ``CMakeLists.txt``.
-``example_interfaces`` is the package that includes `the .srv file <https://github.com/ros2/example_interfaces/blob/{REPOS_FILE_BRANCH}/srv/AddTwoInts.srv>`__ you will need to structure your requests and responses:
+Argumen ``--dependencies`` akan secara otomatis menambahkan baris ketergantungan yang diperlukan ke ``package.xml`` dan ``CMakeLists.txt``.
+``example_interfaces`` adalah paket yang menyertakan `file .srv <https://github.com/ros2/example_interfaces/blob/{REPOS_FILE_BRANCH}/srv/AddTwoInts.srv>`__ Anda perlu menyusun permintaan dan tanggapan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    int64 a
-    int64 b
-    ---
-    int64 sum
+     int64 a
+     int64b
+     ---
+     jumlah int64
 
-The first two lines are the parameters of the request, and below the dashes is the response.
+Dua baris pertama adalah parameter permintaan, dan di bawah tanda hubung adalah responsnya.
 
-1.1 Update ``package.xml``
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+1.1 Perbarui ``package.xml``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because you used the ``--dependencies`` option during package creation, you don't have to manually add dependencies to ``package.xml`` or ``CMakeLists.txt``.
+Karena Anda menggunakan opsi ``--dependencies`` selama pembuatan paket, Anda tidak perlu menambahkan dependensi secara manual ke ``package.xml`` atau ``CMakeLists.txt``.
 
-As always, though, make sure to add the description, maintainer email and name, and license information to ``package.xml``.
+Namun, seperti biasa, pastikan untuk menambahkan deskripsi, nama dan email pengelola, serta informasi lisensi ke ``package.xml``.
 
-.. code-block:: xml
+.. blok kode :: xml
 
-  <description>C++ client server tutorial</description>
-  <maintainer email="you@email.com">Your Name</maintainer>
-  <license>Apache License 2.0</license>
+   <description>Tutorial server klien C++</description>
+   <maintainer email="you@email.com">Nama Anda</maintainer>
+   <lisensi>Lisensi Apache 2.0</lisensi>
 
 
-2 Write the service node
-^^^^^^^^^^^^^^^^^^^^^^^^
+2 Tulis simpul layanan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Inside the ``ros2_ws/src/cpp_srvcli/src`` directory, create a new file called ``add_two_ints_server.cpp`` and paste the following code within:
+Di dalam direktori ``ros2_ws/src/cpp_srvcli/src``, buat file baru bernama ``add_two_ints_server.cpp`` dan rekatkan kode berikut di dalamnya:
 
-.. code-block:: C++
+.. blok kode :: C++
 
-      #include "rclcpp/rclcpp.hpp"
-      #include "example_interfaces/srv/add_two_ints.hpp"
+       #sertakan "rclcpp/rclcpp.hpp"
+       #sertakan "contoh_interfaces/srv/add_two_ints.hpp"
 
-      #include <memory>
+       #termasuk <memori>
 
-      void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request> request,
-                std::shared_ptr<example_interfaces::srv::AddTwoInts::Response>      response)
-      {
-        response->sum = request->a + request->b;
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\na: %ld" " b: %ld",
-                      request->a, request->b);
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%ld]", (long int)response->sum);
-      }
+       permintaan void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request>,
+                 std::shared_ptr<example_interfaces::srv::AddTwoInts::Response> tanggapan)
+       {
+         respon->jumlah = permintaan->a + permintaan->b;
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Permintaan masuk\na: %ld" " b: %ld",
+                       permintaan->a, permintaan->b);
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "mengirim kembali respons: [%ld]", (long int)response->sum);
+       }
 
-      int main(int argc, char **argv)
-      {
-        rclcpp::init(argc, argv);
+       int main(int argc, char **argv)
+       {
+         rclcpp::init(argc, argv);
 
-        std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
+         std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
 
-        rclcpp::Service<example_interfaces::srv::AddTwoInts>::SharedPtr service =
-          node->create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
+         rclcpp::Layanan<example_interfaces::srv::AddTwoInts>::SharedPtr service =
+           node->create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
 
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to add two ints.");
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Siap menambahkan dua int.");
 
-        rclcpp::spin(node);
-        rclcpp::shutdown();
-      }
+         rclcpp::spin(simpul);
+         rclcpp::shutdown();
+       }
 
-2.1 Examine the code
-~~~~~~~~~~~~~~~~~~~~
+2.1 Periksa kodenya
+~~~~~~~~~~~~~~~~~~~~~~
 
-The first two ``#include`` statements are your package dependencies.
+Dua pernyataan ``#include`` pertama adalah dependensi paket Anda.
 
-The ``add`` function adds two integers from the request and gives the sum to the response, while notifying the console of its status using logs.
+Fungsi ``add`` menambahkan dua bilangan bulat dari permintaan dan memberikan jumlah ke respons, sambil memberi tahu konsol tentang statusnya menggunakan log.
 
-.. code-block:: C++
+.. blok kode :: C++
 
-    void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request> request,
-             std::shared_ptr<example_interfaces::srv::AddTwoInts::Response>      response)
-    {
-        response->sum = request->a + request->b;
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\na: %ld" " b: %ld",
-            request->a, request->b);
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%ld]", (long int)response->sum);
-    }
+     permintaan void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request>,
+              std::shared_ptr<example_interfaces::srv::AddTwoInts::Response> tanggapan)
+     {
+         respon->jumlah = permintaan->a + permintaan->b;
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Permintaan masuk\na: %ld" " b: %ld",
+             permintaan->a, permintaan->b);
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "mengirim kembali respons: [%ld]", (long int)response->jumlah);
+     }
 
-The ``main`` function accomplishes the following, line by line:
+Fungsi ``main`` menyelesaikan hal berikut, baris demi baris:
 
-* Initializes ROS 2 C++ client library:
+* Menginisialisasi pustaka klien ROS 2 C++:
 
-  .. code-block:: C++
+   .. blok kode :: C++
 
-    rclcpp::init(argc, argv);
-
-* Creates a node named ``add_two_ints_server``:
-
-  .. code-block:: C++
-
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
-
-* Creates a service named ``add_two_ints`` for that node and automatically advertises it over the networks with the ``&add`` method:
-
-  .. code-block:: C++
-
-    rclcpp::Service<example_interfaces::srv::AddTwoInts>::SharedPtr service =
-    node->create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
-
-* Prints a log message when it's ready:
-
-  .. code-block:: C++
-
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to add two ints.");
-
-* Spins the node, making the service available.
-
-  .. code-block:: C++
-
-    rclcpp::spin(node);
-
-2.2 Add executable
-~~~~~~~~~~~~~~~~~~
-
-The ``add_executable`` macro generates an executable you can run using ``ros2 run``.
-Add the following code block to ``CMakeLists.txt`` to create an executable named ``server``:
-
-.. code-block:: console
-
-    add_executable(server src/add_two_ints_server.cpp)
-    ament_target_dependencies(server rclcpp example_interfaces)
-
-So ``ros2 run`` can find the executable, add the following lines to the end of the file, right before ``ament_package()``:
-
-.. code-block:: console
-
-    install(TARGETS
-        server
-      DESTINATION lib/${PROJECT_NAME})
-
-You could build your package now, source the local setup files, and run it, but let's create the client node first so you can see the full system at work.
-
-3 Write the client node
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Inside the ``ros2_ws/src/cpp_srvcli/src`` directory, create a new file called ``add_two_ints_client.cpp`` and paste the following code within:
-
-.. code-block:: C++
-
-  #include "rclcpp/rclcpp.hpp"
-  #include "example_interfaces/srv/add_two_ints.hpp"
-
-  #include <chrono>
-  #include <cstdlib>
-  #include <memory>
-
-  using namespace std::chrono_literals;
-
-  int main(int argc, char **argv)
-  {
-    rclcpp::init(argc, argv);
-
-    if (argc != 3) {
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "usage: add_two_ints_client X Y");
-        return 1;
-    }
-
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_client");
-    rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedPtr client =
-      node->create_client<example_interfaces::srv::AddTwoInts>("add_two_ints");
-
-    auto request = std::make_shared<example_interfaces::srv::AddTwoInts::Request>();
-    request->a = atoll(argv[1]);
-    request->b = atoll(argv[2]);
-
-    while (!client->wait_for_service(1s)) {
-      if (!rclcpp::ok()) {
-        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-        return 0;
-      }
-      RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-    }
-
-    auto result = client->async_send_request(request);
-    // Wait for the result.
-    if (rclcpp::spin_until_future_complete(node, result) ==
-      rclcpp::FutureReturnCode::SUCCESS)
-    {
-      RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Sum: %ld", result.get()->sum);
-    } else {
-      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service add_two_ints");
-    }
-
-    rclcpp::shutdown();
-    return 0;
-  }
-
-
-3.1 Examine the code
-~~~~~~~~~~~~~~~~~~~~
-
-Similar to the service node, the following lines of code create the node and then create the client for that node:
-
-.. code-block:: C++
-
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_client");
-    rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedPtr client =
-      node->create_client<example_interfaces::srv::AddTwoInts>("add_two_ints");
-
-Next, the request is created.
-Its structure is defined by the ``.srv`` file mentioned earlier.
-
-.. code-block:: C++
-
-  auto request = std::make_shared<example_interfaces::srv::AddTwoInts::Request>();
-  request->a = atoll(argv[1]);
-  request->b = atoll(argv[2]);
-
-The ``while`` loop gives the client 1 second to search for service nodes in the network.
-If it can't find any, it will continue waiting.
-
-.. code-block:: C++
-
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-
-If the client is canceled (e.g. by you entering ``Ctrl+C`` into the terminal), it will return an error log message stating it was interrupted.
-
-.. code-block:: C++
-
-  RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-
-Then the client sends its request, and the node spins until it receives its response, or fails.
-
-3.2 Add executable
-~~~~~~~~~~~~~~~~~~
-
-Return to ``CMakeLists.txt`` to add the executable and target for the new node.
-After removing some unnecessary boilerplate from the automatically generated file, your ``CMakeLists.txt`` should look like this:
-
-.. code-block:: console
-
-  cmake_minimum_required(VERSION 3.5)
-  project(cpp_srvcli)
-
-  find_package(ament_cmake REQUIRED)
-  find_package(rclcpp REQUIRED)
-  find_package(example_interfaces REQUIRED)
-
-  add_executable(server src/add_two_ints_server.cpp)
-  ament_target_dependencies(server rclcpp example_interfaces)
-
-  add_executable(client src/add_two_ints_client.cpp)
-  ament_target_dependencies(client rclcpp example_interfaces)
-
-  install(TARGETS
-    server
-    client
-    DESTINATION lib/${PROJECT_NAME})
-
-  ament_package()
-
-
-4 Build and run
-^^^^^^^^^^^^^^^
-
-It's good practice to run ``rosdep`` in the root of your workspace (``ros2_ws``) to check for missing dependencies before building:
-
-.. code-block:: console
-
-  rosdep install -i --from-path src --rosdistro {DISTRO} -y
-
-
-Navigate back to the root of your workspace, ``ros2_ws``, and build your new package:
-
-.. code-block:: console
-
-  colcon build --packages-select cpp_srvcli
-
-Open a new terminal, navigate to ``ros2_ws``, and source the setup files:
-
-.. code-block:: console
-
-  source install/setup.bash
-
-
-Now run the service node:
-
-.. code-block:: console
-
-     ros2 run cpp_srvcli server
-
-The terminal should return the following message, and then wait:
-
-.. code-block:: console
-
-    [INFO] [rclcpp]: Ready to add two ints.
-
-Open another terminal, source the setup files from inside ``ros2_ws`` again.
-Start the client node, followed by any two integers separated by a space:
-
-.. code-block:: console
-
-     ros2 run cpp_srvcli client 2 3
-
-If you chose ``2`` and ``3``, for example, the client would receive a response like this:
-
-.. code-block:: console
-
-    [INFO] [rclcpp]: Sum: 5
-
-Return to the terminal where your service node is running.
-You will see that it published log messages when it received the request and the data it received, and the response it sent back:
-
-.. code-block:: console
-
-    [INFO] [rclcpp]: Incoming request
-    a: 2 b: 3
-    [INFO] [rclcpp]: sending back response: [5]
-
-Enter ``Ctrl+C`` in the server terminal to stop the node from spinning.
-
-Summary
--------
-
-You created two nodes to request and respond to data over a service.
-You added their dependencies and executables to the package configuration files so that you could build and run them, and see a service/client system at work.
-
-Next steps
-----------
-
-In the last few tutorials you've been utilizing interfaces to pass data across topics and services.
-Next, you'll learn how to :doc:`create custom interfaces <./Custom-ROS2-Interfaces>`.
-
-Related content
----------------
-
-* There are several ways you could write a service and client in C++; check out the ``minimal_service`` and ``minimal_client`` packages in the `ros2/examples <https://github.com/ros2/examples/tree/{REPOS_FILE_BRANCH}/rclcpp/services>`_ repo.
+     R

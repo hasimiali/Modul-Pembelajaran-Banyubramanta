@@ -1,111 +1,111 @@
-.. _ROS2Launch:
+.. _ROS2Luncurkan:
 
-Launching nodes
+Meluncurkan node
 ===============
 
-**Goal:** Use a command line tool to launch multiple nodes at once.
+**Sasaran:** Gunakan alat baris perintah untuk meluncurkan beberapa node sekaligus.
 
-**Tutorial Level:** Beginner
+**Level Tutorial:** Pemula
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-In most of the introductory tutorials, you have been opening new terminals for every new node you run.
-As you create more complex systems with more and more nodes running simultaneously, opening terminals and reentering configuration details becomes tedious.
+Di sebagian besar tutorial pengantar, Anda telah membuka terminal baru untuk setiap node baru yang Anda jalankan.
+Saat Anda membuat sistem yang lebih kompleks dengan semakin banyak node yang berjalan secara bersamaan, membuka terminal dan memasukkan kembali detail konfigurasi menjadi membosankan.
 
-Launch files allow you to start up and configure a number of executables containing ROS 2 nodes simultaneously.
+Luncurkan file memungkinkan Anda untuk memulai dan mengonfigurasi sejumlah executable yang berisi node ROS 2 secara bersamaan.
 
-Running a single launch file with the ``ros2 launch`` command will start up your entire system - all nodes and their configurations - at once.
+Menjalankan satu file peluncuran dengan perintah ``ros2 launch`` akan memulai seluruh sistem Anda - semua node dan konfigurasinya - sekaligus.
 
-Prerequisites
+Prasyarat
 -------------
 
-Before starting these tutorials, install ROS 2 by following the instructions on the ROS 2 :doc:`../../../Installation/` page.
+Sebelum memulai tutorial ini, instal ROS 2 dengan mengikuti petunjuk pada halaman ROS 2 :doc:`../../../Installation/`.
 
-The commands used in this tutorial assume you followed the binary packages installation guide for your operating system (Debian packages for Linux).
-You can still follow along if you built from source, but the path to your setup files will likely be different.
-You also won't be able to use the ``sudo apt install ros-<distro>-<package>`` command (used frequently in the beginner level tutorials) if you install from source.
+Perintah yang digunakan dalam tutorial ini menganggap Anda mengikuti panduan instalasi paket biner untuk sistem operasi Anda (paket Debian untuk Linux).
+Anda masih dapat mengikuti jika Anda membuat dari sumber, tetapi jalur ke file penyiapan Anda kemungkinan akan berbeda.
+Anda juga tidak akan dapat menggunakan perintah ``sudo apt install ros-<distro>-<package>`` (sering digunakan dalam tutorial tingkat pemula) jika Anda menginstal dari sumber.
 
-If you are using Linux and are not already familiar with the shell, `this tutorial <http://www.ee.surrey.ac.uk/Teaching/Unix/>`__ will help.
+Jika Anda menggunakan Linux dan belum terbiasa dengan shell, `tutorial ini <http://www.ee.surrey.ac.uk/Teaching/Unix/>`__ akan membantu.
 
-Tasks
+Tugas
 -----
 
-Running a Launch File
-^^^^^^^^^^^^^^^^^^^^^
+Menjalankan File Peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open a new terminal and run:
+Buka terminal baru dan jalankan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-   ros2 launch turtlesim multisim.launch.py
+    ros2 luncurkan turtlesim multisim.launch.py
 
-This command will run the following launch file:
+Perintah ini akan menjalankan file peluncuran berikut:
 
-.. code-block:: python
+.. blok kode :: python
 
-   # turtlesim/launch/multisim.launch.py
+    # turtlesim/launch/multisim.launch.py
 
-   from launch import LaunchDescription
-   import launch_ros.actions
+    dari peluncuran impor LaunchDescription
+    impor launch_ros.actions
 
-   def generate_launch_description():
-       return LaunchDescription([
-           launch_ros.actions.Node(
-               namespace= "turtlesim1", package='turtlesim', executable='turtlesim_node', output='screen'),
-           launch_ros.actions.Node(
-               namespace= "turtlesim2", package='turtlesim', executable='turtlesim_node', output='screen'),
-       ])
+    def generate_launch_description():
+        kembali LaunchDescription([
+            launch_ros.actions.Node(
+                namespace= "turtlesim1", package='turtlesim', executable='turtlesim_node', output='screen'),
+            launch_ros.actions.Node(
+                namespace = "turtlesim2", package='turtlesim', executable='turtlesim_node', output='screen'),
+        ])
 
-.. note::
+.. catatan::
 
-  The launch file above is written in Python, but you can also use XML and YAML to create launch files.
-  You can see a comparison of these different ROS 2 launch formats in :doc:`../../../How-To-Guides/Launch-file-different-formats`.
+   File peluncuran di atas ditulis dengan Python, tetapi Anda juga dapat menggunakan XML dan YAML untuk membuat file peluncuran.
+   Anda dapat melihat perbandingan berbagai format peluncuran ROS 2 ini di :doc:`../../../How-To-Guides/Launch-file-different-formats`.
 
-This will run two turtlesim nodes:
+Ini akan menjalankan dua simpul turtlesim:
 
-.. image:: images/turtlesim_multisim.png
+.. gambar:: gambar/turtlesim_multisim.png
 
-For now, don't worry about the contents of this launch file.
-You can find more information on ROS 2 launch in the :doc:`ROS 2 launch tutorials <../../Intermediate/Launch/Launch-Main>`.
+Untuk saat ini, jangan khawatir tentang isi file peluncuran ini.
+Anda dapat menemukan informasi selengkapnya tentang peluncuran ROS 2 di :doc:`tutorial peluncuran ROS 2 <../../Intermediate/Launch/Launch-Main>`.
 
-(Optional) Control the Turtlesim Nodes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Opsional) Kontrol Node Turtlesim
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Now that these nodes are running, you can control them like any other ROS 2 nodes.
-For example, you can make the turtles drive in opposite directions by opening up two additional terminals and running the following commands:
+Sekarang setelah node ini berjalan, Anda dapat mengontrolnya seperti node ROS 2 lainnya.
+Misalnya, Anda dapat membuat kura-kura berjalan berlawanan arah dengan membuka dua terminal tambahan dan menjalankan perintah berikut:
 
-In the second terminal:
+Di terminal kedua:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-   ros2 topic pub  /turtlesim1/turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+    pub topik ros2 /turtlesim1/turtle1/cmd_vel geometri_msgs/msg/Twist "{linier: {x: 2.0, y: 0.0, z: 0.0}, sudut: {x: 0.0, y: 0.0, z: 1.8}}"
 
-In the third terminal:
+Di terminal ketiga:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-   ros2 topic pub  /turtlesim2/turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -1.8}}"
+    pub topik ros2 /turtlesim2/turtle1/cmd_vel geometri_msgs/msg/Twist "{linier: {x: 2.0, y: 0.0, z: 0.0}, sudut: {x: 0.0, y: 0.0, z: -1.8}}"
 
-After running these commands, you should see something like the following:
+Setelah menjalankan perintah ini, Anda akan melihat sesuatu seperti berikut:
 
-.. image:: images/turtlesim_multisim_spin.png
+.. gambar:: gambar/turtlesim_multisim_spin.png
 
-Summary
+Ringkasan
 -------
 
-The significance of what you've done so far is that you've run two turtlesim nodes with one command.
-Once you learn to write your own launch files, you'll be able to run multiple nodes - and set up their configuration - in a similar way, with the ``ros2 launch`` command.
+Arti penting dari apa yang telah Anda lakukan sejauh ini adalah Anda telah menjalankan dua node turtlesim dengan satu perintah.
+Setelah Anda belajar menulis file peluncuran Anda sendiri, Anda akan dapat menjalankan banyak node - dan mengatur konfigurasinya - dengan cara yang sama, dengan perintah ``ros2 launch``.
 
-For more tutorials on ROS 2 launch files, see the :doc:`main launch file tutorial page<../../Intermediate/Launch/Launch-Main>`.
+Untuk tutorial lebih lanjut tentang file peluncuran ROS 2, lihat :doc:`halaman tutorial file peluncuran utama<../../Intermediate/Launch/Launch-Main>`.
 
-Next steps
+Langkah selanjutnya
 ----------
 
-In the next tutorial, :doc:`../Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data`, you'll learn about another helpful tool, ``ros2 bag``.
+Dalam tutorial berikutnya, :doc:`../Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data`, Anda akan belajar tentang alat bermanfaat lainnya, ``ros2 bag``.

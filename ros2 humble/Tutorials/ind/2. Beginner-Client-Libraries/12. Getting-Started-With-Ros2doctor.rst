@@ -1,204 +1,139 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Getting-Started-With-Ros2doctor
+     Tutorial/Memulai-Dengan-Ros2doctor
 
 .. _Ros2Doctor:
 
-Using ``ros2doctor`` to identify issues
+Menggunakan ``ros2doctor`` untuk mengidentifikasi masalah
 =======================================
 
-**Goal:** Identify issues in your ROS 2 setup using the ``ros2doctor`` tool.
+**Sasaran:** Identifikasi masalah dalam penyiapan ROS 2 menggunakan alat ``ros2doctor``.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 10 minutes
+**Waktu:** 10 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-When your ROS 2 setup is not running as expected, you can check its settings with the ``ros2doctor`` tool.
+Ketika pengaturan ROS 2 Anda tidak berjalan seperti yang diharapkan, Anda dapat memeriksa pengaturannya dengan alat ``ros2doctor``.
 
-``ros2doctor`` checks all aspects of ROS 2, including platform, version, network, environment, running systems and more, and warns you about possible errors and reasons for issues.
+``ros2doctor`` memeriksa semua aspek ROS 2, termasuk platform, versi, jaringan, lingkungan, sistem yang sedang berjalan, dan lainnya, serta memperingatkan Anda tentang kemungkinan kesalahan dan penyebab masalah.
 
-Prerequisites
+Prasyarat
 -------------
 
-``ros2doctor`` is part of the ``ros2cli`` package.
-As long as you have ``ros2cli`` installed (which any normal install should have), you will be able to use ``ros2doctor``.
+``ros2doctor`` adalah bagian dari paket ``ros2cli``.
+Selama Anda telah menginstal ``ros2cli`` (yang seharusnya dimiliki oleh setiap instalasi normal), Anda akan dapat menggunakan ``ros2doctor``.
 
-This tutorial uses :doc:`turtlesim <../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` to illustrate some of the examples.
+Tutorial ini menggunakan :doc:`turtlesim <../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` untuk mengilustrasikan beberapa contoh.
 
-Tasks
+Tugas
 -----
 
-1 Check your setup
-^^^^^^^^^^^^^^^^^^
+1 Periksa penyiapan Anda
+^^^^^^^^^^^^^^^^^^^^^^
 
-Let's examine your general ROS 2 setup as a whole with ``ros2doctor``.
-First, source ROS 2 in a new terminal, then enter the command:
+Mari kita periksa pengaturan ROS 2 umum Anda secara keseluruhan dengan ``ros2doctor``.
+Pertama, sumber ROS 2 di terminal baru, lalu masukkan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 doctor
+     ros2 dokter
 
-This will conduct checks over all your setup modules and return warnings and errors.
+Ini akan melakukan pemeriksaan atas semua modul pengaturan Anda dan mengembalikan peringatan dan kesalahan.
 
-If your ROS 2 setup is in perfect shape, you'll see a message similar to this:
+Jika pengaturan ROS 2 Anda dalam kondisi sempurna, Anda akan melihat pesan seperti ini:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    All <n> checks passed
+     Semua <n> pemeriksaan lulus
 
-However, it's not unusual to have a few warnings returned.
-A ``UserWarning`` doesn't mean your setup is unusable; it's more likely just an indication that something is configured in a way that's not ideal.
+Namun, bukan hal yang aneh jika beberapa peringatan dikembalikan.
+Sebuah ``UserWarning`` tidak berarti pengaturan Anda tidak dapat digunakan; itu lebih mungkin hanya indikasi bahwa ada sesuatu yang dikonfigurasi dengan cara yang tidak ideal.
 
-If you do receive a warning, it will look something like this:
+Jika Anda menerima peringatan, itu akan terlihat seperti ini:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    <path>: <line>: UserWarning: <message>
+     <path>: <line>: UserWarning: <message>
 
-For example, ``ros2doctor`` will find this warning if you're using an unstable ROS 2 distribution:
+Misalnya, ``ros2doctor`` akan menemukan peringatan ini jika Anda menggunakan distribusi ROS 2 yang tidak stabil:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    UserWarning: Distribution <distro> is not fully supported or tested. To get more consistent features, download a stable version at https://index.ros.org/doc/ros2/Installation/
+     UserWarning: Distribusi <distro> tidak sepenuhnya didukung atau diuji. Untuk mendapatkan fitur yang lebih konsisten, unduh versi stabil di https://index.ros.org/doc/ros2/Installation/
 
-If ``ros2doctor`` only finds warnings in your system, you will still receive the ``All <n> checks passed`` message.
+Jika ``ros2doctor`` hanya menemukan peringatan di sistem Anda, Anda masih akan menerima pesan ``Semua <n> pemeriksaan lulus``.
 
-Most checks are categorized as warnings as opposed to errors.
-It's mostly up to you, the user, to determine the importance of the feedback ``ros2doctor`` returns.
-If it does find a rare error in your setup, indicated by ``UserWarning: ERROR:``, the check is considered failed.
+Sebagian besar pemeriksaan dikategorikan sebagai peringatan, bukan kesalahan.
+Sebagian besar terserah Anda, pengguna, untuk menentukan pentingnya umpan balik yang dikembalikan ``ros2doctor``.
+Jika menemukan kesalahan yang jarang terjadi pada pengaturan Anda, ditunjukkan dengan ``UserWarning: ERROR:``, pemeriksaan dianggap gagal.
 
-You will see a message similar to the following list of issue feedback:
+Anda akan melihat pesan yang mirip dengan daftar masukan masalah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  1/3 checks failed
+   1/3 pemeriksaan gagal
 
-  Failed modules:  network
+   Modul gagal: jaringan
 
-An error indicates the system is missing important settings or functions that are crucial to ROS 2.
-Errors should be addressed to ensure the system functions properly.
+Kesalahan menunjukkan bahwa sistem kehilangan pengaturan atau fungsi penting yang sangat penting untuk ROS 2.
+Kesalahan harus diatasi untuk memastikan sistem berfungsi dengan baik.
 
-2 Check a system
-^^^^^^^^^^^^^^^^
+2 Periksa sistem
+^^^^^^^^^^^^^^^^^^^^
 
-You can also examine a running ROS 2 system to identify possible causes for issues.
-To see ``ros2doctor`` working on a running system, let's run turtlesim, which has nodes actively communicating with each other.
+Anda juga dapat memeriksa sistem ROS 2 yang sedang berjalan untuk mengidentifikasi kemungkinan penyebab masalah.
+Untuk melihat ``ros2doctor`` bekerja pada sistem yang sedang berjalan, mari jalankan turtlesim, yang memiliki node yang berkomunikasi secara aktif satu sama lain.
 
-Start up the system by opening a new terminal, sourcing ROS 2, and entering the command:
+Mulai sistem dengan membuka terminal baru, sumber ROS 2, dan masukkan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtlesim_node
+     ros2 jalankan turtlesim turtlesim_node
 
-Open another terminal and source ROS 2 to run the teleop controls:
+Buka terminal lain dan sumber ROS 2 untuk menjalankan kontrol teleop:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtle_teleop_key
+     ros2 jalankan turtlesim turtle_teleop_key
 
-Now run ``ros2doctor`` again in its own terminal.
-You will see the warnings and errors you had the last time you ran ``ros2doctor`` on your setup if you had any.
-Following those will be a couple new warnings relating to the system itself:
+Sekarang jalankan ``ros2doctor`` lagi di terminalnya sendiri.
+Anda akan melihat peringatan dan kesalahan yang Anda alami saat terakhir kali menjalankan ``ros2doctor`` pada pengaturan Anda jika ada.
+Mengikuti itu akan menjadi beberapa peringatan baru yang berkaitan dengan sistem itu sendiri:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    UserWarning: Publisher without subscriber detected on /turtle1/color_sensor.
-    UserWarning: Publisher without subscriber detected on /turtle1/pose.
+     UserWarning: Penayang tanpa pelanggan terdeteksi di /turtle1/color_sensor.
+     UserWarning: Penayang tanpa pelanggan terdeteksi di /turtle1/pose.
 
-It seems that the ``/turtlesim`` node publishes data to two topics that aren't being subscribed to, and ``ros2doctor`` thinks this could possibly lead to issues.
+Tampaknya node ``/turtlesim`` memublikasikan data ke dua topik yang tidak dilanggan, dan ``ros2doctor`` menganggap hal ini dapat menyebabkan masalah.
 
-If you run commands to echo the ``/color_sensor`` and ``/pose`` topics, those warnings will disappear because the publishers will have subscribers.
+Jika Anda menjalankan perintah untuk mengulangi topik ``/color_sensor`` dan ``/pose``, peringatan tersebut akan hilang karena penerbit akan memiliki pelanggan.
 
-You can try this by opening two new terminals while turtlesim is still running, sourcing ROS 2 in each, and running each of the following commands in their own terminal:
+Anda dapat mencoba ini dengan membuka dua terminal baru saat turtlesim masih berjalan, masing-masing sumber ROS 2, dan menjalankan masing-masing perintah berikut di terminal mereka sendiri:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 topic echo /turtle1/color_sensor
+     topik ros2 gema /turtle1/color_sensor
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 topic echo /turtle1/pose
+     topik ros2 gema /turtle1/pose
 
-Then run ``ros2doctor`` in its terminal again.
-The ``publisher without subscriber`` warnings will be gone.
-(Make sure to enter ``Ctrl+C`` in the terminals where you ran ``echo``).
+Kemudian jalankan lagi ``ros2doctor`` di terminalnya.
+Peringatan ``penerbit tanpa pelanggan`` akan hilang.
+(Pastikan untuk memasukkan ``Ctrl+C`` di terminal tempat Anda menjalankan ``echo``).
 
-Now try exiting either the turtlesim window or quitting the teleop and running ``ros2doctor`` again.
-You'll see more warnings indicating ``publisher without subscriber`` or ``subscriber without publisher`` for different topics, now that one node in the system isn't available.
+Sekarang coba keluar dari jendela turtlesim atau keluar dari teleop dan jalankan ``ros2doctor`` lagi.
+Anda akan melihat lebih banyak peringatan yang menunjukkan ``penerbit tanpa pelanggan`` atau ``pelanggan tanpa penerbit`` untuk topik yang berbeda, karena sekarang satu node dalam sistem tidak tersedia.
 
-In a complex system with many nodes, ``ros2doctor`` would be invaluable for identifying possible reasons for communication issues.
+Dalam sistem yang kompleks dengan banyak node, ``ros2doctor`` akan sangat berharga untuk mengidentifikasi kemungkinan penyebab masalah komunikasi.
 
-3 Get a full report
-^^^^^^^^^^^^^^^^^^^
-
-While ``ros2doctor`` will let you know warnings about your network, system, etc., running it with the ``--report`` argument will give you much more detail to help you analyze issues.
-
-You might want to use ``--report`` if you get a warning about your network setup and want to find out exactly what part of your configuration is causing the warning.
-
-It's also very helpful when you need to open a support ticket to get help with ROS 2.
-You can copy and paste the relevant parts of your report into the ticket so the people helping you can better understand your environment and provide better assistance.
-
-To get a full report, enter the following command in the terminal:
-
-.. code-block:: console
-
-    ros2 doctor --report
-
-Which will return a list of information categorized into five groups:
-
-.. code-block:: console
-
-  NETWORK CONFIGURATION
-  ...
-
-  PLATFORM INFORMATION
-  ...
-
-  RMW MIDDLEWARE
-  ...
-
-  ROS 2 INFORMATION
-  ...
-
-  TOPIC LIST
-  ...
-
-You can crosscheck the information here against the warnings you get when running ``ros2 doctor``.
-For example, if ``ros2doctor`` returned the warning (mentioned earlier) that your distribution is “not fully supported or tested”, you might take a look at the ``ROS 2 INFORMATION`` section of the report:
-
-.. code-block:: console
-
-  distribution name      : <distro>
-  distribution type      : ros2
-  distribution status    : prerelease
-  release platforms      : {'<platform>': ['<version>']}
-
-Here you can see the ``distribution status`` is ``prerelease``, which explains why it's not fully supported.
-
-
-Summary
--------
-
-``ros2doctor`` will inform you of problems in your ROS 2 setup and running systems.
-You can get a deeper look at information behind those warnings by using the ``--report`` argument.
-
-Keep in mind, ``ros2doctor`` is not a debug tool; it won't help with errors in your code or on the implementation side of your system.
-
-
-Related content
----------------
-
-`ros2doctor's README <https://github.com/ros2/ros2cli/tree/{REPOS_FILE_BRANCH}/ros2doctor>`__ will tell you more about different arguments.
-You might want to take a look around the ``ros2doctor`` repo as well, since it's fairly beginner friendly and a great place to get started with contributing.
-
-Next steps
-----------------
-
-You've completed the beginner level tutorials!
+3 Dapatkan laporan lengkap
+^^^^^^^^^^^^^^^^^^^^

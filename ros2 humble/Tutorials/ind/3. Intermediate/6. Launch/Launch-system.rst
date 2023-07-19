@@ -1,254 +1,248 @@
-.. redirect-from::
+Mengintegrasikan file peluncuran ke dalam paket ROS 2
+========================================
 
-  Tutorials/Launch-system
-  Tutorials/Launch-Files/Launch-system
-  Tutorials/Launch/Launch-system
+**Sasaran:** Menambahkan file peluncuran ke paket ROS 2
 
-Integrating launch files into ROS 2 packages
-============================================
+**Tingkat tutorial:** Menengah
 
-**Goal:** Add a launch file to a ROS 2 package
+**Waktu:** 10 menit
 
-**Tutorial level:** Intermediate
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-**Time:** 10 minutes
-
-.. contents:: Contents
-   :depth: 2
-   :local:
-
-Prerequisites
+Prasyarat
 -------------
 
-You should have gone through the tutorial on how to :doc:`create a ROS 2 package <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>`.
+Anda seharusnya sudah membaca tutorial tentang cara :doc:`membuat paket ROS 2 <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>`.
 
-As always, don’t forget to source ROS 2 in :doc:`every new terminal you open <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
 
-Background
+Latar belakang
 ----------
 
-In the :doc:`previous tutorial <Creating-Launch-Files>`, we saw how to write a standalone launch file.
-This tutorial will show how to add a launch file to an existing package, and the conventions typically used.
+Dalam :doc:`tutorial sebelumnya <Membuat-Launch-Files>`, kita melihat cara menulis file peluncuran yang berdiri sendiri.
+Tutorial ini akan menunjukkan cara menambahkan file peluncuran ke paket yang sudah ada, dan konvensi yang biasanya digunakan.
 
-Tasks
+Tugas
 -----
 
-1 Create a package
-^^^^^^^^^^^^^^^^^^
+1 Buat paket
+^^^^^^^^^^^^^^^^^^^^^^
 
-Create a workspace for the package to live in:
+Buat ruang kerja untuk paket tempat tinggal:
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir -p launch_ws/src
-      cd launch_ws/src
+       mkdir -p launch_ws/src
+       cd peluncuran_ws/src
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir -p launch_ws/src
-      cd launch_ws/src
+       mkdir -p launch_ws/src
+       cd peluncuran_ws/src
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      md launch_ws\src
-      cd launch_ws\src
+       md launch_ws\src
+       cd peluncuran_ws\src
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Python package
+   .. grup-tab:: Paket Python
 
-    .. code-block:: console
+     .. blok kode :: konsol
 
-      ros2 pkg create py_launch_example --build-type ament_python
+       ros2 pkg buat py_launch_example --build-type ament_python
 
-  .. group-tab:: C++ package
+   .. grup-tab:: Paket C++
 
-    .. code-block:: console
+     .. blok kode :: konsol
 
-      ros2 pkg create cpp_launch_example --build-type ament_cmake
+       ros2 pkg buat cpp_launch_example --build-type ament_cmake
 
-2 Creating the structure to hold launch files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2 Membuat struktur untuk menyimpan file peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By convention, all launch files for a package are stored in the ``launch`` directory inside of the package.
-Make sure to create a ``launch`` directory at the top-level of the package you created above.
+Secara konvensi, semua file peluncuran untuk sebuah paket disimpan di direktori ``launch`` di dalam paket.
+Pastikan untuk membuat direktori ``launch`` di tingkat atas paket yang Anda buat di atas.
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Python package
+   .. grup-tab:: Paket Python
 
-    For Python packages, the directory containing your package should look like this:
+     Untuk paket Python, direktori yang berisi paket Anda akan terlihat seperti ini:
 
-    .. code-block:: console
+     .. blok kode :: konsol
 
-      src/
-        py_launch_example/
-          launch/
-          package.xml
-          py_launch_example/
-          resource/
-          setup.cfg
-          setup.py
-          test/
+       src/
+         py_launch_example/
+           meluncurkan/
+           paket.xml
+           py_launch_example/
+           sumber/
+           setup.cfg
+           setup.py
+           tes/
 
-    In order for colcon to find the launch files, we need to inform Python's setup tools of our launch files using the ``data_files`` parameter of ``setup``.
+     Agar colcon menemukan file peluncuran, kita perlu memberi tahu alat penyiapan Python tentang file peluncuran kita menggunakan parameter ``data_files`` dari ``setup``.
 
-    Inside our ``setup.py`` file:
+     Di dalam file ``setup.py`` kita:
 
-    .. code-block:: python
+     .. blok kode :: python
 
-      import os
-      from glob import glob
-      from setuptools import find_packages, setup
+       impor os
+       dari glob impor glob
+       dari setuptools import find_packages, setup
 
-      package_name = 'py_launch_example'
+       package_name = 'py_launch_example'
 
-      setup(
-          # Other parameters ...
-          data_files=[
-              # ... Other data files
-              # Include all launch files.
-              (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
-          ]
-      )
+       mempersiapkan(
+           # Parameter lain ...
+           file_data=[
+               # ... File data lainnya
+               # Sertakan semua file peluncuran.
+               (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
+           ]
+       )
 
-  .. group-tab:: C++ package
+   .. grup-tab:: Paket C++
 
-    For C++ packages, we will only be adjusting the ``CMakeLists.txt`` file by adding:
+     Untuk paket C++, kami hanya akan menyesuaikan file ``CMakeLists.txt`` dengan menambahkan:
 
-    .. code-block:: cmake
+     .. blok kode :: cmake
 
-      # Install launch files.
-      install(DIRECTORY
-        launch
-        DESTINATION share/${PROJECT_NAME}/
-      )
+       # Instal file peluncuran.
+       instal (DIRECTORY
+         meluncurkan
+         DESTINATION berbagi/${PROJECT_NAME}/
+       )
 
-    to the end of the file (but before ``ament_package()``).
+     ke akhir file (tetapi sebelum ``ament_package()``).
 
 
-3 Writing the launch file
-^^^^^^^^^^^^^^^^^^^^^^^^^
+3 Menulis file peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Python launch file
+   .. grup-tab :: File peluncuran Python
 
-    Inside your ``launch`` directory, create a new launch file called ``my_script_launch.py``.
-    ``_launch.py`` is recommended, but not required, as the file suffix for Python launch files.
-    However, the launch file name needs to end with ``launch.py`` to be recognized and autocompleted by ``ros2 launch``.
+     Di dalam direktori ``launch`` Anda, buat file peluncuran baru bernama ``my_script_launch.py``.
+     ``_launch.py`` direkomendasikan, tetapi tidak wajib, sebagai akhiran file untuk file peluncuran Python.
+     Namun, nama file peluncuran harus diakhiri dengan ``launch.py`` agar dikenali dan dilengkapi secara otomatis oleh ``ros2 launch``.
 
-    Your launch file should define the ``generate_launch_description()`` function which returns a ``launch.LaunchDescription()`` to be used by the ``ros2 launch`` verb.
+     File peluncuran Anda harus menentukan fungsi ``generate_launch_description()`` yang mengembalikan ``launch.LaunchDescription()`` untuk digunakan oleh kata kerja ``ros2 launch``.
 
-    .. code-block:: python
+     .. blok kode :: python
 
-      import launch
-      import launch_ros.actions
+       peluncuran impor
+       impor launch_ros.actions
 
-      def generate_launch_description():
-          return launch.LaunchDescription([
-              launch_ros.actions.Node(
-                  package='demo_nodes_cpp',
-                  executable='talker',
-                  name='talker'),
-        ])
+       def generate_launch_description():
+           kembali launch.LaunchDescription([
+               launch_ros.actions.Node(
+                   paket='demo_nodes_cpp',
+                   dapat dieksekusi='pembicara',
+                   nama='pembicara'),
+         ])
 
-  .. group-tab:: XML launch file
+   .. grup-tab :: File peluncuran XML
 
-    Inside your ``launch`` directory, create a new launch file called ``my_script_launch.xml``.
-    ``_launch.xml`` is recommended, but not required, as the file suffix for XML launch files.
+     Di dalam direktori ``launch`` Anda, buat file peluncuran baru bernama ``my_script_launch.xml``.
+     ``_launch.xml`` direkomendasikan, tetapi tidak wajib, sebagai akhiran file untuk file peluncuran XML.
 
-    .. code-block:: xml
+     .. blok kode :: xml
 
-      <launch>
-        <node pkg="demo_nodes_cpp" exec="talker" name="talker"/>
-      </launch>
+       <peluncuran>
+         <node pkg="demo_nodes_cpp" exec="pembicara" name="pembicara"/>
+       </peluncuran>
 
-  .. group-tab:: YAML launch file
+   .. grup-tab :: file peluncuran YAML
 
-    Inside your ``launch`` directory, create a new launch file called ``my_script_launch.yaml``.
-    ``_launch.yaml`` is recommended, but not required, as the file suffix for YAML launch files.
+     Di dalam direktori ``launch`` Anda, buat file peluncuran baru bernama ``my_script_launch.yaml``.
+     ``_launch.yaml`` direkomendasikan, tetapi tidak wajib, sebagai akhiran file untuk file peluncuran YAML.
 
-    .. code-block:: yaml
+     .. blok kode :: yaml
 
-      launch:
+       meluncurkan:
 
-      - node:
-          pkg: "demo_nodes_cpp"
-          exec: "talker"
-          name: "talker"
+       - simpul:
+           pkg: "demo_nodes_cpp"
+           exe: "pembicara"
+           nama: "pembicara"
 
 
-4 Building and running the launch file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 Membangun dan menjalankan file peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Go to the top-level of the workspace, and build it:
+Pergi ke tingkat atas ruang kerja, dan bangun:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  colcon build
+   membangun colcon
 
-After the ``colcon build`` has been successful and you've sourced the workspace, you should be able to run the launch file as follows:
+Setelah ``colcon build`` berhasil dan Anda mendapatkan sumber ruang kerja, Anda seharusnya dapatjalankan file peluncuran sebagai berikut:
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Python package
+   .. grup-tab:: Paket Python
 
-    .. tabs::
+     .. tab::
 
-      .. group-tab:: Python launch file
+       .. grup-tab :: File peluncuran Python
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch py_launch_example my_script_launch.py
+           ros2 luncurkan py_launch_example my_script_launch.py
 
-      .. group-tab:: XML launch file
+       .. grup-tab :: File peluncuran XML
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch py_launch_example my_script_launch.xml
+           ros2 luncurkan py_launch_example my_script_launch.xml
 
-      .. group-tab:: YAML launch file
+       .. grup-tab :: file peluncuran YAML
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch py_launch_example my_script_launch.yaml
+           ros2 luncurkan py_launch_example my_script_launch.yaml
 
-  .. group-tab:: C++ package
+   .. grup-tab:: Paket C++
 
-    .. tabs::
+     .. tab::
 
-      .. group-tab:: Python launch file
+       .. grup-tab :: File peluncuran Python
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch cpp_launch_example my_script_launch.py
+           ros2 luncurkan cpp_launch_example my_script_launch.py
 
-      .. group-tab:: XML launch file
+       .. grup-tab :: File peluncuran XML
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch cpp_launch_example my_script_launch.xml
+           ros2 meluncurkan cpp_launch_example my_script_launch.xml
 
-      .. group-tab:: YAML launch file
+       .. grup-tab :: file peluncuran YAML
 
-        .. code-block:: console
+         .. blok kode :: konsol
 
-          ros2 launch cpp_launch_example my_script_launch.yaml
+           ros2 meluncurkan cpp_launch_example my_script_launch.yaml
 
 
-Documentation
+Dokumentasi
 -------------
 
-`The launch documentation <https://github.com/ros2/launch/blob/{REPOS_FILE_BRANCH}/launch/doc/source/architecture.rst>`__ provides more details on concepts that are also used in ``launch_ros``.
+`Dokumentasi peluncuran <https://github.com/ros2/launch/blob/{REPOS_FILE_BRANCH}/launch/doc/source/architecture.rst>`__ memberikan detail lebih lanjut tentang konsep yang juga digunakan dalam ``launch_ros`` .
 
-Additional documentation/examples of launch capabilities are forthcoming.
-See the source code (https://github.com/ros2/launch and https://github.com/ros2/launch_ros) in the meantime.
+Dokumentasi tambahan/contoh kemampuan peluncuran akan segera hadir.
+Lihat kode sumber (https://github.com/ros2/launch dan https://github.com/ros2/launch_ros) untuk sementara.

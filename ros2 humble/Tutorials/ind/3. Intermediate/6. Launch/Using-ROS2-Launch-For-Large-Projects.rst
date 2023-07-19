@@ -1,531 +1,531 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Launch-Files/Using-ROS2-Launch-for-Large-Projects
-    Tutorials/Launch/Using-ROS2-Launch-for-Large-Projects
+     Tutorial/Peluncuran-File/Menggunakan-ROS2-Peluncuran-untuk-Proyek-Besar
+     Tutorial/Peluncuran/Menggunakan-ROS2-Peluncuran-untuk-Proyek-Besar
 
-.. _UsingROS2LaunchForLargeProjects:
+.. _MenggunakanROS2LaunchForLargeProjects:
 
-Managing large projects
+Mengelola proyek-proyek besar
 =======================
 
-**Goal:** Learn best practices of managing large projects using ROS 2 launch files.
+**Sasaran:** Pelajari praktik terbaik dalam mengelola proyek besar menggunakan file peluncuran ROS 2.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 20 minutes
+**Waktu:** 20 menit
 
-.. contents:: Contents
-   :depth: 3
-   :local:
+.. isi :: Isi
+    :kedalaman: 3
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-This tutorial describes some tips for writing launch files for large projects.
-The focus is on how to structure launch files so they may be reused as much as possible in different situations.
-Additionally, it covers usage examples of different ROS 2 launch tools, like parameters, YAML files, remappings, namespaces, default arguments, and RViz configs.
+Tutorial ini menjelaskan beberapa tip untuk menulis file peluncuran untuk proyek besar.
+Fokusnya adalah pada bagaimana menyusun file peluncuran sehingga dapat digunakan kembali sebanyak mungkin dalam situasi yang berbeda.
+Selain itu, ini mencakup contoh penggunaan berbagai alat peluncuran ROS 2, seperti parameter, file YAML, pemetaan ulang, ruang nama, argumen default, dan konfigurasi RViz.
 
-Prerequisites
+Prasyarat
 -------------
 
-This tutorial uses the :doc:`turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` and :doc:`turtle_tf2_py <../Tf2/Introduction-To-Tf2>` packages.
-This tutorial also assumes you have :doc:`created a new package <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>` of build type ``ament_python`` called ``launch_tutorial``.
+Tutorial ini menggunakan :doc:`turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` dan :doc:`turtle_tf2_py <../Tf2/Introduction-To-Tf2>` paket.
+Tutorial ini juga menganggap Anda memiliki :doc:`membuat paket baru <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>` dari tipe build ``ament_python`` bernama ``launch_tutorial ``.
 
-Introduction
+Perkenalan
 ------------
 
-Large applications on a robot typically involve several interconnected nodes, each of which can have many parameters.
-Simulation of multiple turtles in the turtle simulator can serve as a good example.
-The turtle simulation consists of multiple turtle nodes, the world configuration, and the TF broadcaster and listener nodes.
-Between all of the nodes, there are a large number of ROS parameters that affect the behavior and appearance of these nodes.
-ROS 2 launch files allow us to start all nodes and set corresponding parameters in one place.
-By the end of a tutorial, you will build the ``launch_turtlesim_launch.py`` launch file in the ``launch_tutorial`` package.
-This launch file will bring up different nodes responsible for the simulation of two turtlesim simulations, starting TF broadcasters and listener, loading parameters, and launching an RViz configuration.
-In this tutorial, we'll go over this launch file and all related features used.
+Aplikasi besar pada robot biasanya melibatkan beberapa node yang saling berhubungan, yang masing-masing dapat memiliki banyak parameter.
+Simulasi beberapa kura-kura di simulator kura-kura bisa menjadi contoh yang baik.
+Simulasi turtle terdiri dari beberapa node turtle, konfigurasi dunia, dan node penyiar dan pendengar TF.
+Di antara semua node, terdapat sejumlah besar parameter ROS yang memengaruhi perilaku dan tampilan node ini.
+File peluncuran ROS 2 memungkinkan kita untuk memulai semua node dan mengatur parameter yang sesuai di satu tempat.
+Di akhir tutorial, Anda akan membuat file peluncuran ``launch_turtlesim_launch.py`` dalam paket ``launch_tutorial``.
+File peluncuran ini akan memunculkan node berbeda yang bertanggung jawab untuk simulasi dua simulasi turtlesim, memulai penyiar dan pendengar TF, memuat parameter, dan meluncurkan konfigurasi RViz.
+Dalam tutorial ini, kita akan membahas file peluncuran ini dan semua fitur terkait yang digunakan.
 
-Writing launch files
+Menulis file peluncuran
 --------------------
 
-1 Top-level organization
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-One of the aims in the process of writing launch files should be making them as reusable as possible.
-This could be done by clustering related nodes and configurations into separate launch files.
-Afterwards, a top-level launch file dedicated to a specific configuration could be written.
-This would allow moving between identical robots to be done without changing the launch files at all.
-Even a change such as moving from a real robot to a simulated one can be done with only a few changes.
-
-We will now go over the top-level launch file structure that makes this possible.
-Firstly, we will create a launch file that will call separate launch files.
-To do this, let's create a ``launch_turtlesim_launch.py`` file in the ``/launch`` folder of our ``launch_tutorial`` package.
-
-.. code-block:: Python
-
-   import os
-
-   from ament_index_python.packages import get_package_share_directory
-
-   from launch import LaunchDescription
-   from launch.actions import IncludeLaunchDescription
-   from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-
-   def generate_launch_description():
-      turtlesim_world_1 = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/turtlesim_world_1_launch.py'])
-         )
-      turtlesim_world_2 = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/turtlesim_world_2_launch.py'])
-         )
-      broadcaster_listener_nodes = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/broadcaster_listener_launch.py']),
-         launch_arguments={'target_frame': 'carrot1'}.items(),
-         )
-      mimic_node = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/mimic_launch.py'])
-         )
-      fixed_frame_node = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/fixed_broadcaster_launch.py'])
-         )
-      rviz_node = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/turtlesim_rviz_launch.py'])
-         )
-
-      return LaunchDescription([
-         turtlesim_world_1,
-         turtlesim_world_2,
-         broadcaster_listener_nodes,
-         mimic_node,
-         fixed_frame_node,
-         rviz_node
-      ])
-
-This launch file includes a set of other launch files.
-Each of these included launch files contains nodes, parameters, and possibly, nested includes, which pertain to one part of the system.
-To be exact, we launch two turtlesim simulation worlds, TF broadcaster, TF listener, mimic, fixed frame broadcaster, and RViz nodes.
-
-.. note:: Design Tip: Top-level launch files should be short, consist of includes to other files corresponding to subcomponents of the application, and commonly changed parameters.
-
-Writing launch files in the following manner makes it easy to swap out one piece of the system, as we'll see later.
-However, there are cases when some nodes or launch files have to be launched separately due to performance and usage reasons.
-
-.. note:: Design tip: Be aware of the tradeoffs when deciding how many top-level launch files your application requires.
-
-2 Parameters
-^^^^^^^^^^^^
-
-2.1 Setting parameters in the launch file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-We will begin by writing a launch file that will start our first turtlesim simulation.
-First, create a new file called ``turtlesim_world_1_launch.py``.
-
-.. code-block:: Python
-
-   from launch import LaunchDescription
-   from launch.actions import DeclareLaunchArgument
-   from launch.substitutions import LaunchConfiguration, TextSubstitution
-
-   from launch_ros.actions import Node
-
-
-   def generate_launch_description():
-      background_r_launch_arg = DeclareLaunchArgument(
-         'background_r', default_value=TextSubstitution(text='0')
-      )
-      background_g_launch_arg = DeclareLaunchArgument(
-         'background_g', default_value=TextSubstitution(text='84')
-      )
-      background_b_launch_arg = DeclareLaunchArgument(
-         'background_b', default_value=TextSubstitution(text='122')
-      )
-
-      return LaunchDescription([
-         background_r_launch_arg,
-         background_g_launch_arg,
-         background_b_launch_arg,
-         Node(
-            package='turtlesim',
-            executable='turtlesim_node',
-            name='sim',
-            parameters=[{
-               'background_r': LaunchConfiguration('background_r'),
-               'background_g': LaunchConfiguration('background_g'),
-               'background_b': LaunchConfiguration('background_b'),
-            }]
-         ),
-      ])
-
-This launch file starts the ``turtlesim_node`` node, which starts the turtlesim simulation, with simulation configuration parameters that are defined and passed to the nodes.
-
-2.2 Loading parameters from YAML file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the second launch, we will start a second turtlesim simulation with a different configuration.
-Now create a ``turtlesim_world_2_launch.py`` file.
-
-.. code-block:: Python
-
-   import os
-
-   from ament_index_python.packages import get_package_share_directory
-
-   from launch import LaunchDescription
-   from launch_ros.actions import Node
-
-
-   def generate_launch_description():
-      config = os.path.join(
-         get_package_share_directory('launch_tutorial'),
-         'config',
-         'turtlesim.yaml'
-         )
-
-      return LaunchDescription([
-         Node(
-            package='turtlesim',
-            executable='turtlesim_node',
-            namespace='turtlesim2',
-            name='sim',
-            parameters=[config]
-         )
-      ])
-
-This launch file will launch the same ``turtlesim_node`` with parameter values that are loaded directly from the YAML configuration file.
-Defining arguments and parameters in YAML files make it easy to store and load a large number of variables.
-In addition, YAML files can be easily exported from the current ``ros2 param`` list.
-To learn how to do that, refer to the :doc:`Understand parameters <../../Beginner-CLI-Tools/Understanding-ROS2-Parameters/Understanding-ROS2-Parameters>` tutorial.
-
-Let's now create a configuration file, ``turtlesim.yaml``, in the ``/config`` folder of our package, which will be loaded by our launch file.
-
-.. code-block:: YAML
-
-   /turtlesim2/sim:
-      ros__parameters:
-         background_b: 255
-         background_g: 86
-         background_r: 150
-
-If we now start the ``turtlesim_world_2_launch.py`` launch file, we will start the ``turtlesim_node`` with preconfigured background colors.
-
-To learn more about using parameters and using YAML files, take a look at the :doc:`Understand parameters <../../Beginner-CLI-Tools/Understanding-ROS2-Parameters/Understanding-ROS2-Parameters>` tutorial.
-
-2.3 Using wildcards in YAML files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-There are cases when we want to set the same parameters in more than one node.
-These nodes could have different namespaces or names but still have the same parameters.
-Defining separate YAML files that explicitly define namespaces and node names is not efficient.
-A solution is to use wildcard characters, which act as substitutions for unknown characters in a text value, to apply parameters to several different nodes.
-
-Now let's create a new ``turtlesim_world_3_launch.py`` file similar to ``turtlesim_world_2_launch.py`` to include one more ``turtlesim_node`` node.
-
-.. code-block:: Python
-
-   ...
-   Node(
-      package='turtlesim',
-      executable='turtlesim_node',
-      namespace='turtlesim3',
-      name='sim',
-      parameters=[config]
-   )
-
-Loading the same YAML file, however, will not affect the appearance of the third turtlesim world.
-The reason is that its parameters are stored under another namespace as shown below:
-
-.. code-block:: console
-
-   /turtlesim3/sim:
-      background_b
-      background_g
-      background_r
-
-Therefore, instead of creating a new configuration for the same node that use the same parameters, we can use wildcards syntax.
-``/**`` will assign all the parameters in every node, despite differences in node names and namespaces.
-
-We will now update the ``turtlesim.yaml``, in the ``/config`` folder in the following manner:
-
-.. code-block:: YAML
-
-   /**:
-      ros__parameters:
-         background_b: 255
-         background_g: 86
-         background_r: 150
-
-Now include the ``turtlesim_world_3_launch.py`` launch description in our main launch file.
-Using that configuration file in our launch descriptions will assign ``background_b``, ``background_g``, and ``background_r`` parameters to specified values in ``turtlesim3/sim`` and ``turtlesim2/sim`` nodes.
-
-3 Namespaces
-^^^^^^^^^^^^
-
-As you may have noticed, we have defined the namespace for the turlesim world in the ``turtlesim_world_2_launch.py`` file.
-Unique namespaces allow the system to start two similar nodes without node name or topic name conflicts.
-
-.. code-block:: Python
-
-   namespace='turtlesim2',
-
-However, if the launch file contains a large number of nodes, defining namespaces for each of them can become tedious.
-To solve that issue, the ``PushROSNamespace`` action can be used to define the global namespace for each launch file description.
-Every nested node will inherit that namespace automatically.
-
-To do that, firstly, we need to remove the ``namespace='turtlesim2'`` line from the ``turtlesim_world_2_launch.py`` file.
-Afterwards, we need to update the ``launch_turtlesim_launch.py`` to include the following lines:
-
-.. code-block:: Python
-
-   from launch.actions import GroupAction
-   from launch_ros.actions import PushROSNamespace
-
-      ...
-      turtlesim_world_2 = IncludeLaunchDescription(
-         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('launch_tutorial'), 'launch'),
-            '/turtlesim_world_2_launch.py'])
-         )
-      turtlesim_world_2_with_namespace = GroupAction(
-        actions=[
-            PushROSNamespace('turtlesim2'),
-            turtlesim_world_2,
-         ]
-      )
-
-Finally, we replace the ``turtlesim_world_2`` to ``turtlesim_world_2_with_namespace`` in the ``return LaunchDescription`` statement.
-As a result, each node in the ``turtlesim_world_2_launch.py`` launch description will have a ``turtlesim2`` namespace.
-
-4 Reusing nodes
-^^^^^^^^^^^^^^^
-
-Now create a ``broadcaster_listener_launch.py`` file.
-
-.. code-block:: Python
-
-   from launch import LaunchDescription
-   from launch.actions import DeclareLaunchArgument
-   from launch.substitutions import LaunchConfiguration
-
-   from launch_ros.actions import Node
-
-
-   def generate_launch_description():
-      return LaunchDescription([
-         DeclareLaunchArgument(
-            'target_frame', default_value='turtle1',
-            description='Target frame name.'
-         ),
-         Node(
-            package='turtle_tf2_py',
-            executable='turtle_tf2_broadcaster',
-            name='broadcaster1',
-            parameters=[
-               {'turtlename': 'turtle1'}
-            ]
-         ),
-         Node(
-            package='turtle_tf2_py',
-            executable='turtle_tf2_broadcaster',
-            name='broadcaster2',
-            parameters=[
-               {'turtlename': 'turtle2'}
-            ]
-         ),
-         Node(
-            package='turtle_tf2_py',
-            executable='turtle_tf2_listener',
-            name='listener',
-            parameters=[
-               {'target_frame': LaunchConfiguration('target_frame')}
-            ]
-         ),
-      ])
-
-
-In this file, we have declared the ``target_frame`` launch argument with a default value of ``turtle1``.
-The default value means that the launch file can receive an argument to forward to its nodes, or in case the argument is not provided, it will pass the default value to its nodes.
-
-Afterwards, we use the ``turtle_tf2_broadcaster`` node two times using different names and parameters during launch.
-This allows us to duplicate the same node without conflicts.
-
-We also start a ``turtle_tf2_listener`` node and set its ``target_frame`` parameter that we declared and acquired above.
-
-5 Parameter overrides
-^^^^^^^^^^^^^^^^^^^^^
-
-Recall that we called the ``broadcaster_listener_launch.py`` file in our top-level launch file.
-In addition to that, we have passed it ``target_frame`` launch argument as shown below:
-
-.. code-block:: Python
-
-   broadcaster_listener_nodes = IncludeLaunchDescription(
-      PythonLaunchDescriptionSource([os.path.join(
-         get_package_share_directory('launch_tutorial'), 'launch'),
-         '/broadcaster_listener_launch.py']),
-      launch_arguments={'target_frame': 'carrot1'}.items(),
-      )
-
-This syntax allows us to change the default goal target frame to ``carrot1``.
-If you would like ``turtle2`` to follow ``turtle1`` instead of the ``carrot1``, just remove the line that defines ``launch_arguments``.
-This will assign ``target_frame`` its default value, which is ``turtle1``.
-
-6 Remapping
-^^^^^^^^^^^
-
-Now create a ``mimic_launch.py`` file.
-
-.. code-block:: Python
-
-   from launch import LaunchDescription
-   from launch_ros.actions import Node
-
-
-   def generate_launch_description():
-      return LaunchDescription([
-         Node(
-            package='turtlesim',
-            executable='mimic',
-            name='mimic',
-            remappings=[
-               ('/input/pose', '/turtle2/pose'),
-               ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
-            ]
-         )
-      ])
-
-This launch file will start the ``mimic`` node, which will give commands to one turtlesim to follow the other.
-The node is designed to receive the target pose on the topic ``/input/pose``.
-In our case, we want to remap the target pose from ``/turtle2/pose`` topic.
-Finally, we remap the ``/output/cmd_vel`` topic to ``/turtlesim2/turtle1/cmd_vel``.
-This way ``turtle1`` in our ``turtlesim2`` simulation world will follow ``turtle2`` in our initial turtlesim world.
-
-7 Config files
+1 Organisasi tingkat atas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Salah satu tujuan dalam proses penulisan file peluncuran adalah membuatnya dapat digunakan kembali sebanyak mungkin.
+Ini dapat dilakukan dengan mengelompokkan node dan konfigurasi terkait ke dalam file peluncuran terpisah.
+Setelah itu, file peluncuran tingkat atas yang didedikasikan untuk konfigurasi tertentu dapat ditulis.
+Ini akan memungkinkan perpindahan antar robot identik dilakukan tanpa mengubah file peluncuran sama sekali.
+Bahkan perubahan seperti berpindah dari robot sungguhan ke robot simulasi dapat dilakukan hanya dengan sedikit perubahan.
+
+Kami sekarang akan membahas struktur file peluncuran tingkat atas yang memungkinkan hal ini.
+Pertama, kami akan membuat file peluncuran yang akan memanggil file peluncuran terpisah.
+Untuk melakukannya, mari buat file ``launch_turtlesim_launch.py`` di folder ``/launch`` dari paket ``launch_tutorial`` kita.
+
+.. blok kode :: Python
+
+    impor os
+
+    dari ament_index_python.packages impor get_package_share_directory
+
+    dari peluncuran impor LaunchDescription
+    dari launch.actions impor SertakanLaunchDescription
+    dari launch.launch_description_sources mengimpor PythonLaunchDescriptionSource
+
+
+    def generate_launch_description():
+       turtlesim_world_1 = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/turtlesim_world_1_launch.py'])
+          )
+       turtlesim_world_2 = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/turtlesim_world_2_launch.py'])
+          )
+       broadcaster_listener_nodes = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/broadcaster_listener_launch.py']),
+          launch_arguments={'target_frame': 'carrot1'}.items(),
+          )
+       mimik_node = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/mimic_launch.py'])
+          )
+       fixed_frame_node = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/fixed_broadcaster_launch.py'])
+          )
+       rviz_node = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/turtlesim_rviz_launch.py'])
+          )
+
+       kembali LaunchDescription([
+          turtlesim_world_1,
+          turtlesim_world_2,
+          broadcaster_listener_nodes,
+          mimik_simpul,
+          fixed_frame_node,
+          rviz_node
+       ])
+
+File peluncuran ini menyertakan sekumpulan file peluncuran lainnya.
+Masing-masing file peluncuran yang disertakan ini berisi node, parameter, dan mungkin, penyertaan bersarang, yang berkaitan dengan satu bagian sistem.
+Tepatnya, kami meluncurkan dua dunia simulasi turtlesim, penyiar TF, pendengar TF, mimik, penyiar bingkai tetap, dan node RViz.
+
+.. catatan:: Tip Desain: File peluncuran tingkat atas harus singkat, terdiri dari penyertaan ke file lain yang terkait dengan subkomponen aplikasi, dan parameter yang biasanya diubah.
+
+Menulis file peluncuran dengan cara berikut memudahkan untuk menukar satu bagian dari sistem, seperti yang akan kita lihat nanti.
+Namun, ada kalanya beberapa node atau file peluncuran harus diluncurkan secara terpisah karena alasan kinerja dan penggunaan.
+
+.. catatan:: Kiat desain: Waspadai pengorbanan saat memutuskan berapa banyak file peluncuran tingkat atas yang diperlukan aplikasi Anda.
+
+2 Parameter
 ^^^^^^^^^^^^^^
 
-Let's now create a file called ``turtlesim_rviz_launch.py``.
+2.1 Mengatur parameter di file peluncuran
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: Python
+Kami akan mulai dengan menulis file peluncuran yang akan memulai simulasi turtlesim pertama kami.
+Pertama, buat file baru bernama ``turtlesim_world_1_launch.py``.
 
-   import os
+.. blok kode :: Python
 
-   from ament_index_python.packages import get_package_share_directory
+    dari peluncuran impor LaunchDescription
+    dari launch.actions import DeclareLaunchArgument
+    dari launch.substitutions import LaunchConfiguration, TextSubstitution
 
-   from launch import LaunchDescription
-   from launch_ros.actions import Node
-
-
-   def generate_launch_description():
-      rviz_config = os.path.join(
-         get_package_share_directory('turtle_tf2_py'),
-         'rviz',
-         'turtle_rviz.rviz'
-         )
-
-      return LaunchDescription([
-         Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', rviz_config]
-         )
-      ])
-
-This launch file will start the RViz with the configuration file defined in the ``turtle_tf2_py`` package.
-This RViz configuration will set the world frame, enable TF visualization, and start RViz with a top-down view.
-
-8 Environment Variables
-^^^^^^^^^^^^^^^^^^^^^^^
-
-Let's now create the last launch file called ``fixed_broadcaster_launch.py`` in our package.
-
-.. code-block:: Python
-
-   from launch import LaunchDescription
-   from launch.actions import DeclareLaunchArgument
-   from launch.substitutions import EnvironmentVariable, LaunchConfiguration
-   from launch_ros.actions import Node
+    dari launch_ros.actions impor Node
 
 
-   def generate_launch_description():
-      return LaunchDescription([
-         DeclareLaunchArgument(
-               'node_prefix',
-               default_value=[EnvironmentVariable('USER'), '_'],
-               description='prefix for node name'
-         ),
-         Node(
-               package='turtle_tf2_py',
-               executable='fixed_frame_tf2_broadcaster',
-               name=[LaunchConfiguration('node_prefix'), 'fixed_broadcaster'],
-         ),
-      ])
+    def generate_launch_description():
+       background_r_launch_arg = DeklarasikanLaunchArgument(
+          'background_r', default_value=TeksSubstitusi(teks='0')
+       )
+       background_g_launch_arg = DeklarasikanLaunchArgument(
+          'background_g', nilai_default=SubstitusiTeks(teks='84')
+       )
+       background_b_launch_arg = DeklarasikanLaunchArgument(
+          'background_b', default_value=TeksSubstitusi(teks='122')
+       )
 
-This launch file shows the way environment variables can be called inside the launch files.
-Environment variables can be used to define or push namespaces for distinguishing nodes on different computers or robots.
+       kembali LaunchDescription([
+          background_r_launch_arg,
+          background_g_launch_arg,
+          background_b_launch_arg,
+          Simpul(
+             package='turtlesim',
+             dapat dieksekusi='turtlesim_node',
+             nama='sim',
+             parameter=[{
+                'background_r': LaunchConfiguration('background_r'),
+                'background_g': LaunchConfiguration('background_g'),
+                'background_b': LaunchConfiguration('background_b'),
+             }]
+          ),
+       ])
 
-Running launch files
+File peluncuran ini memulai node ``turtlesim_node``, yang memulai simulasi turtlesim, dengan parameter konfigurasi simulasi yang ditentukan dan diteruskan ke node.
+
+2.2 Memuat parameter dari file YAML
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pada peluncuran kedua, kita akan memulai simulasi turtlesim kedua dengan konfigurasi yang berbeda.
+Sekarang buat file ``turtlesim_world_2_launch.py``.
+
+.. blok kode :: Python
+
+    impor os
+
+    dari ament_index_python.packages impor get_package_share_directory
+
+    dari peluncuran impor LaunchDescription
+    dari launch_ros.actions impor Node
+
+
+    def generate_launch_description():
+       config = os.path.bergabung(
+          get_package_share_directory('launch_tutorial'),
+          'konfigurasi',
+          'turtlesim.yaml'
+          )
+
+       kembali LaunchDescription([
+          Simpul(
+             package='turtlesim',
+             dapat dieksekusi='turtlesim_node',
+             namespace='turtlesim2',
+             nama='sim',
+             parameter=[konfigurasi]
+          )
+       ])
+
+File peluncuran ini akan meluncurkan ``turtlesim_node`` yang sama dengan nilai parameter yang dimuat langsung dari file konfigurasi YAML.
+Menentukan argumen dan parameter dalam file YAML memudahkan untuk menyimpan dan memuat sejumlah besar variabel.
+Selain itu, file YAML dapat dengan mudah diekspor dari daftar ``ros2 param`` saat ini.
+Untuk mempelajari cara melakukannya, lihat tutorial :doc:`Memahami parameter <../../Beginner-CLI-Tools/Understanding-ROS2-Parameters/Understanding-ROS2-Parameters>`.
+
+Sekarang mari buat file konfigurasi, ``turtlesim.yaml``, di folder ``/config`` dari paket kita, yang akan dimuat oleh file peluncuran kita.
+
+.. blok kode :: YAML
+
+    /turtlesim2/sim:
+       ros__parameter:
+          background_b: 255
+          background_g: 86
+          background_r: 150
+
+Jika sekarang kita memulai file peluncuran ``turtlesim_world_2_launch.py``, kita akan memulai ``turtlesim_node`` dengan warna latar yang telah dikonfigurasi sebelumnya.
+
+Untuk mempelajari lebih lanjut tentang menggunakan parameter dan menggunakan file YAML, lihat tutorial :doc:`Understand parameter <../../Beginner-CLI-Tools/Understanding-ROS2-Parameters/Understanding-ROS2-Parameters>`.
+
+2.3 Menggunakan wildcard dalam file YAML
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ada kalanya kita ingin mengatur parameter yang sama di lebih dari satu node.
+Node ini dapat memiliki ruang nama atau nama yang berbeda tetapi masih memiliki parameter yang sama.
+Mendefinisikan file YAML terpisah yang secara eksplisit mendefinisikan ruang nama dan nama node tidaklah efisien.
+Solusinya adalah menggunakan karakter wildcard, yang bertindak sebagai pengganti karakter yang tidak dikenal dalam nilai teks, untuk menerapkan parameter ke beberapa node berbeda.
+
+Sekarang mari kita buat ``turtlesim_world_3_launch.py`` serupa dengan ``turtlesim_world_2_launch.py`` untuk menyertakan satu lagi node ``turtlesim_node``.
+
+.. blok kode :: Python
+
+    ...
+    Simpul(
+       package='turtlesim',
+       dapat dieksekusi='turtlesim_node',
+       namespace='turtlesim3',
+       nama='sim',
+       parameter=[konfigurasi]
+    )
+
+Namun, memuat file YAML yang sama tidak akan memengaruhi tampilan dunia turtlesim ketiga.
+Alasannya adalah parameternya disimpan di bawah namespace lain seperti yang ditunjukkan di bawah ini:
+
+.. blok kode :: konsol
+
+    /turtlesim3/sim:
+       background_b
+       background_g
+       background_r
+
+Oleh karena itu, daripada membuat konfigurasi baru untuk node yang sama yang menggunakan parameter yang sama, kita dapat menggunakan sintaks wildcard.
+``/**`` akan menetapkan semua parameter di setiap node, terlepas dari perbedaan dalam nama node dan ruang nama.
+
+Kami sekarang akan memperbarui ``turtlesim.yaml``, di folder ``/config`` dengan cara berikut:
+
+.. blok kode :: YAML
+
+    /**:
+       ros__parameter:
+          background_b: 255
+          background_g: 86
+          background_r: 150
+
+Sekarang sertakan deskripsi peluncuran ``turtlesim_world_3_launch.py`` dalam file peluncuran utama kita.
+Menggunakan file konfigurasi tersebut dalam deskripsi peluncuran kami akan menetapkan parameter ``background_b``, ``background_g``, dan ``background_r`` ke nilai yang ditentukan dalam node ``turtlesim3/sim`` dan ``turtlesim2/sim``.
+
+3 ruang nama
+^^^^^^^^^^^^^^
+
+Seperti yang mungkin telah Anda ketahui, kami telah menentukan ruang nama untuk dunia turlesim di file ``turtlesim_world_2_launch.py``.
+Ruang nama unik memungkinkan sistem untuk memulai dua node serupa tanpa konflik nama node atau nama topik.
+
+.. blok kode :: Python
+
+    namespace='turtlesim2',
+
+Namun, jika file peluncuran berisi node dalam jumlah besar, menentukan ruang nama untuk masing-masing node dapat menjadi membosankan.
+Untuk mengatasi masalah tersebut, tindakan ``PushROSNamespace`` dapat digunakan untuk menentukan namespace global untuk setiap deskripsi file peluncuran.
+Setiap node bersarang akan mewarisi namespace tersebut secara otomatis.
+
+Untuk melakukannya, pertama-tama, kita perlu menghapus baris ``namespace='turtlesim2'`` dari file ``turtlesim_world_2_launch.py``.
+Setelah itu, kita perlu memperbarui ``launch_turtlesim_launch.py`` untuk menyertakan baris berikut:
+
+.. blok kode :: Python
+
+    dari launch.actions mengimpor GroupAction
+    dari launch_ros.actions impor PushROSNamespace
+
+       ...
+       turtlesim_world_2 = SertakanLaunchDescription(
+          PythonLaunchDescriptionSource([os.path.join(
+             get_package_share_directory('launch_tutorial'), 'launch'),
+             '/turtlesim_world_2_launch.py'])
+          )
+       turtlesim_world_2_with_namespace = GroupAction(
+         tindakan=[
+             PushROSNamespace('turtlesim2'),
+             turtlesim_world_2,
+          ]
+       )
+
+Terakhir, kami mengganti ``turtlesim_world_2`` menjadi ``turtlesim_world_2_with_namespace`` dalam pernyataan ``return LaunchDescription``.
+Akibatnya, setiap node dalam deskripsi peluncuran ``turtlesim_world_2_launch.py`` akan memiliki namespace ``turtlesim2``.
+
+4 Menggunakan kembali node
+^^^^^^^^^^^^^^^^^^
+
+Sekarang buat file ``broadcaster_listener_launch.py``.
+
+.. blok kode :: Python
+
+    dari peluncuran impor LaunchDescription
+    dari launch.actions import DeclareLaunchArgument
+    dari launch.substitutions import LaunchConfiguration
+
+    dari launch_ros.actions impor Node
+
+
+    def generate_launch_description():
+       kembali LaunchDescription([
+          DeklarasiLaunchArgument(
+             'target_frame', default_value='turtle1',
+             description='Nama bingkai target.'
+          ),
+          Simpul(
+             paket='turtle_tf2_py',
+             dapat dieksekusi='turtle_tf2_broadcaster',
+             nama='penyiar1',
+             parameter=[
+                {'turtlename': 'turtle1'}
+             ]
+          ),
+          Simpul(
+             paket='turtle_tf2_py',
+             dapat dieksekusi='turtle_tf2_broadcaster',
+             nama='penyiar2',
+             parameter=[
+                {'turtlename': 'turtle2'}
+             ]
+          ),
+          Simpul(
+             paket='turtle_tf2_py',
+             dapat dieksekusi='turtle_tf2_listener',
+             nama='pendengar',
+             parameter=[
+                {'target_frame': LaunchConfiguration('target_frame')}
+             ]
+          ),
+       ])
+
+
+Dalam file ini, kami telah mendeklarasikan argumen peluncuran ``target_frame`` dengan nilai default ``turtle1``.
+Nilai default berarti bahwa file peluncuran dapat menerima argumen untuk diteruskan ke node-nya, atau jika argumen tidak diberikan, ia akan meneruskan nilai default ke node-nya.
+
+Setelah itu, kami menggunakan node ``turtle_tf2_broadcaster`` dua kali menggunakan nama dan parameter yang berbeda selama peluncuran.
+Ini memungkinkan kami untuk menduplikasi simpul yang sama tanpa konflik.
+
+Kami juga memulai node ``turtle_tf2_listener`` dan menetapkan parameter ``target_frame`` yang kami nyatakan dan peroleh di atas.
+
+5 Parameter menimpa
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ingatlah bahwa kami memanggil file ``broadcaster_listener_launch.py`` di file peluncuran tingkat atas kami.
+Selain itu, kami telah memberikan argumen peluncuran ``target_frame`` seperti yang ditunjukkan bdi bawah:
+
+.. blok kode :: Python
+
+    broadcaster_listener_nodes = SertakanLaunchDescription(
+       PythonLaunchDescriptionSource([os.path.join(
+          get_package_share_directory('launch_tutorial'), 'launch'),
+          '/broadcaster_listener_launch.py']),
+       launch_arguments={'target_frame': 'carrot1'}.items(),
+       )
+
+Sintaks ini memungkinkan kita mengubah bingkai target sasaran default menjadi ``carrot1``.
+Jika Anda ingin ``turtle2`` mengikuti ``turtle1`` alih-alih ``carrot1``, cukup hapus baris yang mendefinisikan ``launch_arguments``.
+Ini akan menetapkan ``target_frame`` nilai defaultnya, yaitu ``turtle1``.
+
+6 Pemetaan ulang
+^^^^^^^^^^^^
+
+Sekarang buat file ``mimic_launch.py``.
+
+.. blok kode :: Python
+
+    dari peluncuran impor LaunchDescription
+    dari launch_ros.actions impor Node
+
+
+    def generate_launch_description():
+       kembali LaunchDescription([
+          Simpul(
+             package='turtlesim',
+             dapat dieksekusi = 'meniru',
+             nama='meniru',
+             pemetaan ulang=[
+                ('/input/pose', '/turtle2/pose'),
+                ('/keluaran/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
+             ]
+          )
+       ])
+
+File peluncuran ini akan memulai node ``mimic``, yang akan memberikan perintah ke satu turtlesim untuk mengikuti yang lain.
+Node dirancang untuk menerima pose target pada topik ``/input/pose``.
+Dalam kasus kita, kita ingin memetakan ulang pose target dari topik ``/turtle2/pose``.
+Terakhir, kami memetakan ulang topik ``/output/cmd_vel`` ke ``/turtlesim2/turtle1/cmd_vel``.
+Dengan cara ini ``turtle1`` di dunia simulasi ``turtlesim2`` kita akan mengikuti ``turtle2`` di dunia simulasi turtlesim awal kita.
+
+7 file konfigurasi
+^^^^^^^^^^^^^^^^
+
+Sekarang mari kita membuat file bernama ``turtlesim_rviz_launch.py``.
+
+.. blok kode :: Python
+
+    impor os
+
+    dari ament_index_python.packages impor get_package_share_directory
+
+    dari peluncuran impor LaunchDescription
+    dari launch_ros.actions impor Node
+
+
+    def generate_launch_description():
+       rviz_config = os.path.bergabung(
+          get_package_share_directory('turtle_tf2_py'),
+          'rviz',
+          'turtle_rviz.rviz'
+          )
+
+       kembali LaunchDescription([
+          Simpul(
+             paket='rviz2',
+             dapat dieksekusi='rviz2',
+             nama='rviz2',
+             argumen=['-d', rviz_config]
+          )
+       ])
+
+File peluncuran ini akan memulai RViz dengan file konfigurasi yang ditentukan dalam paket ``turtle_tf2_py``.
+Konfigurasi RViz ini akan mengatur bingkai dunia, mengaktifkan visualisasi TF, dan memulai RViz dengan tampilan dari atas ke bawah.
+
+8 Variabel Lingkungan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sekarang mari buat file peluncuran terakhir bernama ``fixed_broadcaster_launch.py`` dalam paket kita.
+
+.. blok kode :: Python
+
+    dari peluncuran impor LaunchDescription
+    dari launch.actions import DeclareLaunchArgument
+    dari launch.substitutions import EnvironmentVariable, LaunchConfiguration
+    dari launch_ros.actions impor Node
+
+
+    def generate_launch_description():
+       kembali LaunchDescription([
+          DeklarasiLaunchArgument(
+                'node_prefix',
+                default_value=[Variabel Lingkungan('PENGGUNA'), '_'],
+                description='awalan untuk nama node'
+          ),
+          Simpul(
+                paket='turtle_tf2_py',
+                dapat dieksekusi='fixed_frame_tf2_broadcaster',
+                name=[LaunchConfiguration('node_prefix'), 'fixed_broadcaster'],
+          ),
+       ])
+
+File peluncuran ini menunjukkan cara variabel lingkungan dapat dipanggil di dalam file peluncuran.
+Variabel lingkungan dapat digunakan untuk mendefinisikan atau mendorong ruang nama untuk membedakan node pada komputer atau robot yang berbeda.
+
+Menjalankan file peluncuran
 --------------------
 
-1 Update setup.py
-^^^^^^^^^^^^^^^^^
+1 Perbarui setup.py
+^^^^^^^^^^^^^^^^^^^^
 
-Open ``setup.py`` and add the following lines so that the launch files from the ``launch/`` folder and configuration file from the ``config/`` would be installed.
-The ``data_files`` field should now look like this:
+Buka ``setup.py`` dan tambahkan baris berikut sehingga file peluncuran dari folder ``launch/`` dan file konfigurasi dari ``config/`` akan diinstal.
+Kolom ``data_files`` sekarang akan terlihat seperti ini:
 
-.. code-block:: Python
+.. blok kode :: Python
 
-   data_files=[
-         ...
-         (os.path.join('share', package_name, 'launch'),
-            glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
-         (os.path.join('share', package_name, 'config'),
-            glob(os.path.join('config', '*.yaml'))),
-      ],
+    file_data=[
+          ...
+          (os.path.join('berbagi', nama_paket, 'luncurkan'),
+             glob(os.path.join('peluncuran', '*peluncuran.[pxy][yma]*'))),
+          (os.path.join('berbagi', nama_paket, 'config'),
+             glob(os.path.join('config', '*.yaml'))),
+       ],
 
-2 Build and run
-^^^^^^^^^^^^^^^
+2 Bangun dan jalankan
+^^^^^^^^^^^^^^^^^^
 
-To finally see the result of our code, build the package and launch the top-level launch file using the following command:
+Untuk akhirnya melihat hasil dari kode kita, buat paket dan luncurkan file peluncuran tingkat atas menggunakan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-   ros2 launch launch_tutorial launch_turtlesim_launch.py
+    peluncuran ros2 launch_tutorial launch_turtlesim_launch.py
 
-You will now see the two turtlesim simulations started.
-There are two turtles in the first one and one in the second one.
-In the first simulation, ``turtle2`` is spawned in the bottom-left part of the world.
-Its aim is to reach the ``carrot1`` frame which is five meters away on the x-axis relative to the ``turtle1`` frame.
+Anda sekarang akan melihat dua simulasi turtlesim dimulai.
+Ada dua kura-kura di yang pertama dan satu di yang kedua.
+Dalam simulasi pertama, ``turtle2`` muncul di bagian kiri bawah dunia.
+Tujuannya adalah untuk mencapai bingkai ``carrot1`` yang jaraknya lima meter pada sumbu x relatif terhadap bingkai ``turtle1``.
 
-The ``turtlesim2/turtle1`` in the second is designed to mimic the behavior of the ``turtle2``.
+``turtlesim2/turtle1`` di bagian kedua dirancang untuk meniru perilaku ``turtle2``.
 
-If you want to control the ``turtle1``, run the teleop node.
+Jika Anda ingin mengontrol ``turtle1``, jalankan teleop node.
 
-.. code-block:: console
+.. blok kode :: konsol
 
-   ros2 run turtlesim turtle_teleop_key
+    ros2 jalankan turtlesim turtle_teleop_key
 
-As a result, you will see a similar picture:
+Hasilnya, Anda akan melihat gambar serupa:
 
-.. image:: images/turtlesim_worlds.png
+.. gambar:: gambar/turtlesim_worlds.png
 
-In addition to that, the RViz should have started.
-It will show all turtle frames relative to the ``world`` frame, whose origin is at the bottom-left corner.
+Selain itu, RViz seharusnya sudah mulai.
+Ini akan menampilkan semua bingkai turtle relatif terhadap bingkai ``dunia``, yang asalnya ada di pojok kiri bawah.
 
-.. image:: images/turtlesim_rviz.png
+.. gambar:: gambar/turtlesim_rviz.png
 
-Summary
+Ringkasan
 -------
 
-In this tutorial, you learned about various tips and practices of managing large projects using ROS 2 launch files.
+Dalam tutorial ini, Anda belajar tentang berbagai tip dan praktik mengelola proyek besar menggunakan file peluncuran ROS 2.

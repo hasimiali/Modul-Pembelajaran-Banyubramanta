@@ -1,246 +1,190 @@
-.. _ROS2Params:
+.. _ROS2Param:
 
-Understanding parameters
+Memahami parameter
 ========================
 
-**Goal:** Learn how to get, set, save and reload parameters in ROS 2.
+**Sasaran:** Pelajari cara mendapatkan, menyetel, menyimpan, dan memuat ulang parameter di ROS 2.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-A parameter is a configuration value of a node.
-You can think of parameters as node settings.
-A node can store parameters as integers, floats, booleans, strings, and lists.
-In ROS 2, each node maintains its own parameters.
-For more background on parameters, please see :doc:`the concept document <../../../Concepts/Basic/About-Parameters>`.
+Parameter adalah nilai konfigurasi dari sebuah node.
+Anda dapat menganggap parameter sebagai pengaturan node.
+Node dapat menyimpan parameter sebagai bilangan bulat, float, boolean, string, dan daftar.
+Di ROS 2, setiap node mempertahankan parameternya sendiri.
+Untuk latar belakang lebih lanjut tentang parameter, silakan lihat :doc:`the concept document <../../../Concepts/Basic/About-Parameters>`.
 
-Prerequisites
+Prasyarat
 -------------
 
-This tutorial uses the :doc:`turtlesim package <../Introducing-Turtlesim/Introducing-Turtlesim>`.
+Tutorial ini menggunakan :doc:`turtlesim package <../Introducing-Turtlesim/Introducing-Turtlesim>`.
 
-As always, don't forget to source ROS 2 in :doc:`every new terminal you open <../Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../Configuring-ROS2-Environment>`.
 
-Tasks
+Tugas
 -----
 
-1 Setup
+1 Pengaturan
 ^^^^^^^
 
-Start up the two turtlesim nodes, ``/turtlesim`` and ``/teleop_turtle``.
+Mulai dua simpul turtlesim, ``/turtlesim`` dan ``/teleop_turtle``.
 
-Open a new terminal and run:
+Buka terminal baru dan jalankan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtlesim_node
+     ros2 jalankan turtlesim turtlesim_node
 
-Open another terminal and run:
+Buka terminal lain dan jalankan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtle_teleop_key
-
-
-2 ros2 param list
-^^^^^^^^^^^^^^^^^
-
-To see the parameters belonging to your nodes, open a new terminal and enter the command:
-
-.. code-block:: console
-
-    ros2 param list
-
-You will see the node namespaces, ``/teleop_turtle`` and ``/turtlesim``, followed by each node's parameters:
-
-.. code-block:: console
-
-  /teleop_turtle:
-    qos_overrides./parameter_events.publisher.depth
-    qos_overrides./parameter_events.publisher.durability
-    qos_overrides./parameter_events.publisher.history
-    qos_overrides./parameter_events.publisher.reliability
-    scale_angular
-    scale_linear
-    use_sim_time
-  /turtlesim:
-    background_b
-    background_g
-    background_r
-    qos_overrides./parameter_events.publisher.depth
-    qos_overrides./parameter_events.publisher.durability
-    qos_overrides./parameter_events.publisher.history
-    qos_overrides./parameter_events.publisher.reliability
-    use_sim_time
-
-Every node has the parameter ``use_sim_time``; it's not unique to turtlesim.
-
-Based on their names, it looks like ``/turtlesim``'s parameters determine the background color of the turtlesim window using RGB color values.
-
-To determine a parameter's type, you can use ``ros2 param get``.
+     ros2 jalankan turtlesim turtle_teleop_key
 
 
-3 ros2 param get
-^^^^^^^^^^^^^^^^
+2 daftar param ros2
+^^^^^^^^^^^^^^^^^^^^
 
-To display the type and current value of a parameter, use the command:
+Untuk melihat parameter milik node Anda, buka terminal baru dan masukkan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 param get <node_name> <parameter_name>
+     daftar param ros2
 
-Let's find out the current value of ``/turtlesim``'s parameter ``background_g``:
+Anda akan melihat ruang nama node, ``/teleop_turtle`` dan ``/turtlesim``, diikuti dengan parameter setiap node:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 param get /turtlesim background_g
+   / teleop_turtle:
+     qos_overrides./parameter_events.publisher.depth
+     qos_overrides./parameter_events.publisher.durability
+     qos_overrides./parameter_events.publisher.history
+     qos_overrides./parameter_events.publisher.reliability
+     scale_angular
+     scale_linear
+     gunakan_sim_waktu
+   /turtlesim:
+     background_b
+     background_g
+     background_r
+     qos_overrides./parameter_events.publisher.depth
+     qos_overrides./parameter_events.publisher.durability
+     qos_overrides./parameter_events.publisher.history
+     qos_overrides./parameter_events.publisher.reliability
+     gunakan_sim_waktu
 
-Which will return the value:
+Setiap node memiliki parameter ``use_sim_time``; itu tidak unik untuk turtlesim.
 
-.. code-block:: console
+Berdasarkan namanya, sepertinya parameter ``/turtlesim`` menentukan warna latar belakang jendela turtlesim menggunakan nilai warna RGB.
 
-    Integer value is: 86
+Untuk menentukan jenis parameter, Anda dapat menggunakan ``ros2 param get``.
 
-Now you know ``background_g`` holds an integer value.
 
-If you run the same command on ``background_r`` and ``background_b``, you will get the values ``69`` and ``255``, respectively.
+3 ros2 param dapatkan
+^^^^^^^^^^^^^^^^^^^^
 
-4 ros2 param set
-^^^^^^^^^^^^^^^^
+Untuk menampilkan tipe dan nilai parameter saat ini, gunakan perintah:
 
-To change a parameter's value at runtime, use the command:
+.. blok kode :: konsol
 
-.. code-block:: console
+     ros2 param dapatkan <node_name> <parameter_name>
 
-    ros2 param set <node_name> <parameter_name> <value>
+Mari cari tahu nilai parameter ``/turtlesim`` saat ini ``background_g``:
 
-Let's change ``/turtlesim``'s background color:
+.. blok kode :: konsol
 
-.. code-block:: console
+     ros2 param dapatkan /turtlesim background_g
 
-    ros2 param set /turtlesim background_r 150
+Yang akan mengembalikan nilai:
 
-Your terminal should return the message:
+.. blok kode :: konsol
 
-.. code-block:: console
+     Nilai bilangan bulat adalah: 86
 
-  Set parameter successful
+Sekarang Anda tahu ``background_g`` memiliki nilai bilangan bulat.
 
-And the background of your turtlesim window should change colors:
+Jika Anda menjalankan perintah yang sama pada ``background_r`` dan ``background_b``, Anda akan mendapatkan nilai masing-masing ``69`` dan ``255``.
 
-.. image:: images/set.png
+4 set parameter ros2
+^^^^^^^^^^^^^^^^^^^^
 
-Setting parameters with the ``set`` command will only change them in your current session, not permanently.
-However, you can save your settings and reload them the next time you start a node.
+Untuk mengubah nilai parameter saat runtime, gunakan perintah:
+
+.. blok kode :: konsol
+
+     parameter ros2 mengatur <nama_simpul> <nama_parameter> <nilai>
+
+Mari ubah warna latar belakang ``/turtlesim``:
+
+.. blok kode :: konsol
+
+     set param ros2 /turtlesim background_r 150
+
+Terminal Anda harus mengembalikan pesan:
+
+.. blok kode :: konsol
+
+   Setel parameter berhasil
+
+Dan latar belakang jendela turtlesim Anda akan berubah warna:
+
+.. gambar:: gambar/set.png
+
+Mengatur parameter dengan perintah ``set`` hanya akan mengubahnya di sesi Anda saat ini, tidak secara permanen.
+Namun, Anda dapat menyimpan pengaturan Anda dan memuatnya kembali saat Anda memulai node berikutnya.
 
 5 ros2 param dump
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
-You can view all of a node's current parameter values by using the command:
+Anda dapat melihat semua nilai parameter node saat ini dengan menggunakan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 param dump <node_name>
+   ros2 param membuang <node_name>
 
-The command prints to the standard output (stdout) by default but you can also redirect the parameter values into a file to save them for later.
-To save your current configuration of ``/turtlesim``'s parameters into the file ``turtlesim.yaml``, enter the command:
+Perintah mencetak ke output standar (stdout) secara default tetapi Anda juga dapat mengarahkan ulang nilai parameter ke dalam file untuk menyimpannya nanti.
+Untuk menyimpan konfigurasi parameter ``/turtlesim`` Anda saat ini ke dalam file ``turtlesim.yaml``, masukkan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 param dump /turtlesim > turtlesim.yaml
+   ros2 param dump /turtlesim > turtlesim.yaml
 
-You will find a new file in the current working directory your shell is running in.
-If you open this file, you'll see the following content:
+Anda akan menemukan file baru di direktori kerja saat ini di mana shell Anda berjalan.
+Jika Anda membuka file ini, Anda akan melihat konten berikut:
 
-.. code-block:: YAML
+.. blok kode :: YAML
 
-  /turtlesim:
-    ros__parameters:
-      background_b: 255
-      background_g: 86
-      background_r: 150
-      qos_overrides:
-        /parameter_events:
-          publisher:
-            depth: 1000
-            durability: volatile
-            history: keep_last
-            reliability: reliable
-      use_sim_time: false
+   /turtlesim:
+     ros__parameter:
+       background_b: 255
+       background_g: 86
+       background_r: 150
+       qos_overrides:
+         /parameter_events:
+           penerbit:
+             kedalaman: 1000
+             daya tahan: mudah menguap
+             riwayat: keep_last
+             keandalan: dapat diandalkan
+       use_sim_time: salah
 
-Dumping parameters comes in handy if you want to reload the node with the same parameters in the future.
+Parameter dumping berguna jika Anda ingin memuat ulang node dengan parameter yang sama di masa mendatang.
 
-6 ros2 param load
-^^^^^^^^^^^^^^^^^
+6 ros2 beban param
+^^^^^^^^^^^^^^^^^^^^
 
-You can load parameters from a file to a currently running node using the command:
+Anda dapat memuat parameter dari file ke node yang sedang berjalan menggunakan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 param load <node_name> <parameter_file>
+   ros2 param memuat <node_name> <parameter_file>
 
-To load the ``turtlesim.yaml`` file generated with ``ros2 param dump`` into ``/turtlesim`` node's parameters, enter the command:
-
-.. code-block:: console
-
-  ros2 param load /turtlesim turtlesim.yaml
-
-Your terminal will return the message:
-
-.. code-block:: console
-
-  Set parameter background_b successful
-  Set parameter background_g successful
-  Set parameter background_r successful
-  Set parameter qos_overrides./parameter_events.publisher.depth failed: parameter 'qos_overrides./parameter_events.publisher.depth' cannot be set because it is read-only
-  Set parameter qos_overrides./parameter_events.publisher.durability failed: parameter 'qos_overrides./parameter_events.publisher.durability' cannot be set because it is read-only
-  Set parameter qos_overrides./parameter_events.publisher.history failed: parameter 'qos_overrides./parameter_events.publisher.history' cannot be set because it is read-only
-  Set parameter qos_overrides./parameter_events.publisher.reliability failed: parameter 'qos_overrides./parameter_events.publisher.reliability' cannot be set because it is read-only
-  Set parameter use_sim_time successful
-
-.. note::
-
-  Read-only parameters can only be modified at startup and not afterwards, that is why there are some warnings for the "qos_overrides" parameters.
-
-7 Load parameter file on node startup
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To start the same node using your saved parameter values, use:
-
-.. code-block:: console
-
-  ros2 run <package_name> <executable_name> --ros-args --params-file <file_name>
-
-This is the same command you always use to start turtlesim, with the added flags ``--ros-args`` and ``--params-file``, followed by the file you want to load.
-
-Stop your running turtlesim node, and try reloading it with your saved parameters, using:
-
-.. code-block:: console
-
-  ros2 run turtlesim turtlesim_node --ros-args --params-file turtlesim.yaml
-
-The turtlesim window should appear as usual, but with the purple background you set earlier.
-
-.. note::
-
-  When a parameter file is used at node startup, all parameters, including the read-only ones, will be updated.
-
-Summary
--------
-
-Nodes have parameters to define their default configuration values.
-You can ``get`` and ``set`` parameter values from the command line.
-You can also save the parameter settings to a file to reload them in a future session.
-
-Next steps
-----------
-
-Jumping back to ROS 2 communication methods, in the next tutorial you'll learn about :doc:`actions <../Understanding-ROS2-Actions/Understanding-ROS2-Actions>`.
+Untuk memuat file ``turtlesim.yaml`` yang dihasilkan dengan ``ros2 param dump`` ke dalam ``/turtlesim``

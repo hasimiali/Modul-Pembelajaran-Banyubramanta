@@ -1,401 +1,400 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Tutorials/Launch-Files/Using-Substitutions
-    Tutorials/Launch/Using-Substitutions
+     Tutorial/Launch-Files/Menggunakan-Substitusi
+     Tutorial/Peluncuran/Menggunakan-Pergantian
 
-Using substitutions
+Menggunakan substitusi
 ===================
 
-**Goal:** Learn about substitutions in ROS 2 launch files.
+**Sasaran:** Pelajari tentang penggantian dalam file peluncuran ROS 2.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 15 minutes
+**Waktu:** 15 menit
 
-.. contents:: Table of Contents
-   :depth: 2
-   :local:
+.. isi :: Daftar Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-Launch files are used to start nodes, services and execute processes.
-This set of actions may have arguments, which affect their behavior.
-Substitutions can be used in arguments to provide more flexibility when describing reusable launch files.
-Substitutions are variables that are only evaluated during execution of the launch description and can be used to acquire specific information like a launch configuration, an environment variable, or to evaluate an arbitrary Python expression.
+File peluncuran digunakan untuk memulai node, layanan, dan menjalankan proses.
+Serangkaian tindakan ini mungkin memiliki argumen, yang memengaruhi perilaku mereka.
+Pergantian dapat digunakan dalam argumen untuk memberikan lebih banyak fleksibilitas saat mendeskripsikan file peluncuran yang dapat digunakan kembali.
+Pergantian adalah variabel yang hanya dievaluasi selama pelaksanaan deskripsi peluncuran dan dapat digunakan untuk memperoleh informasi spesifik seperti konfigurasi peluncuran, variabel lingkungan, atau untuk mengevaluasi ekspresi Python yang sewenang-wenang.
 
-This tutorial shows usage examples of substitutions in ROS 2 launch files.
+Tutorial ini menunjukkan contoh penggunaan substitusi dalam file peluncuran ROS 2.
 
-Prerequisites
+Prasyarat
 -------------
 
-This tutorial uses the :doc:`turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>` package.
-This tutorial also assumes you are familiar with :doc:`creating packages <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>`.
+Tutorial ini menggunakan paket :doc:`turtlesim <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>`.
+Tutorial ini juga menganggap Anda sudah familiar dengan :doc:`membuat paket <../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package>`.
 
-As always, don’t forget to source ROS 2 in :doc:`every new terminal you open <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../../Beginner-CLI-Tools/Configuring-ROS2-Environment>`.
 
-Using substitutions
+Menggunakan substitusi
 -------------------
 
-1 Create and setup the package
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1 Buat dan atur paket
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Create a new package of build_type ``ament_python`` called ``launch_tutorial``:
+Buat paket baru tipe_build ``ament_python`` bernama ``launch_tutorial``:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 pkg create launch_tutorial --build-type ament_python
+   ros2 pkg buat launch_tutorial --build-type ament_python
 
-Inside of that package, create a directory called ``launch``:
+Di dalam paket itu, buat direktori bernama ``launch``:
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir launch_tutorial/launch
+       mkdir launch_tutorial/launch
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      mkdir launch_tutorial/launch
+       mkdir launch_tutorial/launch
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      md launch_tutorial/launch
+       md launch_tutorial/launch
 
-Finally, make sure to add in changes to the ``setup.py`` of the package so that the launch files will be installed:
+Terakhir, pastikan untuk menambahkan perubahan pada ``setup.py`` paket sehingga file peluncuran akan diinstal:
 
-.. code-block:: python
+.. blok kode :: python
 
-  import os
-  from glob import glob
-  from setuptools import find_packages, setup
+   impor os
+   dari glob impor glob
+   dari setuptools import find_packages, setup
 
-  package_name = 'launch_tutorial'
+   nama_paket = 'peluncuran_tutorial'
 
-  setup(
-      # Other parameters ...
-      data_files=[
-          # ... Other data files
-          # Include all launch files.
-          (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
-      ]
-  )
+   mempersiapkan(
+       # Parameter lain ...
+       file_data=[
+           # ... File data lainnya
+           # Sertakan semua file peluncuran.
+           (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
+       ]
+   )
 
 
-2 Parent launch file
-^^^^^^^^^^^^^^^^^^^^
+2 File peluncuran induk
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's create a launch file that will call and pass arguments to another launch file.
-To do this, create an ``example_main_launch.py`` file in the ``launch`` folder of the ``launch_tutorial`` package.
+Mari buat file peluncuran yang akan memanggil dan meneruskan argumen ke file peluncuran lainnya.
+Untuk melakukannya, buat file ``example_main_launch.py`` di folder ``launch`` dari paket ``launch_tutorial``.
 
-.. code-block:: python
+.. blok kode :: python
 
-    from launch_ros.substitutions import FindPackageShare
+     dari launch_ros.substitutions impor FindPackageShare
 
-    from launch import LaunchDescription
-    from launch.actions import IncludeLaunchDescription
-    from launch.launch_description_sources import PythonLaunchDescriptionSource
-    from launch.substitutions import PathJoinSubstitution, TextSubstitution
+     dari peluncuran impor LaunchDescription
+     dari launch.actions impor SertakanLaunchDescription
+     dari launch.launch_description_sources mengimpor PythonLaunchDescriptionSource
+     dari launch.substitutions import PathJoinSubstitution, TextSubstitution
 
 
-    def generate_launch_description():
-        colors = {
-            'background_r': '200'
-        }
+     def generate_launch_description():
+         warna = {
+             'background_r': '200'
+         }
 
-        return LaunchDescription([
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    PathJoinSubstitution([
-                        FindPackageShare('launch_tutorial'),
-                        'launch',
-                        'example_substitutions_launch.py'
-                    ])
-                ]),
-                launch_arguments={
-                    'turtlesim_ns': 'turtlesim2',
-                    'use_provided_red': 'True',
-                    'new_background_r': TextSubstitution(text=str(colors['background_r']))
-                }.items()
-            )
-        ])
-
-
-In the ``example_main_launch.py`` file, the ``FindPackageShare`` substitution is used to find the path to the ``launch_tutorial`` package.
-The ``PathJoinSubstitution`` substitution is then used to join the path to that package path with the ``example_substitutions_launch.py`` file name.
-
-.. code-block:: python
-
-    PathJoinSubstitution([
-        FindPackageShare('launch_tutorial'),
-        'launch',
-        'example_substitutions_launch.py'
-    ])
-
-The ``launch_arguments`` dictionary with ``turtlesim_ns`` and ``use_provided_red`` arguments is passed to the ``IncludeLaunchDescription`` action.
-The ``TextSubstitution`` substitution is used to define the ``new_background_r`` argument with the value of the ``background_r`` key in the ``colors`` dictionary.
-
-.. code-block:: python
-
-    launch_arguments={
-        'turtlesim_ns': 'turtlesim2',
-        'use_provided_red': 'True',
-        'new_background_r': TextSubstitution(text=str(colors['background_r']))
-    }.items()
-
-3 Substitutions example launch file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Now create an ``example_substitutions_launch.py`` file in the same folder.
-
-.. code-block:: python
-
-    from launch_ros.actions import Node
-
-    from launch import LaunchDescription
-    from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction
-    from launch.conditions import IfCondition
-    from launch.substitutions import LaunchConfiguration, PythonExpression
-
-
-    def generate_launch_description():
-        turtlesim_ns = LaunchConfiguration('turtlesim_ns')
-        use_provided_red = LaunchConfiguration('use_provided_red')
-        new_background_r = LaunchConfiguration('new_background_r')
-
-        turtlesim_ns_launch_arg = DeclareLaunchArgument(
-            'turtlesim_ns',
-            default_value='turtlesim1'
-        )
-        use_provided_red_launch_arg = DeclareLaunchArgument(
-            'use_provided_red',
-            default_value='False'
-        )
-        new_background_r_launch_arg = DeclareLaunchArgument(
-            'new_background_r',
-            default_value='200'
-        )
-
-        turtlesim_node = Node(
-            package='turtlesim',
-            namespace=turtlesim_ns,
-            executable='turtlesim_node',
-            name='sim'
-        )
-        spawn_turtle = ExecuteProcess(
-            cmd=[[
-                'ros2 service call ',
-                turtlesim_ns,
-                '/spawn ',
-                'turtlesim/srv/Spawn ',
-                '"{x: 2, y: 2, theta: 0.2}"'
-            ]],
-            shell=True
-        )
-        change_background_r = ExecuteProcess(
-            cmd=[[
-                'ros2 param set ',
-                turtlesim_ns,
-                '/sim background_r ',
-                '120'
-            ]],
-            shell=True
-        )
-        change_background_r_conditioned = ExecuteProcess(
-            condition=IfCondition(
-                PythonExpression([
-                    new_background_r,
-                    ' == 200',
-                    ' and ',
-                    use_provided_red
-                ])
-            ),
-            cmd=[[
-                'ros2 param set ',
-                turtlesim_ns,
-                '/sim background_r ',
-                new_background_r
-            ]],
-            shell=True
-        )
-
-        return LaunchDescription([
-            turtlesim_ns_launch_arg,
-            use_provided_red_launch_arg,
-            new_background_r_launch_arg,
-            turtlesim_node,
-            spawn_turtle,
-            change_background_r,
-            TimerAction(
-                period=2.0,
-                actions=[change_background_r_conditioned],
-            )
-        ])
-
-In the ``example_substitutions_launch.py`` file, ``turtlesim_ns``, ``use_provided_red``, and ``new_background_r`` launch configurations are defined.
-They are used to store values of launch arguments in the above variables and to pass them to required actions.
-These ``LaunchConfiguration`` substitutions allow us to acquire the value of the launch argument in any part of the launch description.
-
-``DeclareLaunchArgument`` is used to define the launch argument that can be passed from the above launch file or from the console.
-
-.. code-block:: python
-
-    turtlesim_ns = LaunchConfiguration('turtlesim_ns')
-    use_provided_red = LaunchConfiguration('use_provided_red')
-    new_background_r = LaunchConfiguration('new_background_r')
-
-    turtlesim_ns_launch_arg = DeclareLaunchArgument(
-        'turtlesim_ns',
-        default_value='turtlesim1'
-    )
-    use_provided_red_launch_arg = DeclareLaunchArgument(
-        'use_provided_red',
-        default_value='False'
-    )
-    new_background_r_launch_arg = DeclareLaunchArgument(
-        'new_background_r',
-        default_value='200'
-    )
-
-The ``turtlesim_node`` node with the ``namespace`` set to ``turtlesim_ns`` ``LaunchConfiguration`` substitution is defined.
-
-.. code-block:: python
-
-    turtlesim_node = Node(
-        package='turtlesim',
-        namespace=turtlesim_ns,
-        executable='turtlesim_node',
-        name='sim'
-    )
-
-Afterwards, the ``ExecuteProcess`` action called ``spawn_turtle`` is defined with the corresponding ``cmd`` argument.
-This command makes a call to the spawn service of the turtlesim node.
-
-Additionally, the ``LaunchConfiguration`` substitution is used to get the value of the ``turtlesim_ns`` launch argument to construct a command string.
-
-.. code-block:: python
-
-    spawn_turtle = ExecuteProcess(
-        cmd=[[
-            'ros2 service call ',
-            turtlesim_ns,
-            '/spawn ',
-            'turtlesim/srv/Spawn ',
-            '"{x: 2, y: 2, theta: 0.2}"'
-        ]],
-        shell=True
-    )
-
-The same approach is used for the ``change_background_r`` and ``change_background_r_conditioned`` actions that change the turtlesim background's red color parameter.
-The difference is that the ``change_background_r_conditioned`` action is only executed if the provided ``new_background_r`` argument equals ``200`` and the ``use_provided_red`` launch argument is set to ``True``.
-The evaluation inside the ``IfCondition`` is done using the ``PythonExpression`` substitution.
-
-.. code-block:: python
-
-    change_background_r = ExecuteProcess(
-        cmd=[[
-            'ros2 param set ',
-            turtlesim_ns,
-            '/sim background_r ',
-            '120'
-        ]],
-        shell=True
-    )
-    change_background_r_conditioned = ExecuteProcess(
-        condition=IfCondition(
-            PythonExpression([
-                new_background_r,
-                ' == 200',
-                ' and ',
-                use_provided_red
-            ])
-        ),
-        cmd=[[
-            'ros2 param set ',
-            turtlesim_ns,
-            '/sim background_r ',
-            new_background_r
-        ]],
-        shell=True
-    )
-
-4 Build the package
-^^^^^^^^^^^^^^^^^^^
-
-Go to the root of the workspace, and build the package:
-
-.. code-block:: console
-
-  colcon build
-
-Also remember to source the workspace after building.
-
-Launching example
+         kembali LaunchDescription([
+             SertakanDeskripsiPeluncuran(
+                 PythonLaunchDescriptionSumber([
+                     PathJoinSubstitusi([
+                         FindPackageShare('launch_tutorial'),
+                         'meluncurkan',
+                         'example_substitutions_launch.py'
+                     ])
+                 ]),
+                 launch_arguments={
+                     'turtlesim_ns': 'turtlesim2',
+                     'use_provided_red': 'Benar',
+                     'new_background_r': TextSubstitution(text=str(colors['background_r']))
+                 }.item()
+             )
+         ])
+
+
+Dalam file ``example_main_launch.py``, substitusi ``FindPackageShare`` digunakan untuk menemukan path ke paket ``launch_tutorial``.
+Substitusi ``PathJoinSubstitution`` kemudian digunakan untuk menggabungkan jalur ke jalur paket tersebut dengan nama file ``example_substitutions_launch.py``.
+
+.. blok kode :: python
+
+     PathJoinSubstitusi([
+         FindPackageShare('launch_tutorial'),
+         'meluncurkan',
+         'example_substitutions_launch.py'
+     ])
+
+Kamus ``launch_arguments`` dengan argumen ``turtlesim_ns`` dan ``use_provided_red`` diteruskan ke tindakan ``IncludeLaunchDescription``.
+Substitusi ``TextSubstitution`` digunakan untuk mendefinisikan argumen ``new_background_r`` dengan nilai kunci ``background_r`` dalam kamus ``colors``.
+
+.. blok kode :: python
+
+     launch_arguments={
+         'turtlesim_ns': 'turtlesim2',
+         'use_provided_red': 'Benar',
+         'new_background_r': TextSubstitution(text=str(colors['background_r']))
+     }.item()
+
+3 Pergantian contoh file peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sekarang buat file ``example_substitutions_launch.py`` di folder yang sama.
+
+.. blok kode :: python
+
+     dari launch_ros.actions impor Node
+
+     dari peluncuran impor LaunchDdeskripsi
+     dari launch.actions impor DeclareLaunchArgument, ExecuteProcess, TimerAction
+     dari launch.conditions mengimpor IfCondition
+     dari launch.substitutions import LaunchConfiguration, PythonExpression
+
+
+     def generate_launch_description():
+         turtlesim_ns = LaunchConfiguration('turtlesim_ns')
+         use_provided_red = LaunchConfiguration('use_provided_red')
+         new_background_r = LaunchConfiguration('new_background_r')
+
+         turtlesim_ns_launch_arg = DeklarasikanLaunchArgument(
+             'turtlesim_ns',
+             default_value='turtlesim1'
+         )
+         use_provided_red_launch_arg = DeklarasikanLaunchArgument(
+             'use_provided_red',
+             default_value='Salah'
+         )
+         new_background_r_launch_arg = DeklarasikanLaunchArgument(
+             'new_background_r',
+             default_value='200'
+         )
+
+         turtlesim_node = Node(
+             package='turtlesim',
+             namespace=turtlesim_ns,
+             dapat dieksekusi='turtlesim_node',
+             nama='sim'
+         )
+         spawn_turtle = Jalankan Proses(
+             cmd=[[
+                 'panggilan layanan ros2',
+                 turtlesim_ns,
+                 '/muncul ',
+                 'turtlesim/srv/Spawn ',
+                 '"{x: 2, y: 2, teta: 0,2}"'
+             ]],
+             cangkang=Benar
+         )
+         change_background_r = Jalankan Proses(
+             cmd=[[
+                 'set parameter ros2',
+                 turtlesim_ns,
+                 '/sim background_r',
+                 '120'
+             ]],
+             cangkang=Benar
+         )
+         change_background_r_conditioned = Jalankan Proses(
+             kondisi=JikaKondisi(
+                 Ekspresi Python([
+                     baru_latar belakang_r,
+                     ' == 200',
+                     ' Dan ',
+                     use_provided_red
+                 ])
+             ),
+             cmd=[[
+                 'set parameter ros2',
+                 turtlesim_ns,
+                 '/sim background_r',
+                 new_background_r
+             ]],
+             cangkang=Benar
+         )
+
+         kembali LaunchDescription([
+             turtlesim_ns_launch_arg,
+             gunakan_provided_red_launch_arg,
+             new_background_r_launch_arg,
+             turtlesim_node,
+             bertelur_kura-kura,
+             ubah_latar belakang_r,
+             TimerAksi(
+                 periode=2,0,
+                 tindakan=[ubah_latar belakang_r_dikondisikan],
+             )
+         ])
+
+Dalam file ``example_substitutions_launch.py``, konfigurasi peluncuran ``turtlesim_ns``, ``use_provided_red``, dan ``new_background_r`` ditentukan.
+Mereka digunakan untuk menyimpan nilai argumen peluncuran dalam variabel di atas dan meneruskannya ke tindakan yang diperlukan.
+Substitusi ``LaunchConfiguration`` ini memungkinkan kita memperoleh nilai argumen peluncuran di bagian mana pun dari deskripsi peluncuran.
+
+``DeclareLaunchArgument`` digunakan untuk menentukan argumen peluncuran yang dapat diteruskan dari file peluncuran di atas atau dari konsol.
+
+.. blok kode :: python
+
+     turtlesim_ns = LaunchConfiguration('turtlesim_ns')
+     use_provided_red = LaunchConfiguration('use_provided_red')
+     new_background_r = LaunchConfiguration('new_background_r')
+
+     turtlesim_ns_launch_arg = DeklarasikanLaunchArgument(
+         'turtlesim_ns',
+         default_value='turtlesim1'
+     )
+     use_provided_red_launch_arg = DeklarasikanLaunchArgument(
+         'use_provided_red',
+         default_value='Salah'
+     )
+     new_background_r_launch_arg = DeklarasikanLaunchArgument(
+         'new_background_r',
+         default_value='200'
+     )
+
+Node ``turtlesim_node`` dengan ``namespace`` disetel ke substitusi ``turtlesim_ns`` ``LaunchConfiguration`` telah ditentukan.
+
+.. blok kode :: python
+
+     turtlesim_node = Node(
+         package='turtlesim',
+         namespace=turtlesim_ns,
+         dapat dieksekusi='turtlesim_node',
+         nama='sim'
+     )
+
+Setelah itu, tindakan ``ExecuteProcess`` yang disebut ``spawn_turtle`` ditentukan dengan argumen ``cmd`` yang sesuai.
+Perintah ini membuat panggilan ke layanan spawn dari node turtlesim.
+
+Selain itu, substitusi ``LaunchConfiguration`` digunakan untuk mendapatkan nilai argumen peluncuran ``turtlesim_ns`` untuk membuat string perintah.
+
+.. blok kode :: python
+
+     spawn_turtle = Jalankan Proses(
+         cmd=[[
+             'panggilan layanan ros2',
+             turtlesim_ns,
+             '/muncul ',
+             'turtlesim/srv/Spawn ',
+             '"{x: 2, y: 2, teta: 0,2}"'
+         ]],
+         cangkang=Benar
+     )
+
+Pendekatan yang sama digunakan untuk tindakan ``change_background_r`` dan ``change_background_r_conditioned`` yang mengubah parameter warna merah latar belakang turtlesim.
+Perbedaannya adalah bahwa tindakan ``change_background_r_conditioned`` hanya dijalankan jika argumen ``new_background_r`` yang diberikan sama dengan ``200`` dan argumen peluncuran ``use_provided_red`` disetel ke ``True``.
+Evaluasi di dalam ``IfCondition`` dilakukan dengan menggunakan substitusi ``PythonExpression``.
+
+.. blok kode :: python
+
+     change_background_r = Jalankan Proses(
+         cmd=[['set parameter ros2',
+             turtlesim_ns,
+             '/sim background_r',
+             '120'
+         ]],
+         cangkang=Benar
+     )
+     change_background_r_conditioned = Jalankan Proses(
+         kondisi=JikaKondisi(
+             Ekspresi Python([
+                 baru_latar belakang_r,
+                 ' == 200',
+                 ' Dan ',
+                 use_provided_red
+             ])
+         ),
+         cmd=[[
+             'set parameter ros2',
+             turtlesim_ns,
+             '/sim background_r',
+             new_background_r
+         ]],
+         cangkang=Benar
+     )
+
+4 Bangun paket
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Pergi ke akar ruang kerja, dan buat paketnya:
+
+.. blok kode :: konsol
+
+   membangun colcon
+
+Ingat juga untuk sumber ruang kerja setelah membangun.
+
+Contoh peluncuran
 -----------------
 
-Now you can launch the ``example_main_launch.py`` file using the ``ros2 launch`` command.
+Sekarang Anda dapat meluncurkan file ``example_main_launch.py`` menggunakan perintah ``ros2 launch``.
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 launch launch_tutorial example_main_launch.py
+     peluncuran ros2 launch_tutorial example_main_launch.py
 
-This will do the following:
+Ini akan melakukan hal berikut:
 
-#. Start a turtlesim node with a blue background
-#. Spawn the second turtle
-#. Change the color to purple
-#. Change the color to pink after two seconds if the provided ``background_r`` argument is ``200`` and ``use_provided_red`` argument is ``True``
+#. Mulai simpul turtlesim dengan latar belakang biru
+#. Menelurkan kura-kura kedua
+#. Ubah warnanya menjadi ungu
+#. Ubah warna menjadi merah muda setelah dua detik jika argumen ``background_r`` yang diberikan adalah ``200`` dan argumen ``use_provided_red`` adalah ``True``
 
-Modifying launch arguments
+Memodifikasi argumen peluncuran
 --------------------------
 
-If you want to change the provided launch arguments, you can either update them in ``launch_arguments`` dictionary in the ``example_main_launch.py`` or launch the ``example_substitutions_launch.py`` with preferred arguments.
-To see arguments that may be given to the launch file, run the following command:
+Jika Anda ingin mengubah argumen peluncuran yang disediakan, Anda dapat memperbaruinya di kamus ``launch_arguments`` di ``example_main_launch.py`` atau meluncurkan ``example_substitutions_launch.py`` dengan argumen pilihan.
+Untuk melihat argumen yang mungkin diberikan ke file peluncuran, jalankan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 launch launch_tutorial example_substitutions_launch.py --show-args
+     peluncuran ros2 launch_tutorial example_substitutions_launch.py --show-args
 
-This will show the arguments that may be given to the launch file and their default values.
+Ini akan menampilkan argumen yang mungkin diberikan ke file peluncuran dan nilai defaultnya.
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    Arguments (pass arguments as '<name>:=<value>'):
+     Argumen (berikan argumen sebagai '<nama>:=<nilai>'):
 
-        'turtlesim_ns':
-            no description given
-            (default: 'turtlesim1')
+         'turtlesim_ns':
+             tidak ada deskripsi yang diberikan
+             (default: 'turtlesim1')
 
-        'use_provided_red':
-            no description given
-            (default: 'False')
+         'use_provided_red':
+             tidak ada deskripsi yang diberikan
+             (default: 'Salah')
 
-        'new_background_r':
-            no description given
-            (default: '200')
+         'new_background_r':
+             tidak ada deskripsi yang diberikan
+             (bawaan: '200')
 
-Now you can pass the desired arguments to the launch file as follows:
+Sekarang Anda dapat meneruskan argumen yang diinginkan ke file peluncuran sebagai berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 launch launch_tutorial example_substitutions_launch.py turtlesim_ns:='turtlesim3' use_provided_red:='True' new_background_r:=200
+     peluncuran ros2 launch_tutorial example_substitutions_launch.py turtlesim_ns:='turtlesim3' use_provided_red:='True' new_background_r:=200
 
 
-Documentation
+Dokumentasi
 -------------
 
-`The launch documentation <https://github.com/ros2/launch/blob/{REPOS_FILE_BRANCH}/launch/doc/source/architecture.rst>`_ provides detailed information about available substitutions.
+`Dokumentasi peluncuran <https://github.com/ros2/launch/blob/{REPOS_FILE_BRANCH}/launch/doc/source/architecture.rst>`_ memberikan informasi mendetail tentang substitusi yang tersedia.
 
-Summary
+Ringkasan
 -------
 
-In this tutorial, you learned about using substitutions in launch files.
-You learned about their possibilities and capabilities to create reusable launch files.
+Dalam tutorial ini, Anda belajar tentang penggunaan substitusi dalam file peluncuran.
+Anda mempelajari tentang kemungkinan dan kemampuannya untuk membuat file peluncuran yang dapat digunakan kembali.
 
-You can now learn more about :doc:`using event handlers in launch files <./Using-Event-Handlers>` which are used to define a complex set of rules which can be used to dynamically modify the launch file.
+Anda sekarang dapat mempelajari lebih lanjut tentang :doc:`menggunakan event handler dalam file peluncuran <./Using-Event-Handlers>` yang digunakan untuk menentukan seperangkat aturan kompleks yang dapat digunakan untuk memodifikasi file peluncuran secara dinamis.

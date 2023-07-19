@@ -1,259 +1,167 @@
-.. _ROS2Workspace:
+.. _Colcon:
 
-Creating a workspace
-====================
+Menggunakan ``colcon`` untuk membuat paket
+==================================
 
-**Goal:** Create a workspace and learn how to set up an overlay for development and testing.
+.. isi :: Daftar Isi
+    :kedalaman: 2
+    :lokal:
 
-**Tutorial level:** Beginner
+**Sasaran:** Bangun ruang kerja ROS 2 dengan ``colcon``.
 
-**Time:** 20 minutes
+**Tingkat tutorial:** Pemula
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+**Waktu:** 20 menit
 
-Background
+Ini adalah tutorial singkat tentang cara membuat dan membangun ruang kerja ROS 2 dengan ``colcon``.
+Ini adalah tutorial praktis dan tidak dirancang untuk menggantikan dokumentasi inti.
+
+Latar belakang
 ----------
 
-A workspace is a directory containing ROS 2 packages.
-Before using ROS 2, it's necessary to source your ROS 2 installation workspace in the terminal you plan to work in.
-This makes ROS 2's packages available for you to use in that terminal.
+``colcon`` adalah iterasi pada alat build ROS ``catkin_make``, ``catkin_make_isolated``, ``catkin_tools`` dan ``ament_tools``.
+Untuk informasi lebih lanjut tentang desain colcon, lihat `dokumen ini <https://design.ros2.org/articles/build_tool.html>`__.
 
-You also have the option of sourcing an "overlay" - a secondary workspace where you can add new packages without interfering with the existing ROS 2 workspace that you're extending, or "underlay".
-Your underlay must contain the dependencies of all the packages in your overlay.
-Packages in your overlay will override packages in the underlay.
-It's also possible to have several layers of underlays and overlays, with each successive overlay using the packages of its parent underlays.
+Kode sumber dapat ditemukan di organisasi `colcon GitHub <https://github.com/colcon>`__.
 
-
-Prerequisites
+Prasyarat
 -------------
 
-* :doc:`ROS 2 installation <../../../Installation>`
-* :doc:`colcon installation <../Colcon-Tutorial>`
-* `git installation <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`__
-* :doc:`turtlesim installation <../../Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim>`
-* Have :doc:`rosdep installed <../../Intermediate/Rosdep>`
-* Understanding of basic terminal commands (`here's a guide for Linux <http://www.ee.surrey.ac.uk/Teaching/Unix/>`__)
-* Text editor of your choice
+Instal colcon
+^^^^^^^^^^^^^^^^
 
-Tasks
------
+.. blok kode :: bash
 
-1 Source ROS 2 environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Your main ROS 2 installation will be your underlay for this tutorial.
-(Keep in mind that an underlay does not necessarily have to be the main ROS 2 installation.)
-
-Depending on how you installed ROS 2 (from source or binaries), and which platform you're on, your exact source command will vary:
-
-.. code-block:: console
-
-  source /opt/ros/{DISTRO}/setup.bash
-
-Consult the :doc:`installation guide <../../../Installation>` you followed if these commands don't work for you.
-
-.. _new-directory:
-
-2 Create a new directory
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Best practice is to create a new directory for every new workspace.
-The name doesn't matter, but it is helpful to have it indicate the purpose of the workspace.
-Let's choose the directory name ``ros2_ws``, for "development workspace":
-
-.. code-block:: console
-
-  mkdir -p ~/ros2_ws/src
-  cd ~/ros2_ws/src
-
-Another best practice is to put any packages in your workspace into the ``src`` directory.
-The above code creates a ``src`` directory inside ``ros2_ws`` and then navigates into it.
+     sudo apt install python3-colcon-common-extensions
 
 
-3 Clone a sample repo
-^^^^^^^^^^^^^^^^^^^^^
 
-Ensure you're still in the ``ros2_ws/src`` directory before you clone.
+Instal ROS2
+^^^^^^^^^^^^^^^
 
-In the rest of the beginner developer tutorials, you will create your own packages, but for now you will practice putting a workspace together using existing packages.
+Untuk membuat sampel, Anda perlu menginstal ROS 2.
 
-If you went through the :doc:`Beginner: CLI Tools <../../Beginner-CLI-Tools>` tutorials, you'll be familiar with ``turtlesim``, one of the packages in `ros_tutorials <https://github.com/ros/ros_tutorials/>`__.
+Ikuti :doc:`instruksi instalasi <../../Installation>`.
 
-A repo can have multiple branches.
-You need to check out the one that targets your installed ROS 2 distro.
-When you clone this repo, add the ``-b`` argument followed by that branch.
+.. perhatian:: Jika menginstal dari paket Debian, tutorial ini memerlukan :ref:`instalasi desktop <linux-install-debians-install-ros-2-packages>`.
 
-In the ``ros2_ws/src`` directory, run the following command:
+Dasar
+------
 
-.. code-block:: console
+Ruang kerja ROS adalah direktori dengan struktur tertentu.
+Biasanya ada subdirektori ``src``.
+Di dalam subdirektori itu adalah tempat kode sumber paket ROS akan ditempatkan.
+Biasanya direktori mulai kosong.
 
-  git clone https://github.com/ros/ros_tutorials.git -b {DISTRO}
+colcon melakukan build di luar sumber.
+Secara default ini akan membuat direktori berikut sebagai peer dari direktori ``src``:
 
-Now ``ros_tutorials`` is cloned in your workspace.  The ``ros_tutorials`` repository contains the ``turtlesim`` package, which we'll use in the rest of this tutorial.  The other packages in this repository are not built because they contain a ``COLCON_IGNORE`` file.
+* Direktori ``build`` akan menjadi tempat file perantara disimpan.
+   Untuk setiap paket, subfolder akan dibuat di mana mis. CMake sedang dipanggil.
+* Direktori ``install`` adalah tempat setiap paket akan diinstal.
+   Secara default setiap paket akan diinstal ke dalam subdirektori yang terpisah.
+* Direktori ``log`` berisi berbagai informasi logging tentang setiap pemanggilan colcon.
 
-So far you have populated your workspace with a sample package, but it isn't a fully-functional workspace yet.
-You need to resolve the dependencies first and then build the workspace.
+.. catatan:: Dibandingkan dengan catkin tidak ada direktori ``devel``.
 
-
-4 Resolve dependencies
+Buat ruang kerja
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Before building the workspace, you need to resolve the package dependencies.
-You may have all the dependencies already, but best practice is to check for dependencies every time you clone.
-You wouldn't want a build to fail after a long wait only to realize that you have missing dependencies.
+Pertama, buat direktori (``ros2_ws``) untuk memuat ruang kerja kita:
 
-From the root of your workspace (``ros2_ws``), run the following command:
+.. blok kode :: bash
 
-.. code-block:: bash
-
-  # cd if you're still in the ``src`` directory with the ``ros_tutorials`` clone
-  cd ..
-  rosdep install -i --from-path src --rosdistro {DISTRO} -y
+     mkdir -p ~/ros2_ws/src
+     cd ~/ros2_ws
 
 
-If you installed ROS 2 on Linux from source or the "fat" archive, you will need to use the rosdep command from their installation instructions.
-Here are the :ref:`from-source rosdep section <linux-development-setup-install-dependencies-using-rosdep>` and the :ref:`"fat" archive rosdep section <linux-install-binary-install-missing-dependencies>`.
+Pada titik ini ruang kerja berisi satu direktori kosong ``src``:
 
-If you already have all your dependencies, the console will return:
+.. blok kode :: bash
 
-.. code-block:: console
+     .
+     └── src
 
-  #All required rosdeps installed successfully
+     1 direktori, 0 file
 
-Packages declare their dependencies in the package.xml file (you will learn more about packages in the next tutorial).
-This command walks through those declarations and installs the ones that are missing.
-You can learn more about ``rosdep`` in another tutorial (coming soon).
-
-5 Build the workspace with colcon
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-From the root of your workspace (``ros2_ws``), you can now build your packages using the command:
-
-.. code-block:: console
-
-  colcon build
-
-The console will return the following message:
-
-.. code-block:: console
-
-  Starting >>> turtlesim
-  Finished <<< turtlesim [5.49s]
-
-  Summary: 1 package finished [5.58s]
-
-.. note::
-
-  Other useful arguments for ``colcon build``:
-
-  * ``--packages-up-to`` builds the package you want, plus all its dependencies, but not the whole workspace (saves time)
-  * ``--symlink-install`` saves you from having to rebuild every time you tweak python scripts
-  * ``--event-handlers console_direct+`` shows console output while building (can otherwise be found in the ``log`` directory)
-
-Once the build is finished, enter ``ls`` in the workspace root (``~/ros2_ws``) and you will see that colcon has created new directories:
-
-.. code-block:: console
-
-  build  install  log  src
-
-The ``install`` directory is where your workspace's setup files are, which you can use to source your overlay.
-
-
-6 Source the overlay
+Tambahkan beberapa sumber
 ^^^^^^^^^^^^^^^^^^^^
 
-Before sourcing the overlay, it is very important that you open a new terminal, separate from the one where you built the workspace.
-Sourcing an overlay in the same terminal where you built, or likewise building where an overlay is sourced, may create complex issues.
+Mari klon repositori `contoh <https://github.com/ros2/examples>`__ ke dalam direktori ``src`` ruang kerja:
 
-In the new terminal, source your main ROS 2 environment as the "underlay", so you can build the overlay "on top of" it:
+.. blok kode :: bash
 
-.. code-block:: console
+     git clone https://github.com/ros2/contoh src/contoh -b {REPOS_FILE_BRANCH}
 
-  source /opt/ros/{DISTRO}/setup.bash
+Sekarang ruang kerja harus memiliki kode sumber ke contoh ROS 2:
 
+.. blok kode :: bash
 
-Go into the root of your workspace:
+     .
+     └── src
+         └── contoh
+             ├── KONTRIBUSI.md
+             ├── LISENSI
+             ├── rclcpp
+             ├── rclpy
+             └── README.md
 
-.. code-block:: console
+     4 direktori, 3 file
 
-  cd ~/ros2_ws
+Sumber lapisan bawah
+^^^^^^^^^^^^^^^^^^^^^^
 
+Penting bagi kita untuk memiliki sumber lingkungan untuk instalasi ROS 2 yang ada yang akan menyediakan ruang kerja kita dengan dependensi build yang diperlukan untuk paket contoh.
+Hal ini dicapai dengan mengambil skrip penyiapan yang disediakan oleh instalasi biner atau instalasi sumber, yaitu. ruang kerja colcon lain (lihat :doc:`Instalasi <../../Instalasi>`).
+Kami menyebut lingkungan ini sebagai **lapisan bawah**.
 
-In the root, source your overlay:
+Ruang kerja kita, ``ros2_ws``, akan menjadi **overlay** di atas instalasi ROS 2 yang sudah ada.
+Secara umum, disarankan untuk menggunakan overlay saat Anda berencana untuk melakukan iterasi pada sejumlah kecil paket, daripada meletakkan semua paket Anda di ruang kerja yang sama.
 
-.. code-block:: console
+Bangun ruang kerja
+^^^^^^^^^^^^^^^^^^^^^^^
 
-  source install/local_setup.bash
+.. Perhatian::
 
+    Untuk membangun paket di Windows, Anda harus berada di lingkungan Visual Studio, lihat :ref:`Membuat Kode ROS 2 <windows-dev-build-ros2>` untuk detail lebih lanjut.
 
-.. note::
+Di root ruang kerja, jalankan ``colcon build``.
+Karena tipe build seperti ``ament_cmake`` tidak mendukung konsep ruang ``devel`` dan memerlukan paket untuk diinstal, colcon mendukung opsi ``--symlink-install``.
+Ini memungkinkan file yang diinstal diubah dengan mengubah file di ruang ``sumber`` (mis. File Python atau sumber daya lain yang tidak dikompilasi) untuk iterasi yang lebih cepat.
 
-  Sourcing the ``local_setup`` of the overlay will only add the packages available in the overlay to your environment.
-  ``setup`` sources the overlay as well as the underlay it was created in, allowing you to utilize both workspaces.
+.. blok kode :: konsol
 
-  So, sourcing your main ROS 2 installation's ``setup`` and then the ``ros2_ws`` overlay's ``local_setup``, like you just did,
-  is the same as just sourcing ``ros2_ws``'s ``setup``, because that includes the environment of its underlay.
-
-Now you can run the ``turtlesim`` package from the overlay:
-
-.. code-block:: console
-
-  ros2 run turtlesim turtlesim_node
-
-But how can you tell that this is the overlay turtlesim running, and not your main installation's turtlesim?
-
-Let's modify turtlesim in the overlay so you can see the effects:
-
-* You can modify and rebuild packages in the overlay separately from the underlay.
-* The overlay takes precedence over the underlay.
-
-
-7 Modify the overlay
-^^^^^^^^^^^^^^^^^^^^
-
-You can modify ``turtlesim`` in your overlay by editing the title bar on the turtlesim window.
-To do this, locate the ``turtle_frame.cpp`` file in ``~/ros2_ws/src/ros_tutorials/turtlesim/src``.
-Open ``turtle_frame.cpp`` with your preferred text editor.
-
-On line 52 you will see the function ``setWindowTitle("TurtleSim");``.
-Change the value ``"TurtleSim"`` to ``"MyTurtleSim"``, and save the file.
-
-Return to the first terminal where you ran ``colcon build`` earlier and run it again.
-
-Return to the second terminal (where the overlay is sourced) and run turtlesim again:
-
-.. code-block:: console
-
-  ros2 run turtlesim turtlesim_node
-
-You will see the title bar on the turtlesim window now says "MyTurtleSim".
-
-.. image:: images/overlay.png
-
-Even though your main ROS 2 environment was sourced in this terminal earlier, the overlay of your ``ros2_ws`` environment takes precedence over the contents of the underlay.
-
-To see that your underlay is still intact, open a brand new terminal and source only your ROS 2 installation.
-Run turtlesim again:
-
-.. code-block:: console
-
-  ros2 run turtlesim turtlesim_node
-
-.. image:: images/underlay.png
-
-You can see that modifications in the overlay did not actually affect anything in the underlay.
+   colcon build --symlink-install
 
 
-Summary
--------
-In this tutorial, you sourced your main ROS 2 distro install as your underlay, and created an overlay by cloning and building packages in a new workspace.
-The overlay gets prepended to the path, and takes precedence over the underlay, as you saw with your modified turtlesim.
+Setelah build selesai, kita akan melihat direktori ``build``, ``install``, dan ``log``:
 
-Using overlays is recommended for working on a small number of packages, so you don't have to put everything in the same workspace and rebuild a huge workspace on every iteration.
+.. blok kode :: bash
 
-Next steps
-----------
+     .
+     ├── bangun
+     ├── pasang
+     ├── mencatat
+     └── src
 
-Now that you understand the details behind creating, building and sourcing your own workspace, you can learn how to :doc:`create your own packages <../Creating-Your-First-ROS2-Package>`.
+     4 direktori, 0 file
+
+.. _colcon-run-the-tests:
+
+Jalankan tes
+^^^^^^^^^
+
+Untuk menjalankan tes untuk paket yang baru saja kita buat, jalankan perintah berikut:
+
+.. blok kode :: konsol
+
+   uji colkon
+
+.. _colcon-tutorial-sumber-lingkungan:
+
+Sumber lingkungan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ketika colcon berhasil menyelesaikan pembangunan, hasilnya akan berada di direktori ``install``.
+Sebelum Anda dapat menggunakan salah satu executable atau pustaka yang diinstal, Anda perlu menambahkannya ke jalur dan jalur pustaka Anda.
+colcon akan memiliki

@@ -1,273 +1,184 @@
-.. _ROS2Services:
+.. _ROS2Layanan:
 
-Understanding services
+Memahami layanan
 ======================
 
-**Goal:** Learn about services in ROS 2 using command line tools.
+**Sasaran:** Pelajari tentang layanan di ROS 2 menggunakan alat baris perintah.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 10 minutes
+**Waktu:** 10 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-Services are another method of communication for nodes in the ROS graph.
-Services are based on a call-and-response model versus the publisher-subscriber model of topics.
-While topics allow nodes to subscribe to data streams and get continual updates, services only provide data when they are specifically called by a client.
+Layanan adalah metode komunikasi lain untuk node dalam grafik ROS.
+Layanan didasarkan pada model panggilan dan tanggapan versus model topik penerbit-pelanggan.
+Sementara topik memungkinkan node untuk berlangganan aliran data dan mendapatkan pembaruan terus-menerus, layanan hanya menyediakan data saat dipanggil secara khusus oleh klien.
 
-.. image:: images/Service-SingleServiceClient.gif
+.. image:: images/Layanan-SingleServiceClient.gif
 
 .. image:: images/Service-MultipleServiceClient.gif
 
-Prerequisites
+Prasyarat
 -------------
 
-Some concepts mentioned in this tutorial, like :doc:`Nodes <../Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` and :doc:`Topics <../Understanding-ROS2-Topics/Understanding-ROS2-Topics>`, were covered in previous tutorials in the series.
+Beberapa konsep yang disebutkan dalam tutorial ini, seperti :doc:`Nodes <../Understanding-ROS2-Nodes/Understanding-ROS2-Nodes>` dan :doc:`Topics <../Understanding-ROS2-Topics/Understanding-ROS2- Topik>`, dibahas dalam tutorial sebelumnya dalam seri ini.
 
-You will need the :doc:`turtlesim package <../Introducing-Turtlesim/Introducing-Turtlesim>`.
+Anda memerlukan :doc:`paket turtlesim <../Introducing-Turtlesim/Introducing-Turtlesim>`.
 
-As always, don't forget to source ROS 2 in :doc:`every new terminal you open <../Configuring-ROS2-Environment>`.
+Seperti biasa, jangan lupa untuk mencari sumber ROS 2 di :doc:`setiap terminal baru yang Anda buka <../Configuring-ROS2-Environment>`.
 
-Tasks
+Tugas
 -----
 
-1 Setup
+1 Pengaturan
 ^^^^^^^
-Start up the two turtlesim nodes, ``/turtlesim`` and ``/teleop_turtle``.
+Mulai dua simpul turtlesim, ``/turtlesim`` dan ``/teleop_turtle``.
 
-Open a new terminal and run:
+Buka terminal baru dan jalankan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtlesim_node
+     ros2 jalankan turtlesim turtlesim_node
 
-Open another terminal and run:
+Buka terminal lain dan jalankan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    ros2 run turtlesim turtle_teleop_key
+     ros2 jalankan turtlesim turtle_teleop_key
 
-2 ros2 service list
-^^^^^^^^^^^^^^^^^^^
+2 daftar layanan ros2
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Running the ``ros2 service list`` command in a new terminal will return a list of all the services currently active in the system:
+Menjalankan perintah ``ros2 service list`` di terminal baru akan mengembalikan daftar semua layanan yang saat ini aktif di sistem:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  /clear
-  /kill
-  /reset
-  /spawn
-  /teleop_turtle/describe_parameters
-  /teleop_turtle/get_parameter_types
-  /teleop_turtle/get_parameters
-  /teleop_turtle/list_parameters
-  /teleop_turtle/set_parameters
-  /teleop_turtle/set_parameters_atomically
-  /turtle1/set_pen
-  /turtle1/teleport_absolute
-  /turtle1/teleport_relative
-  /turtlesim/describe_parameters
-  /turtlesim/get_parameter_types
-  /turtlesim/get_parameters
-  /turtlesim/list_parameters
-  /turtlesim/set_parameters
-  /turtlesim/set_parameters_atomically
+   /jernih
+   /membunuh
+   /mengatur ulang
+   /muncul
+   /teleop_turtle/describe_parameters
+   /teleop_turtle/get_parameter_types
+   /teleop_turtle/get_parameters
+   /teleop_turtle/list_parameters
+   /teleop_turtle/set_parameters
+   /teleop_turtle/set_parameters_atomically
+   /turtle1/set_pen
+   /turtle1/teleport_absolute
+   /turtle1/teleport_relative
+   /turtlesim/describe_parameters
+   /turtlesim/get_parameter_types
+   /turtlesim/get_parameters
+   /turtlesim/list_parameters
+   /turtlesim/set_parameters
+   /turtlesim/set_parameters_atomically
 
-You will see that both nodes have the same six services with ``parameters`` in their names.
-Nearly every node in ROS 2 has these infrastructure services that parameters are built off of.
-There will be more about parameters in the next tutorial.
-In this tutorial, the parameter services will be omitted from the discussion.
+Anda akan melihat bahwa kedua node memiliki enam layanan yang sama dengan ``parameter`` di namanya.
+Hampir setiap node di ROS 2 memiliki layanan infrastruktur yang dibangun dari parameter ini.
+Akan ada lebih banyak tentang parameter di tutorial berikutnya.
+Dalam tutorial ini, layanan parameter akan dihilangkan dari diskusi.
 
-For now, let's focus on the turtlesim-specific services, ``/clear``, ``/kill``, ``/reset``, ``/spawn``, ``/turtle1/set_pen``, ``/turtle1/teleport_absolute``, and ``/turtle1/teleport_relative``.
-You may recall interacting with some of these services using rqt in the :doc:`Use turtlesim, ros2, and rqt <../Introducing-Turtlesim/Introducing-Turtlesim>` tutorial.
+Untuk saat ini, mari fokus pada layanan khusus turtlesim, ``/clear``, ``/kill``, ``/reset``, ``/spawn``, ``/turtle1/set_pen``, ` `/turtle1/teleport_absolute``, dan ``/turtle1/teleport_relative``.
+Anda mungkin ingat berinteraksi dengan beberapa layanan ini menggunakan rqt di tutorial :doc:`Use turtlesim, ros2, and rqt <../Introducing-Turtlesim/Introducing-Turtlesim>`.
 
 
-3 ros2 service type
-^^^^^^^^^^^^^^^^^^^
+Jenis layanan 3 ros2
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Services have types that describe how the request and response data of a service is structured.
-Service types are defined similarly to topic types, except service types have two parts: one message for the request and another for the response.
+Layanan memiliki tipe yang menjelaskan bagaimana data permintaan dan respons dari suatu layanan disusun.
+Jenis layanan didefinisikan serupa dengan jenis topik, kecuali jenis layanan memiliki dua bagian: satu pesan untuk permintaan dan satu lagi untuk respons.
 
-To find out the type of a service, use the command:
+Untuk mengetahui jenis layanan, gunakan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 service type <service_name>
+   ros2 jenis layanan <service_name>
 
-Let's take a look at turtlesim's ``/clear`` service.
-In a new terminal, enter the command:
+Mari kita lihat layanan ``/clear`` turtlesim.
+Di terminal baru, masukkan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 service type /clear
+   jenis layanan ros2 / jelas
 
-Which should return:
+Yang harus dikembalikan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  std_srvs/srv/Empty
+   std_srvs/srv/Kosong
 
-The ``Empty`` type means the service call sends no data when making a request and receives no data when receiving a response.
+Tipe ``Empty`` berarti panggilan layanan tidak mengirimkan data saat mengajukan permintaan dan tidak menerima data saat menerima respons.
 
-3.1 ros2 service list -t
-~~~~~~~~~~~~~~~~~~~~~~~~
+3.1 daftar layanan ros2 -t
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To see the types of all the active services at the same time, you can append the ``--show-types`` option, abbreviated as ``-t``, to the ``list`` command:
+Untuk melihat jenis semua layanan aktif pada saat yang sama, Anda dapat menambahkan opsi ``--show-types``, disingkat ``-t``, ke perintah ``list``:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 service list -t
+   daftar layanan ros2 -t
 
-Which will return:
+Yang akan mengembalikan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  /clear [std_srvs/srv/Empty]
-  /kill [turtlesim/srv/Kill]
-  /reset [std_srvs/srv/Empty]
-  /spawn [turtlesim/srv/Spawn]
-  ...
-  /turtle1/set_pen [turtlesim/srv/SetPen]
-  /turtle1/teleport_absolute [turtlesim/srv/TeleportAbsolute]
-  /turtle1/teleport_relative [turtlesim/srv/TeleportRelative]
-  ...
+   /hapus [std_srvs/srv/Kosong]
+   /bunuh [turtlesim/srv/Bunuh]
+   /reset [std_srvs/srv/Kosong]
+   / menelurkan [turtlesim/srv/Menelurkan]
+   ...
+   /turtle1/set_pen [turtlesim/srv/SetPen]
+   /turtle1/teleport_absolute [turtlesim/srv/TeleportAbsolute]
+   /turtle1/teleport_relative [turtlesim/srv/TeleportRelative]
+   ...
 
-4 ros2 service find
-^^^^^^^^^^^^^^^^^^^
+4 layanan ros2 temukan
+^^^^^^^^^^^^^^^^^^^^^^^
 
-If you want to find all the services of a specific type, you can use the command:
+Jika Anda ingin menemukan semua layanan dari jenis tertentu, Anda dapat menggunakan perintah:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 service find <type_name>
+   layanan ros2 temukan <type_name>
 
-For example, you can find all the ``Empty`` typed services like this:
+Misalnya, Anda dapat menemukan semua layanan yang diketik ``Empty`` seperti ini:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 service find std_srvs/srv/Empty
+   layanan ros2 temukan std_srvs/srv/Empty
 
-Which will return:
+Yang akan mengembalikan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  /clear
-  /reset
+   /jernih
+   /mengatur ulang
 
-5 ros2 interface show
-^^^^^^^^^^^^^^^^^^^^^
+Tampilan antarmuka 5 ros2
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can call services from the command line, but first you need to know the structure of the input arguments.
+Anda dapat memanggil layanan dari baris perintah, tetapi pertama-tama Anda perlu mengetahui struktur argumen masukan.
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 interface show <type_name>
+   antarmuka ros2 menampilkan <type_name>
 
-Try this on the ``/clear`` service's type, ``Empty``:
+Coba ini pada jenis layanan ``/clear``, ``Empty``:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ros2 interface show std_srvs/srv/Empty
+   antarmuka ros2 menunjukkan std_srvs/srv/Empty
 
-Which will return:
+Yang akan mengembalikan:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-  ---
+   ---
 
-The ``---`` separates the request structure (above) from the response structure (below).
-But, as you learned earlier, the ``Empty`` type doesn't send or receive any data.
-So, naturally, its structure is blank.
-
-Let's introspect a service with a type that sends and receives data, like ``/spawn``.
-From the results of ``ros2 service list -t``, we know ``/spawn``'s type is ``turtlesim/srv/Spawn``.
-
-To see the request and response arguments of the ``/spawn`` service, run the command:
-
-.. code-block:: console
-
-  ros2 interface show turtlesim/srv/Spawn
-
-Which will return:
-
-.. code-block:: console
-
-  float32 x
-  float32 y
-  float32 theta
-  string name # Optional.  A unique name will be created and returned if this is empty
-  ---
-  string name
-
-The information above the ``---`` line tells us the arguments needed to call ``/spawn``.
-``x``, ``y`` and ``theta`` determine the 2D pose of the spawned turtle, and ``name`` is clearly optional.
-
-The information below the line isn't something you need to know in this case, but it can help you understand the data type of the response you get from the call.
-
-6 ros2 service call
-^^^^^^^^^^^^^^^^^^^
-
-Now that you know what a service type is, how to find a service's type, and how to find the structure of that type's arguments, you can call a service using:
-
-.. code-block:: console
-
-  ros2 service call <service_name> <service_type> <arguments>
-
-The ``<arguments>`` part is optional.
-For example, you know that ``Empty`` typed services don't have any arguments:
-
-.. code-block:: console
-
-  ros2 service call /clear std_srvs/srv/Empty
-
-This command will clear the turtlesim window of any lines your turtle has drawn.
-
-.. image:: images/clear.png
-
-Now let's spawn a new turtle by calling ``/spawn`` and setting arguments.
-Input ``<arguments>`` in a service call from the command-line need to be in YAML syntax.
-
-Enter the command:
-
-.. code-block:: console
-
-  ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: ''}"
-
-You will get this method-style view of what's happening, and then the service response:
-
-.. code-block:: console
-
-  requester: making request: turtlesim.srv.Spawn_Request(x=2.0, y=2.0, theta=0.2, name='')
-
-  response:
-  turtlesim.srv.Spawn_Response(name='turtle2')
-
-Your turtlesim window will update with the newly spawned turtle right away:
-
-.. image:: images/spawn.png
-
-Summary
--------
-
-Nodes can communicate using services in ROS 2.
-Unlike a topic - a one way communication pattern where a node publishes information that can be consumed by one or more subscribers - a service is a request/response pattern where a client makes a request to a node providing the service and the service processes the request and generates a response.
-
-You generally don't want to use a service for continuous calls; topics or even actions would be better suited.
-
-In this tutorial you used command line tools to identify, introspect, and call services.
-
-Next steps
-----------
-
-In the next tutorial, :doc:`../Understanding-ROS2-Parameters/Understanding-ROS2-Parameters`, you will learn about configuring node settings.
-
-Related content
----------------
-
-Check out `this tutorial <https://discourse.ubuntu.com/t/call-services-in-ros-2/15261>`_; it's an excellent realistic application of ROS services using a Robotis robot arm.
+``---`` memisahkan

@@ -1,394 +1,160 @@
-.. redirect-from::
-
-    Tutorials/Actions/Writing-a-Cpp-Action-Server-Client
-
 .. _ActionsCpp:
 
-Writing an action server and client (C++)
-=========================================
+Menulis server tindakan dan klien (C++)
+=====================================
 
-**Goal:** Implement an action server and client in C++.
+**Sasaran:** Mengimplementasikan server tindakan dan klien di C++.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 15 minutes
+**Waktu:** 15 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
-Actions are a form of asynchronous communication in ROS.
-*Action clients* send goal requests to *action servers*.
-*Action servers* send goal feedback and results to *action clients*.
+Tindakan adalah bentuk komunikasi asinkron di ROS.
+*Klien tindakan* mengirim permintaan sasaran ke *server tindakan*.
+*Server tindakan* mengirimkan umpan balik tujuan dan hasil ke *klien tindakan*.
 
-Prerequisites
+Prasyarat
 -------------
 
-You will need the ``custom_action_interfaces`` package and the ``Fibonacci.action``
-interface defined in the previous tutorial, :doc:`../Creating-an-Action`.
+Anda memerlukan paket ``custom_action_interfaces`` dan ``Fibonacci.action``
+antarmuka yang ditentukan dalam tutorial sebelumnya, :doc:`../Creating-an-Action`.
 
-Tasks
+Tugas
 -----
 
-1 Creating the custom_action_cpp package
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1 Membuat paket custom_action_cpp
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As we saw in the :doc:`../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package` tutorial, we need to create a new package to hold our C++ and supporting code.
+Seperti yang kita lihat di tutorial :doc:`../../Beginner-Client-Libraries/Creating-Your-First-ROS2-Package`, kita perlu membuat paket baru untuk menyimpan C++ dan kode pendukung kita.
 
-1.1 Creating the custom_action_cpp package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1.1 Membuat paket custom_action_cpp
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Go into the action workspace you created in the :doc:`previous tutorial <../Creating-an-Action>` (remember to source the workspace), and create a new package for the C++ action server:
+Pergilah ke ruang kerja tindakan yang Anda buat di :doc:`tutorial sebelumnya <../Creating-an-Action>` (ingat untuk sumber ruang kerja), dan buat paket baru untuk server tindakan C++:
 
 
-.. tabs::
+.. tab::
 
-  .. group-tab:: Linux
+   .. grup-tab :: Linux
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd ~/ros2_ws/src
-      ros2 pkg create --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --license Apache-2.0 -- custom_action_cpp
+       cd ~/ros2_ws/src
+       ros2 pkg buat --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --lisensi Apache-2.0 -- custom_action_cpp
 
-  .. group-tab:: macOS
+   .. grup-tab :: macOS
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd ~/ros2_ws/src
-      ros2 pkg create --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --license Apache-2.0 -- custom_action_cpp
+       cd ~/ros2_ws/src
+       ros2 pkg buat --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --lisensi Apache-2.0 -- custom_action_cpp
 
-  .. group-tab:: Windows
+   .. grup-tab :: Windows
 
-    .. code-block:: bash
+     .. blok kode :: bash
 
-      cd \ros2_ws\src
-      ros2 pkg create --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --license Apache-2.0 -- custom_action_cpp
+       cd\ros2_ws\src
+       ros2 pkg buat --dependencies custom_action_interfaces rclcpp rclcpp_action rclcpp_components --lisensi Apache-2.0 -- custom_action_cpp
 
-1.2 Adding in visibility control
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In order to make the package compile and work on Windows, we need to add in some "visibility control".
-For more details, see :ref:`Windows Symbol Visibility in the Windows Tips and Tricks document <Windows_Symbol_Visibility>`.
-
-Open up ``custom_action_cpp/include/custom_action_cpp/visibility_control.h``, and put the following code in:
-
-.. code-block:: c++
-
-  #ifndef CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
-  #define CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
-
-  #ifdef __cplusplus
-  extern "C"
-  {
-  #endif
-
-  // This logic was borrowed (then namespaced) from the examples on the gcc wiki:
-  //     https://gcc.gnu.org/wiki/Visibility
-
-  #if defined _WIN32 || defined __CYGWIN__
-    #ifdef __GNUC__
-      #define CUSTOM_ACTION_CPP_EXPORT __attribute__ ((dllexport))
-      #define CUSTOM_ACTION_CPP_IMPORT __attribute__ ((dllimport))
-    #else
-      #define CUSTOM_ACTION_CPP_EXPORT __declspec(dllexport)
-      #define CUSTOM_ACTION_CPP_IMPORT __declspec(dllimport)
-    #endif
-    #ifdef CUSTOM_ACTION_CPP_BUILDING_DLL
-      #define CUSTOM_ACTION_CPP_PUBLIC CUSTOM_ACTION_CPP_EXPORT
-    #else
-      #define CUSTOM_ACTION_CPP_PUBLIC CUSTOM_ACTION_CPP_IMPORT
-    #endif
-    #define CUSTOM_ACTION_CPP_PUBLIC_TYPE CUSTOM_ACTION_CPP_PUBLIC
-    #define CUSTOM_ACTION_CPP_LOCAL
-  #else
-    #define CUSTOM_ACTION_CPP_EXPORT __attribute__ ((visibility("default")))
-    #define CUSTOM_ACTION_CPP_IMPORT
-    #if __GNUC__ >= 4
-      #define CUSTOM_ACTION_CPP_PUBLIC __attribute__ ((visibility("default")))
-      #define CUSTOM_ACTION_CPP_LOCAL  __attribute__ ((visibility("hidden")))
-    #else
-      #define CUSTOM_ACTION_CPP_PUBLIC
-      #define CUSTOM_ACTION_CPP_LOCAL
-    #endif
-    #define CUSTOM_ACTION_CPP_PUBLIC_TYPE
-  #endif
-
-  #ifdef __cplusplus
-  }
-  #endif
-
-  #endif  // CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
-
-2 Writing an action server
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Let's focus on writing an action server that computes the Fibonacci sequence using the action we created in the :doc:`../Creating-an-Action` tutorial.
-
-2.1 Writing the action server code
+1.2 Menambahkan kontrol visibilitas
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Open up ``custom_action_cpp/src/fibonacci_action_server.cpp``, and put the following code in:
+Untuk membuat paket terkompilasi dan bekerja di Windows, kita perlu menambahkan beberapa "kontrol visibilitas".
+Untuk detail selengkapnya, lihat :ref:`Visibilitas Simbol Windows di dokumen Tip dan Trik Windows <Windows_Symbol_Visibility>`.
+
+Buka ``custom_action_cpp/include/custom_action_cpp/visibility_control.h``, dan masukkan kode berikut di:
+
+.. blok kode :: c++
+
+   #ifndef CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
+   #define CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
+
+   #ifdef __cplusplus
+   eksternal "C"
+   {
+   #berakhir jika
+
+   // Logika ini dipinjam (kemudian diberi spasi nama) dari contoh di wiki gcc:
+   // https://gcc.gnu.org/wiki/Visibilitas
+
+   #jika ditentukan _WIN32 || didefinisikan __CYGWIN__
+     #ifdef __GNUC__
+       #define CUSTOM_ACTION_CPP_EXPORT __attribute__ ((dllexport))
+       #define CUSTOM_ACTION_CPP_IMPORT __attribute__ ((dllimport))
+     #kalau tidak
+       #define CUSTOM_ACTION_CPP_EXPORT __declspec(dllexport)
+       #define CUSTOM_ACTION_CPP_IMPORT __declspec(dllimport)
+     #berakhir jika
+     #ifdef CUSTOM_ACTION_CPP_BUILDING_DLL
+       #define CUSTOM_ACTION_CPP_PUBLIC CUSTOM_ACTION_CPP_EXPORT
+     #kalau tidak
+       #define CUSTOM_ACTION_CPP_PUBLIC CUSTOM_ACTION_CPP_IMPORT
+     #berakhir jika
+     #menentukan CUSTOM_ACTION_CPP_PUBLIC_TYPE CUSTOM_ACTION_CPP_PUBLIC
+     #menentukan CUSTOM_ACTION_CPP_LOCAL
+   #kalau tidak
+     #define CUSTOM_ACTION_CPP_EXPORT __atribut__ ((visibilitas("default")))
+     #menentukan CUSTOM_ACTION_CPP_IMPORT
+     #jika __GNUC__ >= 4
+       #define CUSTOM_ACTION_CPP_PUBLIC __atribut__ ((visibilitas("default")))
+       #define CUSTOM_ACTION_CPP_LOCAL __atribut__ ((visibilitas("tersembunyi")))
+     #kalau tidak
+       #menentukan CUSTOM_ACTION_CPP_PUBLIC
+       #menentukan CUSTOM_ACTION_CPP_LOCAL
+     #berakhir jika
+     #menentukan CUSTOM_ACTION_CPP_PUBLIC_TYPE
+   #berakhir jika
+
+   #ifdef __cplusplus
+   }
+   #berakhir jika
+
+   #endif // CUSTOM_ACTION_CPP__VISIBILITY_CONTROL_H_
+
+2 Menulis server tindakan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Mari fokus pada penulisan server aksi yang menghitung deret Fibonacci menggunakan aksi yang kita buat di tutorial :doc:`../Creating-an-Action`.
+
+2.1 Menulis kode server tindakan
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Buka ``custom_action_cpp/src/fibonacci_action_server.cpp``, dan masukkan kode berikut di:
 
 .. literalinclude:: scripts/server.cpp
-    :language: c++
+     :bahasa: c++
 
-The first few lines include all of the headers we need to compile.
+Beberapa baris pertama menyertakan semua header yang perlu kita kompilasi.
 
-Next we create a class that is a derived class of ``rclcpp::Node``:
-
-.. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 14
-
-The constructor for the ``FibonacciActionServer`` class initializes the node name as ``fibonacci_action_server``:
+Selanjutnya kita membuat kelas yang merupakan kelas turunan dari ``rclcpp::Node``:
 
 .. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 21-22
+     :bahasa: c++
+     :baris: 14
 
-The constructor also instantiates a new action server:
-
-.. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 26-31
-
-An action server requires 6 things:
-
-1. The templated action type name: ``Fibonacci``.
-2. A ROS 2 node to add the action to: ``this``.
-3. The action name: ``'fibonacci'``.
-4. A callback function for handling goals: ``handle_goal``
-5. A callback function for handling cancellation: ``handle_cancel``.
-6. A callback function for handling goal accept: ``handle_accept``.
-
-The implementation of the various callbacks is next in the file.
-Note that all of the callbacks need to return quickly, otherwise we risk starving the executor.
-
-We start with the callback for handling new goals:
+Konstruktor untuk kelas ``FibonacciActionServer`` menginisialisasi nama node sebagai ``fibonacci_action_server``:
 
 .. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 37-44
+     :bahasa: c++
+     :baris: 21-22
 
-This implementation just accepts all goals.
-
-Next up is the callback for dealing with cancellation:
+Konstruktor juga memberi contoh server tindakan baru:
 
 .. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 46-52
-
-This implementation just tells the client that it accepted the cancellation.
-
-The last of the callbacks accepts a new goal and starts processing it:
-
-.. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 54-59
-
-Since the execution is a long-running operation, we spawn off a thread to do the actual work and return from ``handle_accepted`` quickly.
-
-All further processing and updates are done in the ``execute`` method in the new thread:
-
-.. literalinclude:: scripts/server.cpp
-    :language: c++
-    :lines: 61-95
-
-This work thread processes one sequence number of the Fibonacci sequence every second, publishing a feedback update for each step.
-When it has finished processing, it marks the ``goal_handle`` as succeeded, and quits.
-
-We now have a fully functioning action server.  Let's get it built and running.
-
-2.2 Compiling the action server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the previous section we put the action server code into place.
-To get it to compile and run, we need to do a couple of additional things.
-
-First we need to setup the CMakeLists.txt so that the action server is compiled.
-Open up ``custom_action_cpp/CMakeLists.txt``, and add the following right after the ``find_package`` calls:
-
-.. code-block:: cmake
-
-  add_library(action_server SHARED
-    src/fibonacci_action_server.cpp)
-  target_include_directories(action_server PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
-  target_compile_definitions(action_server
-    PRIVATE "CUSTOM_ACTION_CPP_BUILDING_DLL")
-  ament_target_dependencies(action_server
-    "custom_action_interfaces"
-    "rclcpp"
-    "rclcpp_action"
-    "rclcpp_components")
-  rclcpp_components_register_node(action_server PLUGIN "custom_action_cpp::FibonacciActionServer" EXECUTABLE fibonacci_action_server)
-  install(TARGETS
-    action_server
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin)
-
-And now we can compile the package.  Go to the top-level of the ``ros2_ws``, and run:
-
-.. code-block:: bash
-
-  colcon build
-
-This should compile the entire workspace, including the ``fibonacci_action_server`` in the ``custom_action_cpp`` package.
-
-2.3 Running the action server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Now that we have the action server built, we can run it.
-Source the workspace we just built (``ros2_ws``), and try to run the action server:
-
-.. code-block:: bash
-
-  ros2 run custom_action_cpp fibonacci_action_server
-
-3 Writing an action client
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-3.1 Writing the action client code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Open up ``custom_action_cpp/src/fibonacci_action_client.cpp``, and put the following code in:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-
-The first few lines include all of the headers we need to compile.
-
-Next we create a class that is a derived class of ``rclcpp::Node``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 15
-
-The constructor for the ``FibonacciActionClient`` class initializes the node name as ``fibonacci_action_client``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 20-22
-
-The constructor also instantiates a new action client:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 24-26
-
-An action client requires 3 things:
-
-1. The templated action type name: ``Fibonacci``.
-2. A ROS 2 node to add the action client to: ``this``.
-3. The action name: ``'fibonacci'``.
-
-We also instantiate a ROS timer that will kick off the one and only call to ``send_goal``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 27-30
-
-When the timer expires, it will call ``send_goal``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 32-57
-
-This function does the following:
-
-1. Cancels the timer (so it is only called once).
-2. Waits for the action server to come up.
-3. Instantiates a new ``Fibonacci::Goal``.
-4. Sets the response, feedback, and result callbacks.
-5. Sends the goal to the server.
-
-When the server receives and accepts the goal, it will send a response to the client.
-That response is handled by ``goal_response_callback``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 62-71
-
-Assuming the goal was accepted by the server, it will start processing.
-Any feedback to the client will be handled by the ``feedback_callback``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 72-83
-
-When the server is finished processing, it will return a result to the client.
-The result is handled by the ``result_callback``:
-
-.. literalinclude:: scripts/client.cpp
-    :language: c++
-    :lines: 84-107
-
-We now have a fully functioning action client.  Let's get it built and running.
-
-3.2 Compiling the action client
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the previous section we put the action client code into place.
-To get it to compile and run, we need to do a couple of additional things.
-
-First we need to setup the CMakeLists.txt so that the action client is compiled.
-Open up ``custom_action_cpp/CMakeLists.txt``, and add the following right after the ``find_package`` calls:
-
-.. code-block:: cmake
-
-  add_library(action_client SHARED
-    src/fibonacci_action_client.cpp)
-  target_include_directories(action_client PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
-  target_compile_definitions(action_client
-    PRIVATE "CUSTOM_ACTION_CPP_BUILDING_DLL")
-  ament_target_dependencies(action_client
-    "custom_action_interfaces"
-    "rclcpp"
-    "rclcpp_action"
-    "rclcpp_components")
-  rclcpp_components_register_node(action_client PLUGIN "custom_action_cpp::FibonacciActionClient" EXECUTABLE fibonacci_action_client)
-  install(TARGETS
-    action_client
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin)
-
-And now we can compile the package.  Go to the top-level of the ``ros2_ws``, and run:
-
-.. code-block:: bash
-
-  colcon build
-
-This should compile the entire workspace, including the ``fibonacci_action_client`` in the ``custom_action_cpp`` package.
-
-3.3 Running the action client
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Now that we have the action client built, we can run it.
-First make sure that an action server is running in a separate terminal.
-Now source the workspace we just built (``ros2_ws``), and try to run the action client:
-
-.. code-block:: bash
-
-  ros2 run custom_action_cpp fibonacci_action_client
-
-You should see logged messages for the goal being accepted, feedback being printed, and the final result.
-
-Summary
--------
-
-In this tutorial, you put together a C++ action server and action client line by line, and configured them to exchange goals, feedback, and results.
-
-Related content
----------------
-
-* There are several ways you could write an action server and client in C++; check out the ``minimal_action_server`` and ``minimal_action_client`` packages in the `ros2/examples <https://github.com/ros2/examples/tree/{REPOS_FILE_BRANCH}/rclcpp>`_ repo.
-
-* For more detailed information about ROS actions, please refer to the `design article <http://design.ros2.org/articles/actions.html>`__.
+     :bahasa: c++
+     :baris: 26-31
+
+Server tindakan memerlukan 6 hal:
+
+1. Nama jenis tindakan dengan template: ``Fibonacci``.
+2. Node ROS 2 untuk menambahkan tindakan ke: ``this``.
+3. Nama tindakan: ``'fibonacci'``.
+4. Fungsi callback untuk menangani tujuan: ``handle_goal``
+5. Fungsi callback untuk menangani pembatalan: ``handle_ca

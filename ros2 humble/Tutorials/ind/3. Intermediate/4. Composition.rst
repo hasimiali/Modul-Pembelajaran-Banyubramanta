@@ -1,369 +1,369 @@
-.. redirect-from::
+.. redirect-dari::
 
-    Composition
-    Tutorials/Composition
+     Komposisi
+     Tutorial/Komposisi
 
-Composing multiple nodes in a single process
-============================================
+Menyusun beberapa node dalam satu proses
+========================================
 
-.. contents:: Table of Contents
-   :depth: 2
-   :local:
+.. isi :: Daftar Isi
+    :kedalaman: 2
+    :lokal:
 
-**Goal:** Compose multiple nodes into a single process.
+**Sasaran:** Buat beberapa node menjadi satu proses.
 
-**Tutorial level:** Intermediate
+**Tingkat tutorial:** Menengah
 
-**Time:** 20 minutes
+**Waktu:** 20 menit
 
-Background
+Latar belakang
 ----------
 
-See the :doc:`conceptual article <../../Concepts/Intermediate/About-Composition>`.
+Lihat :doc:`artikel konseptual <../../Concepts/Intermediate/About-Composition>`.
 
-Run the demos
+Jalankan demo
 -------------
 
-The demos use executables from `rclcpp_components <https://github.com/ros2/rclcpp/tree/{REPOS_FILE_BRANCH}/rclcpp_components>`__, `ros2component <https://github.com/ros2/ros2cli/tree/{REPOS_FILE_BRANCH}/ros2component>`__, and  `composition <https://github.com/ros2/demos/tree/{REPOS_FILE_BRANCH}/composition>`__ packages, and can be run with the following commands.
+Demo menggunakan executable dari `rclcpp_components <https://github.com/ros2/rclcpp/tree/{REPOS_FILE_BRANCH}/rclcpp_components>`__, `ros2component <https://github.com/ros2/ros2cli/tree/{REPOS_FILE_BRANCH }/ros2component>`__, dan paket `composition <https://github.com/ros2/demos/tree/{REPOS_FILE_BRANCH}/composition>`__, dan dapat dijalankan dengan perintah berikut.
 
 
-Discover available components
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To see what components are registered and available in the workspace, execute the following in a shell:
-
-.. code-block:: bash
-
-   ros2 component types
-
-The terminal will return the list of all available components:
-
-.. code-block:: bash
-
-   (... components of other packages here)
-   composition
-     composition::Talker
-     composition::Listener
-     composition::NodeLikeListener
-     composition::Server
-     composition::Client
-   (... components of other packages here)
-
-
-Run-time composition using ROS services with a publisher and subscriber
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In the first shell, start the component container:
-
-.. code-block:: bash
-
-   ros2 run rclcpp_components component_container
-
-Open the second shell and verify that the container is running via ``ros2`` command line tools:
-
-.. code-block:: bash
-
-   ros2 component list
-
-You should see a name of the component:
-
-.. code-block:: bash
-
-   /ComponentManager
-
-In the second shell load the talker component (see `talker <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/talker_component.cpp>`__ source code):
-
-.. code-block:: bash
-
-   ros2 component load /ComponentManager composition composition::Talker
-
-The command will return the unique ID of the loaded component as well as the node name:
-
-.. code-block:: bash
-
-   Loaded component 1 into '/ComponentManager' container node as '/talker'
-
-Now the first shell should show a message that the component was loaded as well as repeated message for publishing a message.
-
-Run another command in the second shell to load the listener component (see `listener <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/listener_component.cpp>`__ source code):
-
-.. code-block:: bash
-
-   ros2 component load /ComponentManager composition composition::Listener
-
-Terminal will return:
-
-.. code-block:: bash
-
-   Loaded component 2 into '/ComponentManager' container node as '/listener'
-
-The ``ros2`` command line utility can now be used to inspect the state of the container:
-
-.. code-block:: bash
-
-   ros2 component list
-
-You will see the following result:
-
-.. code-block:: bash
-
-   /ComponentManager
-      1  /talker
-      2  /listener
-
-Now the first shell should show repeated output for each received message.
-
-Run-time composition using ROS services with a server and client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The example with a server and a client is very similar.
-
-In the first shell:
-
-.. code-block:: bash
-
-   ros2 run rclcpp_components component_container
-
-In the second shell (see `server <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/server_component.cpp>`__ and `client <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/client_component.cpp>`__ source code):
-
-.. code-block:: bash
-
-   ros2 component load /ComponentManager composition composition::Server
-   ros2 component load /ComponentManager composition composition::Client
-
-In this case the client sends a request to the server, the server processes the request and replies with a response, and the client prints the received response.
-
-Compile-time composition using ROS services
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This demos shows that the same shared libraries can be reused to compile a single executable running multiple components.
-The executable contains all four components from above: talker and listener as well as server and client.
-
-In the shell call (see `source code <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/manual_composition.cpp>`__):
-
-.. code-block:: bash
-
-   ros2 run composition manual_composition
-
-This should show repeated messages from both pairs, the talker and the listener as well as the server and the client.
-
-.. note::
-
-   Manually-composed components will not be reflected in the ``ros2 component list`` command line tool output.
-
-Run-time composition using dlopen
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This demo presents an alternative to run-time composition by creating a generic container process and explicitly passing the libraries to load without using ROS interfaces.
-The process will open each library and create one instance of each "rclcpp::Node" class in the library `source code <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/dlopen_composition.cpp>`__).
-
-.. tabs::
-
-  .. group-tab:: Linux
-
-    .. code-block:: bash
-
-       ros2 run composition dlopen_composition `ros2 pkg prefix composition`/lib/libtalker_component.so `ros2 pkg prefix composition`/lib/liblistener_component.so
-
-  .. group-tab:: macOS
-
-    .. code-block:: bash
-
-       ros2 run composition dlopen_composition `ros2 pkg prefix composition`/lib/libtalker_component.dylib `ros2 pkg prefix composition`/lib/liblistener_component.dylib
-
-  .. group-tab:: Windows
-
-    .. code-block:: bash
-
-       > ros2 pkg prefix composition
-
-    to get the path to where composition is installed. Then call
-
-    .. code-block:: bash
-
-       > ros2 run composition dlopen_composition <path_to_composition_install>\bin\talker_component.dll <path_to_composition_install>\bin\listener_component.dll
-
-Now the shell should show repeated output for each sent and received message.
-
-.. note::
-
-   dlopen-composed components will not be reflected in the ``ros2 component list`` command line tool output.
-
-
-Composition using launch actions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-While the command line tools are useful for debugging and diagnosing component configurations, it is frequently more convenient to start a set of components at the same time.
-To automate this action, we can use a `launch file <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/launch/composition_demo_launch.py>`__:
-
-.. code-block:: bash
-
-   ros2 launch composition composition_demo_launch.py
-
-
-Advanced Topics
----------------
-
-Now that we have seen the basic operation of components, we can discuss a few more advanced topics.
-
-
-Unloading components
-^^^^^^^^^^^^^^^^^^^^
-
-In the first shell, start the component container:
-
-.. code-block:: bash
-
-   ros2 run rclcpp_components component_container
-
-Verify that the container is running via ``ros2`` command line tools:
-
-.. code-block:: bash
-
-   ros2 component list
-
-You should see a name of the component:
-
-.. code-block:: bash
-
-   /ComponentManager
-
-In the second shell load both the talker and listener as we have before:
-
-.. code-block:: bash
-
-   ros2 component load /ComponentManager composition composition::Talker
-   ros2 component load /ComponentManager composition composition::Listener
-
-Use the unique ID to unload the node from the component container.
-
-.. code-block:: bash
-
-   ros2 component unload /ComponentManager 1 2
-
-The terminal should return:
-
-.. code-block:: bash
-
-   Unloaded component 1 from '/ComponentManager' container
-   Unloaded component 2 from '/ComponentManager' container
-
-In the first shell, verify that the repeated messages from talker and listener have stopped.
-
-
-Remapping container name and namespace
+Temukan komponen yang tersedia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The component manager name and namespace can be remapped via standard command line arguments:
+Untuk melihat komponen apa saja yang terdaftar dan tersedia di ruang kerja, jalankan perintah berikut di shell:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 run rclcpp_components component_container --ros-args -r __node:=MyContainer -r __ns:=/ns
+    jenis komponen ros2
 
-In a second shell, components can be loaded by using the updated container name:
+Terminal akan mengembalikan daftar semua komponen yang tersedia:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 component load /ns/MyContainer composition composition::Listener
-
-.. note::
-
-   Namespace remappings of the container do not affect loaded components.
-
-
-Remap component names and namespaces
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Component names and namespaces may be adjusted via arguments to the load command.
-
-In the first shell, start the component container:
-
-.. code-block:: bash
-
-   ros2 run rclcpp_components component_container
+    (... komponen paket lain di sini)
+    komposisi
+      komposisi::Pembicara
+      komposisi::Pendengar
+      komposisi::NodeLikeListener
+      komposisi::Server
+      komposisi::Klien
+    (... komponen paket lain di sini)
 
 
-Some examples of how to remap names and namespaces.
+Komposisi run-time menggunakan layanan ROS dengan penerbit dan pelanggan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Remap node name:
+Di Shell pertama, mulai wadah komponen:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 component load /ComponentManager composition composition::Talker --node-name talker2
+    ros2 jalankan rclcpp_components component_container
 
-Remap namespace:
+Buka shell kedua dan verifikasi bahwa container berjalan melalui alat baris perintah ``ros2``:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 component load /ComponentManager composition composition::Talker --node-namespace /ns
+    daftar komponen ros2
 
-Remap both:
+Anda akan melihat nama komponen:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 component load /ComponentManager composition composition::Talker --node-name talker3 --node-namespace /ns2
+    / Pengelola Komponen
 
-Now use ``ros2`` command line utility:
+Di shell kedua muat komponen pembicara (lihat `pembicara <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/talker_component.cpp>`__ kode sumber):
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   ros2 component list
+    ros2 memuat komponen / Komposisi Komposisi Pengelola Komponen :: Pembicara
 
-In the console you should see corresponding entries:
+Perintah akan mengembalikan ID unik dari komponen yang dimuat serta nama node:
 
-.. code-block:: bash
+.. blok kode :: bash
 
-   /ComponentManager
-      1  /talker2
-      2  /ns/talker
-      3  /ns2/talker3
+    Memuat komponen 1 ke node kontainer '/ComponentManager' sebagai '/ pembicara'
 
-.. note::
+Sekarang shell pertama akan menampilkan pesan bahwa komponen telah dimuat serta pesan berulang untuk menerbitkan pesan.
 
-   Namespace remappings of the container do not affect loaded components.
+Jalankan perintah lain di shell kedua untuk memuat komponen pendengar (lihat `listener <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/listener_component.cpp>`__ kode sumber):
 
-Passing parameter values into components
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. blok kode :: bash
 
-The ``ros2 component load`` command-line supports passing arbitrary parameters to the node as it is constructed.
-This functionality can be used as follows:
+    ros2 memuat komponen /ComponentManager komposisi komposisi::Listener
 
-.. code-block:: bash
+Terminal akan mengembalikan:
 
-   ros2 component load /ComponentManager image_tools image_tools::Cam2Image -p burger_mode:=true
+.. blok kode :: bash
 
-Passing additional arguments into components
+    Memuat komponen 2 ke node kontainer '/ComponentManager' sebagai '/listener'
+
+Utilitas baris perintah ``ros2`` kini dapat digunakan untuk memeriksa status wadah:
+
+.. blok kode :: bash
+
+    daftar komponen ros2
+
+Anda akan melihat hasil berikut:
+
+.. blok kode :: bash
+
+    / Pengelola Komponen
+       1 /pembicara
+       2 /pendengar
+
+Sekarang shell pertama akan menampilkan keluaran berulang untuk setiap pesan yang diterima.
+
+Komposisi run-time menggunakan layanan ROS dengan server dan klien
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^
+
+Contoh dengan server dan klien sangat mirip.
+
+Di cangkang pertama:
+
+.. blok kode :: bash
+
+    ros2 jalankan rclcpp_components component_container
+
+Di shell kedua (lihat `server <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/server_component.cpp>`__ dan `client <https://github.com/ros2 /demos/blob/{REPOS_FILE_BRANCH}/composition/src/client_component.cpp>`__ kode sumber):
+
+.. blok kode :: bash
+
+    ros2 memuat komponen /ComponentManager komposisi komposisi::Server
+    ros2 beban komponen /komposisi Komposisi Pengelola Komponen::Klien
+
+Dalam hal ini klien mengirim permintaan ke server, server memproses permintaan dan membalas dengan respons, dan klien mencetak respons yang diterima.
+
+Komposisi waktu kompilasi menggunakan layanan ROS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Demo ini menunjukkan bahwa shared library yang sama dapat digunakan kembali untuk mengkompilasi sebuah executable tunggal yang menjalankan beberapa komponen.
+Eksekusi berisi keempat komponen dari atas: pembicara dan pendengar serta server dan klien.
+
+Dalam panggilan shell (lihat `kode sumber <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/manual_composition.cpp>`__):
+
+.. blok kode :: bash
+
+    ros2 jalankan komposisi manual_composition
+
+Ini harus menampilkan pesan berulang dari kedua pasangan, pembicara dan pendengar serta server dan klien.
+
+.. catatan::
+
+    Komponen yang disusun secara manual tidak akan tercermin dalam keluaran alat baris perintah ``ros2 component list``.
+
+Komposisi run-time menggunakan dlopen
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``ros2 component load`` command-line supports passing particular options to the component manager for use when constructing the node.
-As of now, the only command-line option that is supported is to instantiate a node using intra-process communication.
-This functionality can be used as follows:
+Demo ini menyajikan alternatif untuk komposisi run-time dengan membuat proses kontainer generik dan exsecara plisit meneruskan perpustakaan untuk memuat tanpa menggunakan antarmuka ROS.
+Proses ini akan membuka setiap perpustakaan dan membuat satu instance dari setiap kelas "rclcpp::Node" di perpustakaan `kode sumber <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/dlopen_composition. cpp>`__).
 
-.. code-block:: bash
+.. tab::
 
-   ros2 component load /ComponentManager composition composition::Talker -e use_intra_process_comms:=true
+   .. grup-tab :: Linux
 
-Composable nodes as shared libraries
+     .. blok kode :: bash
+
+        ros2 jalankan komposisi dlopen_composition `ros2 komposisi awalan pkg`/lib/libtalker_component.so `ros2 komposisi awalan pkg`/lib/liblistener_component.so
+
+   .. grup-tab :: macOS
+
+     .. blok kode :: bash
+
+        ros2 jalankan komposisi dlopen_composition `ros2 pkg prefix composition`/lib/libtalker_component.dylib `ros2 pkg prefix composition`/lib/liblistener_component.dylib
+
+   .. grup-tab :: Windows
+
+     .. blok kode :: bash
+
+        > komposisi awalan ros2 pkg
+
+     untuk mendapatkan jalur ke tempat komposisi dipasang. Lalu telepon
+
+     .. blok kode :: bash
+
+        > ros2 jalankan komposisi dlopen_composition <path_to_composition_install>\bin\talker_component.dll <path_to_composition_install>\bin\listener_component.dll
+
+Sekarang shell akan menampilkan keluaran berulang untuk setiap pesan yang dikirim dan diterima.
+
+.. catatan::
+
+    komponen yang disusun dlopen tidak akan tercermin dalam keluaran alat baris perintah ``ros2 component list``.
+
+
+Komposisi menggunakan tindakan peluncuran
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Meskipun alat baris perintah berguna untuk men-debug dan mendiagnosis konfigurasi komponen, seringkali lebih nyaman untuk memulai rangkaian komponen pada saat yang bersamaan.
+Untuk mengotomatiskan tindakan ini, kita dapat menggunakan `launch file <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/launch/composition_demo_launch.py>`__:
+
+.. blok kode :: bash
+
+    ros2 meluncurkan komposisi komposisi_demo_launch.py
+
+
+Topik Lanjutan
+---------------
+
+Sekarang setelah kita melihat operasi dasar komponen, kita dapat membahas beberapa topik lebih lanjut.
+
+
+Bongkar komponen
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Di Shell pertama, mulai wadah komponen:
+
+.. blok kode :: bash
+
+    ros2 jalankan rclcpp_components component_container
+
+Verifikasi bahwa penampung berjalan melalui alat baris perintah ``ros2``:
+
+.. blok kode :: bash
+
+    daftar komponen ros2
+
+Anda akan melihat nama komponen:
+
+.. blok kode :: bash
+
+    / Pengelola Komponen
+
+Di shell kedua muat pembicara dan pendengar seperti yang kita miliki sebelumnya:
+
+.. blok kode :: bash
+
+    ros2 memuat komponen / Komposisi Komposisi Pengelola Komponen :: Pembicara
+    ros2 memuat komponen /ComponentManager komposisi komposisi::Listener
+
+Gunakan ID unik untuk membongkar node dari wadah komponen.
+
+.. blok kode :: bash
+
+    membongkar komponen ros2 /ComponentManager 1 2
+
+Terminal harus mengembalikan:
+
+.. blok kode :: bash
+
+    Komponen 1 dibongkar dari wadah '/ComponentManager'
+    Komponen 2 dibongkar dari wadah '/ComponentManager'
+
+Di shell pertama, verifikasi bahwa pesan berulang dari pembicara dan pendengar telah berhenti.
+
+
+Memetakan ulang nama container dan namespace
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Nama dan namespace pengelola komponen dapat dipetakan ulang melalui argumen baris perintah standar:
+
+.. blok kode :: bash
+
+    ros2 jalankan rclcpp_components component_container --ros-args -r __node:=MyContainer -r __ns:=/ns
+
+Di shell kedua, komponen dapat dimuat dengan menggunakan nama wadah yang diperbarui:
+
+.. blok kode :: bash
+
+    komponen ros2 memuat /ns/MyContainer komposisi komposisi::Listener
+
+.. catatan::
+
+    Pemetaan ulang ruang nama wadah tidak memengaruhi komponen yang dimuat.
+
+
+Remap nama komponen dan ruang nama
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Nama komponen dan ruang nama dapat disesuaikan melalui argumen ke perintah load.
+
+Di Shell pertama, mulai wadah komponen:
+
+.. blok kode :: bash
+
+    ros2 jalankan rclcpp_components component_container
+
+
+Beberapa contoh cara memetakan ulang nama dan ruang nama.
+
+Remap nama node:
+
+.. blok kode :: bash
+
+    ros2 memuat komponen /ComponentManager komposisi komposisi::Talker --node-name talker2
+
+Petakan ulang ruang nama:
+
+.. blok kode :: bash
+
+    ros2 memuat komponen /ComponentManager komposisi komposisi::Talker --node-namespace /ns
+
+Petakan ulang keduanya:
+
+.. blok kode :: bash
+
+    komponen ros2 memuat komposisi komposisi /ComponentManager :: Talker --node-name talker3 --node-namespace /ns2
+
+Sekarang gunakan utilitas baris perintah ``ros2``:
+
+.. blok kode :: bash
+
+    daftar komponen ros2
+
+Di konsol Anda akan melihat entri yang sesuai:
+
+.. blok kode :: bash
+
+    / Pengelola Komponen
+       1 /pembicara2
+       2 /ns/pembicara
+       3 /ns2/pembicara3
+
+.. catatan::
+
+    Pemetaan ulang ruang nama wadah tidak memengaruhi komponen yang dimuat.
+
+Melewati nilai parameter ke dalam komponen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Baris perintah ``ros2 component load`` mendukung penerusan parameter arbitrer ke node saat node dibuat.
+Fungsi ini dapat digunakan sebagai berikut:
+
+.. blok kode :: bash
+
+    ros2 memuat komponen /ComponentManager image_tools image_tools::Cam2Image -p burger_mode:=true
+
+Melewati argumen tambahan ke dalam komponen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Baris perintah ``ros2 component load`` mendukung penerusan opsi tertentu ke manajer komponen untuk digunakan saat membangun node.
+Saat ini, satu-satunya opsi baris perintah yang didukung adalah membuat instance node menggunakan komunikasi intra-proses.
+Fungsi ini dapat digunakan sebagai berikut:
+
+.. blok kode :: bash
+
+    ros2 memuat komponen komposisi komposisi /ComponentManager :: Talker -e use_intra_process_comms: = true
+
+Node yang dapat disusun sebagai library bersama
 ------------------------------------
 
-If you want to export a composable node as a shared library from a package and use that node in another package that does link-time composition, add code to the CMake file which imports the actual targets in downstream packages.
+Jika Anda ingin mengekspor node yang dapat disusun sebagai library bersama dari sebuah paket dan menggunakan node tersebut dalam paket lain yang melakukan komposisi link-time, tambahkan kode ke file CMake yang mengimpor target aktual dalam paket downstream.
 
-Then install the generated file and export the generated file.
+Kemudian instal file yang dihasilkan dan ekspor file yang dihasilkan.
 
-A practical example can be seen here: `ROS Discourse - Ament best practice for sharing libraries <https://discourse.ros.org/t/ament-best-practice-for-sharing-libraries/3602>`__
+Contoh praktis dapat dilihat di sini: `ROS Discourse - Ament best practice for sharing library <https://discourse.ros.org/t/ament-best-practice-for-sharing-libraries/3602>`__
 
-Composing Non-Node Derived Components
+Menyusun Komponen Turunan Non-Node
 -------------------------------------
 
-In ROS 2, components allow for more efficient use of system resources and provide a powerful feature that enables you to create reusable functionality that is not tied to a specific node.
+Di ROS 2, komponen memungkinkan penggunaan sumber daya sistem yang lebih efisien dan menyediakan fitur canggih yang memungkinkan Anda membuat fungsionalitas yang dapat digunakan kembali yang tidak terikat ke node tertentu.
 
-One advantage of using components is that they allow you to create non-node derived functionality as standalone executables or shared libraries that can be loaded into the ROS system as needed.
+Salah satu keuntungan menggunakan komponen adalah mereka memungkinkan Anda untuk membuat fungsionalitas turunan non-node sebagai executable mandiri atau pustaka bersama yang dapat dimuat ke sistem ROS sesuai kebutuhan.
 
-To create a component that is not derived from a node, follow these guidelines:
+Untuk membuat komponen yang tidak diturunkan dari node, ikuti panduan berikut:
 
-1. Implement a constructor that takes ``const rclcpp::NodeOptions&`` as its argument.
-2. Implement the ``get_node_base_interface()`` method, which should return a ``NodeBaseInterface::SharedPtr``. You can use the ``get_node_base_interface()`` method of a node that you create in your constructor to provide this interface.
+1. Implementasikan konstruktor yang menggunakan ``const rclcpp::NodeOptions&`` sebagai argumennya.
+2. Implementasikan metode ``get_node_base_interface()``, yang akan mengembalikan ``NodeBaseInterface::SharedPtr``. Anda dapat menggunakan metode ``get_node_base_interface()`` dari node yang Anda buat di konstruktor untuk menyediakan antarmuka ini.
 
-Here's an example of a component that is not derived from a node, which listens to a ROS topic: `node_like_listener_component <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/node_like_listener_component.cpp>`__.
+Berikut adalah contoh komponen yang tidak diturunkan dari node, yang mendengarkan topik ROS: `node_like_listener_component <https://github.com/ros2/demos/blob/{REPOS_FILE_BRANCH}/composition/src/node_like_listener_component.cpp> `__.
 
-For more information on this topic, you can refer to this `discussion <https://github.com/ros2/rclcpp/issues/2110#issuecomment-1454228192>`__.
+Untuk informasi selengkapnya tentang topik ini, Anda dapat merujuk ke `diskusi <https://github.com/ros2/rclcpp/issues/2110#issuecomment-1454228192>`__ ini.

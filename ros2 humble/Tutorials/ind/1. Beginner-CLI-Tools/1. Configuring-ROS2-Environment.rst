@@ -1,19 +1,19 @@
 .. _ConfigROS2:
 
-Configuring environment
+Mengonfigurasi lingkungan
 =======================
 
-**Goal:** This tutorial will show you how to prepare your ROS 2 environment.
+**Sasaran:** Tutorial ini akan menunjukkan cara menyiapkan lingkungan ROS 2 Anda.
 
-**Tutorial level:** Beginner
+**Tingkat tutorial:** Pemula
 
-**Time:** 5 minutes
+**Waktu:** 5 menit
 
-.. contents:: Contents
-   :depth: 2
-   :local:
+.. isi :: Isi
+    :kedalaman: 2
+    :lokal:
 
-Background
+Latar belakang
 ----------
 
 ROS 2 mengandalkan gagasan menggabungkan ruang kerja menggunakan lingkungan shell.
@@ -26,102 +26,94 @@ Menggabungkan ruang kerja membuat pengembangan terhadap versi ROS 2 yang berbeda
 Ini juga memungkinkan pemasangan beberapa distribusi ROS 2 (atau "distro", misalnya Dashing dan Eloquent) pada komputer yang sama dan beralih di antaranya.
 
 Ini dilakukan dengan mengambil file setup setiap kali Anda membuka shell baru, atau dengan menambahkan perintah source ke skrip startup shell Anda satu kali.
-Tanpa sumber file setup, Anda tidak akan dapat mengakses perintah ROS 2, atau menemukan atau menggunakan paket ROS 2.
+Tanpa penyiapan file sumber, Anda tidak akan dapat mengakses perintah ROS 2, atau menemukan atau menggunakan paket ROS 2.
 Dengan kata lain, Anda tidak akan dapat menggunakan ROS 2.
 
-Prerequisites
+Prasyarat
 -------------
 
 Sebelum memulai tutorial ini, instal ROS 2 dengan mengikuti petunjuk di halaman ROS 2 :doc:`../../Installation`.
 
 Perintah yang digunakan dalam tutorial ini menganggap Anda mengikuti panduan instalasi paket biner untuk sistem operasi Anda (paket Debian untuk Linux).
-Anda masih dapat mengikuti jika Anda membuat dari sumber, tetapi jalur ke file penyiapan Anda kemungkinan akan berbeda.
+Anda masih dapat mengikuti jika Anda membuat dari sumber, tetapi jalur ke penyiapan file Anda kemungkinan akan berbeda.
 Anda juga tidak akan dapat menggunakan perintah ``sudo apt install ros-<distro>-<package>`` (sering digunakan dalam tutorial tingkat pemula) jika Anda menginstal dari sumber.
 
 Jika Anda menggunakan Linux atau macOS, tetapi belum terbiasa dengan shell, `tutorial ini <http://www.ee.surrey.ac.uk/Teaching/Unix/>`__ akan membantu.
-Tasks
+Tugas
 -----
 
-1 Source the setup files
-^^^^^^^^^^^^^^^^^^^^^^^^
+1 Sumber file setup
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Anda harus menjalankan perintah ini di setiap shell baru yang Anda buka untuk mengakses perintah ROS 2, seperti:
-.. code-block:: console
+.. blok kode :: konsol
 
-    # Replace ".bash" with your shell if you're not using bash
-    # Possible values are: setup.bash, setup.sh, setup.zsh
-    source /opt/ros/{DISTRO}/setup.bash
+     # Ganti ".bash" dengan shell Anda jika Anda tidak menggunakan bash
+     # Nilai yang mungkin adalah: setup.bash, setup.sh, setup.zsh
+     sumber /opt/ros/{DISTRO}/setup.bash
 
-.. note::
-    Perintah yang tepat tergantung di mana Anda menginstal ROS 2.
-    Jika Anda mengalami masalah, pastikan jalur file mengarah ke instalasi Anda.
+.. catatan::
+     Perintah yang tepat tergantung di mana Anda menginstal ROS 2.
+     Jika Anda mengalami masalah, pastikan file jalur mengarah ke instalasi Anda.
 
-2 Add sourcing to your shell startup script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2 Tambahkan sumber ke skrip startup shell Anda
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Jika Anda tidak ingin sumber file setup setiap kali Anda membuka shell baru (melewati tugas 1), maka Anda dapat menambahkan perintah ke skrip startup shell Anda:
+Jika Anda tidak ingin sumber file setup setiap kali Anda membuka shell baru (melalui tugas 1), maka Anda dapat menambahkan perintah ke skrip startup shell Anda:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    echo "source /opt/ros/{DISTRO}/setup.bash" >> ~/.bashrc
+     echo "sumber /opt/ros/{DISTRO}/setup.bash" >> ~/.bashrc
 
-    # To undo this, locate your system's shell startup script and remove the appended source command.
+     # Untuk membatalkan ini, temukan skrip startup shell sistem Anda dan hapus perintah sumber yang ditambahkan.
 
-3 Check environment variables
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+3 Periksa variabel lingkungan
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sourcing file setup ROS 2 akan menetapkan beberapa variabel lingkungan yang diperlukan untuk mengoperasikan ROS 2.
 Jika Anda mengalami masalah dalam menemukan atau menggunakan paket ROS 2, pastikan lingkungan Anda diatur dengan benar menggunakan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
 
-    printenv | grep -i ROS
+     printenv | grep -i ROS
 
 
-Check that variables like ``ROS_DISTRO`` and ``ROS_VERSION`` are set.
+Periksa apakah variabel seperti ``ROS_DISTRO`` dan ``ROS_VERSION`` sudah disetel.
 
 ::
 
-  ROS_VERSION=2
-  ROS_PYTHON_VERSION=3
-  ROS_DISTRO={DISTRO}
+   ROS_VERSION=2
+   ROS_PYTHON_VERSION=3
+   ROS_DISTRO={DISTRO}
 
 Jika variabel lingkungan tidak diatur dengan benar, kembali ke bagian penginstalan paket ROS 2 dari panduan penginstalan yang Anda ikuti.
 Jika Anda memerlukan bantuan yang lebih spesifik (karena file pengaturan lingkungan dapat berasal dari tempat yang berbeda), Anda dapat `mendapatkan jawaban <https://answers.ros.org>`__ dari komunitas.
 
-3.1 The ``ROS_DOMAIN_ID`` variable
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3.1 Variabel ``ROS_DOMAIN_ID``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Lihat artikel `ID domain <../../Concepts/Intermediate/About-Domain-ID>` untuk detail tentang ID domain ROS.
 
 Setelah Anda menentukan bilangan bulat unik untuk grup node ROS 2 Anda, Anda dapat mengatur variabel lingkungan dengan perintah berikut:
 
-.. code-block:: console
+.. blok kode :: konsol
   
-    export ROS_DOMAIN_ID=<your_domain_id>
+     ekspor ROS_DOMAIN_ID=<your_domain_id>
 
-    # To maintain this setting between shell sessions, you can add the command to your shell startup script:
+     # Untuk mempertahankan pengaturan ini di antara sesi shell, Anda dapat menambahkan perintah ke skrip startup shell Anda:
 
-    echo "export ROS_DOMAIN_ID=<your_domain_id>" >> ~/.bashrc
+     echo "ekspor ROS_DOMAIN_ID=<id_domain_anda>" >> ~/.bashrc
 
 
-3.2 The ``ROS_AUTOMATIC_DISCOVERY_RANGE`` variable
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3.2 Variabel ``ROS_AUTOMATIC_DISCOVERY_RANGE``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Secara default, komunikasi ROS 2 tidak terbatas pada localhost.
 Variabel lingkungan ``ROS_AUTOMATIC_DISCOVERY_RANGE`` memungkinkan Anda membatasi rentang penemuan ROS 2.
 Menggunakan ``ROS_AUTOMATIC_DISCOVERY_RANGE`` berguna dalam pengaturan tertentu, seperti ruang kelas, di mana beberapa robot dapat menerbitkan topik yang sama yang menyebabkan perilaku aneh.
 Lihat :ref:`Improved Dynamic Discovery <ImprovedDynamicDiscovery>` untuk detail lebih lanjut.
 
-Summary
+Ringkasan
 -------
 
-Lingkungan pengembangan ROS 2 perlu dikonfigurasi dengan benar sebelum digunakan.
-Ini dapat dilakukan dengan dua cara: mencari file setup di setiap shell baru yang Anda buka, atau menambahkan perintah source ke skrip startup Anda.
-
-Jika Anda pernah menghadapi masalah dalam menemukan atau menggunakan paket dengan ROS 2, hal pertama yang harus Anda lakukan adalah memeriksa variabel lingkungan Anda dan memastikannya disetel ke versi dan distro yang Anda inginkan.
-
-Next steps
-----------
-
-Sekarang setelah Anda memiliki penginstalan ROS 2 yang berfungsi dan Anda tahu cara mendapatkan file pengaturannya, Anda dapat mulai mempelajari seluk beluk ROS 2 dengan :doc:`turtlesim tool <./Introducing-Turtlesim/Introducing-Turtlesim>` .
+Lingkungan hal
