@@ -1,8 +1,3 @@
-.. redirect-from::
-
-    Discovery-Server
-    Tutorials/Discovery-Server/Discovery-Server
-
 Using Fast DDS Discovery Server as discovery protocol [community-contributed]
 =============================================================================
 
