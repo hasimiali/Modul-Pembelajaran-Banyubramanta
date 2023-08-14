@@ -1,0 +1,54 @@
+running egg_info
+creating ../../build/sercli_python/sercli_python.egg-info
+writing ../../build/sercli_python/sercli_python.egg-info/PKG-INFO
+writing dependency_links to ../../build/sercli_python/sercli_python.egg-info/dependency_links.txt
+writing entry points to ../../build/sercli_python/sercli_python.egg-info/entry_points.txt
+writing requirements to ../../build/sercli_python/sercli_python.egg-info/requires.txt
+writing top-level names to ../../build/sercli_python/sercli_python.egg-info/top_level.txt
+writing manifest file '../../build/sercli_python/sercli_python.egg-info/SOURCES.txt'
+reading manifest file '../../build/sercli_python/sercli_python.egg-info/SOURCES.txt'
+writing manifest file '../../build/sercli_python/sercli_python.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python
+copying sercli_python/service.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python
+copying sercli_python/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python
+copying sercli_python/client.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python
+running install
+/home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer, pypa/build or
+        other standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+running install_lib
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python
+copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python/service.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python
+copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python
+copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build/lib/sercli_python/client.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python
+byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python/service.py to service.cpython-38.pyc
+byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python/__init__.py to __init__.cpython-38.pyc
+byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python/client.py to client.cpython-38.pyc
+running install_data
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/ament_index
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/ament_index/resource_index
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/ament_index/resource_index/packages
+copying resource/sercli_python -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/ament_index/resource_index/packages
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/sercli_python
+copying package.xml -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/share/sercli_python
+running install_egg_info
+Copying ../../build/sercli_python/sercli_python.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python-0.0.0-py3.8.egg-info
+running install_scripts
+Installing client script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/sercli_python
+Installing service script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/sercli_python
+writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/install.log'

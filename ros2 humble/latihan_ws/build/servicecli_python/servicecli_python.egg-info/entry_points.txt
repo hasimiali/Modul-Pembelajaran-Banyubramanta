@@ -1,0 +1,3 @@
+[console_scripts]
+client = servicecli_python.client:main
+service = servicecli_python.service:main

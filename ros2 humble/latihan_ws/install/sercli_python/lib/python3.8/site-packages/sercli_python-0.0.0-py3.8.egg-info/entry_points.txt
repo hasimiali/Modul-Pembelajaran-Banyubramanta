@@ -1,0 +1,3 @@
+[console_scripts]
+client = sercli_python.client:main
+service = sercli_python.service:main

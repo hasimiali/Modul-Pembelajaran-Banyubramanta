@@ -1,0 +1,54 @@
+[4.958s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/py_srvcli': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/py_srvcli build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log --single-version-externally-managed
+[9.084s] running egg_info
+[9.084s] creating ../../build/py_srvcli/py_srvcli.egg-info
+[9.138s] writing ../../build/py_srvcli/py_srvcli.egg-info/PKG-INFO
+[9.138s] writing dependency_links to ../../build/py_srvcli/py_srvcli.egg-info/dependency_links.txt
+[9.139s] writing entry points to ../../build/py_srvcli/py_srvcli.egg-info/entry_points.txt
+[9.139s] writing requirements to ../../build/py_srvcli/py_srvcli.egg-info/requires.txt
+[9.139s] writing top-level names to ../../build/py_srvcli/py_srvcli.egg-info/top_level.txt
+[9.359s] writing manifest file '../../build/py_srvcli/py_srvcli.egg-info/SOURCES.txt'
+[9.465s] reading manifest file '../../build/py_srvcli/py_srvcli.egg-info/SOURCES.txt'
+[9.466s] writing manifest file '../../build/py_srvcli/py_srvcli.egg-info/SOURCES.txt'
+[9.466s] running build
+[9.466s] running build_py
+[9.466s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build
+[9.466s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib
+[9.466s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli
+[9.467s] copying py_srvcli/service_member_function.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli
+[9.480s] copying py_srvcli/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli
+[9.482s] copying py_srvcli/client_member_function.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli
+[9.494s] running install
+[9.494s] /home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[9.495s] !!
+[9.495s] 
+[9.495s]         ********************************************************************************
+[9.496s]         Please avoid running ``setup.py`` directly.
+[9.496s]         Instead, use pypa/build, pypa/installer, pypa/build or
+[9.496s]         other standards-based tools.
+[9.497s] 
+[9.497s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[9.497s]         ********************************************************************************
+[9.497s] 
+[9.498s] !!
+[9.498s]   self.initialize_options()
+[9.513s] running install_lib
+[9.556s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli
+[9.557s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli/service_member_function.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli
+[9.557s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli
+[9.557s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build/lib/py_srvcli/client_member_function.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli
+[9.559s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli/service_member_function.py to service_member_function.cpython-38.pyc
+[9.560s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli/__init__.py to __init__.cpython-38.pyc
+[9.560s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli/client_member_function.py to client_member_function.cpython-38.pyc
+[9.561s] running install_data
+[9.614s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/share/ament_index
+[9.614s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/share/ament_index/resource_index
+[9.614s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/share/ament_index/resource_index/packages
+[9.615s] copying resource/py_srvcli -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/share/ament_index/resource_index/packages
+[9.615s] copying package.xml -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/share/py_srvcli
+[9.615s] running install_egg_info
+[9.684s] Copying ../../build/py_srvcli/py_srvcli.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli-0.0.0-py3.8.egg-info
+[9.685s] running install_scripts
+[9.905s] Installing client script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/py_srvcli
+[9.905s] Installing service script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/py_srvcli
+[9.907s] writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log'
+[9.974s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/py_srvcli' returned '0': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/py_srvcli build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log --single-version-externally-managed

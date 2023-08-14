@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+../../build/servicecli_python/servicecli_python.egg-info/PKG-INFO
+../../build/servicecli_python/servicecli_python.egg-info/SOURCES.txt
+../../build/servicecli_python/servicecli_python.egg-info/dependency_links.txt
+../../build/servicecli_python/servicecli_python.egg-info/entry_points.txt
+../../build/servicecli_python/servicecli_python.egg-info/requires.txt
+../../build/servicecli_python/servicecli_python.egg-info/top_level.txt
+../../build/servicecli_python/servicecli_python.egg-info/zip-safe
+resource/servicecli_python
+servicecli_python/__init__.py
+servicecli_python/client.py
+servicecli_python/service.py
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

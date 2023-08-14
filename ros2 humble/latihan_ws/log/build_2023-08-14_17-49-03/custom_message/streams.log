@@ -1,0 +1,41 @@
+[0.081s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message': /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8
+[0.156s] -- Found ament_cmake: 1.3.5 (/home/cimi/ros2_humble/install/ament_cmake/share/ament_cmake/cmake)
+[0.881s] -- Found geometry_msgs: 4.2.3 (/home/cimi/ros2_humble/install/geometry_msgs/share/geometry_msgs/cmake)
+[0.925s] -- Found rosidl_generator_c: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_generator_c/share/rosidl_generator_c/cmake)
+[0.930s] -- Found rosidl_adapter: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_adapter/share/rosidl_adapter/cmake)
+[0.939s] -- Found rosidl_generator_cpp: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_generator_cpp/share/rosidl_generator_cpp/cmake)
+[0.984s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_introspection_c;rosidl_typesupport_fastrtps_c
+[1.039s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_introspection_cpp;rosidl_typesupport_fastrtps_cpp
+[1.240s] -- Found rosidl_default_generators: 1.2.0 (/home/cimi/ros2_humble/install/rosidl_default_generators/share/rosidl_default_generators/cmake)
+[2.076s] Error parsing '/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml':
+[2.254s] Traceback (most recent call last):
+[2.254s]   File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 150, in <module>
+[2.254s]     main()
+[2.254s]   File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 53, in main
+[2.254s]     raise e
+[2.255s]   File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 49, in main
+[2.255s]     package = parse_package_string(
+[2.255s]   File "/usr/local/lib/python3.8/dist-packages/catkin_pkg/package.py", line 788, in parse_package_string
+[2.255s]     pkg.validate(warnings=warnings)
+[2.255s]   File "/usr/local/lib/python3.8/dist-packages/catkin_pkg/package.py", line 330, in validate
+[2.255s]     raise InvalidPackage('\n'.join(errors), self.filename)
+[2.255s] catkin_pkg.package.InvalidPackage: Error(s) in package '/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml':
+[2.255s] The package "custom_message" must not "build_depend" on a package with the same name as this package
+[2.255s] The package "custom_message" must not "build_export_depend" on a package with the same name as this package
+[2.255s] The package "custom_message" must not "exec_depend" on a package with the same name as this package
+[2.274s] CMake Error at /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[2.274s]   execute_process(/usr/bin/python3.8
+[2.274s]   /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[2.274s]   /home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml
+[2.274s]   /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message/ament_cmake_core/package.cmake)
+[2.274s]   returned error code 1
+[2.274s] Call Stack (most recent call first):
+[2.274s]   /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[2.274s]   /home/cimi/ros2_humble/install/rosidl_cmake/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:226 (ament_package_xml)
+[2.275s]   CMakeLists.txt:19 (rosidl_generate_interfaces)
+[2.275s] 
+[2.275s] 
+[2.276s] -- Configuring incomplete, errors occurred!
+[2.276s] See also "/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message/CMakeFiles/CMakeOutput.log".
+[2.284s] make: *** [Makefile:1256: cmake_check_build_system] Error 1
+[2.287s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message' returned '2': /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8

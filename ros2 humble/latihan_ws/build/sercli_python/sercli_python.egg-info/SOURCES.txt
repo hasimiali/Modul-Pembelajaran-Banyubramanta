@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+../../build/sercli_python/sercli_python.egg-info/PKG-INFO
+../../build/sercli_python/sercli_python.egg-info/SOURCES.txt
+../../build/sercli_python/sercli_python.egg-info/dependency_links.txt
+../../build/sercli_python/sercli_python.egg-info/entry_points.txt
+../../build/sercli_python/sercli_python.egg-info/requires.txt
+../../build/sercli_python/sercli_python.egg-info/top_level.txt
+../../build/sercli_python/sercli_python.egg-info/zip-safe
+resource/sercli_python
+sercli_python/__init__.py
+sercli_python/client.py
+sercli_python/service.py
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

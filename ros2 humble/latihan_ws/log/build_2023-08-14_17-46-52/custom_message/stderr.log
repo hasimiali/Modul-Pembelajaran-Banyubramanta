@@ -1,0 +1,29 @@
+Error parsing '/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml':
+Traceback (most recent call last):
+  File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 150, in <module>
+    main()
+  File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 53, in main
+    raise e
+  File "/home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 49, in main
+    package = parse_package_string(
+  File "/usr/local/lib/python3.8/dist-packages/catkin_pkg/package.py", line 788, in parse_package_string
+    pkg.validate(warnings=warnings)
+  File "/usr/local/lib/python3.8/dist-packages/catkin_pkg/package.py", line 330, in validate
+    raise InvalidPackage('\n'.join(errors), self.filename)
+catkin_pkg.package.InvalidPackage: Error(s) in package '/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml':
+The package "custom_message" must not "build_depend" on a package with the same name as this package
+The package "custom_message" must not "build_export_depend" on a package with the same name as this package
+The package "custom_message" must not "exec_depend" on a package with the same name as this package
+CMake Error at /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+  execute_process(/usr/bin/python3.8
+  /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+  /home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/package.xml
+  /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message/ament_cmake_core/package.cmake)
+  returned error code 1
+Call Stack (most recent call first):
+  /home/cimi/ros2_humble/install/ament_cmake_core/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+  /home/cimi/ros2_humble/install/rosidl_cmake/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:226 (ament_package_xml)
+  CMakeLists.txt:20 (rosidl_generate_interfaces)
+
+
+make: *** [Makefile:1256: cmake_check_build_system] Error 1

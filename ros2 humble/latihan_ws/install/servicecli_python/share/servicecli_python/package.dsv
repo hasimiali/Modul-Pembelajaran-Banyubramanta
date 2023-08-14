@@ -1,0 +1,3 @@
+source;share/servicecli_python/hook/pythonpath.ps1
+source;share/servicecli_python/hook/pythonpath.dsv
+source;share/servicecli_python/hook/pythonpath.sh

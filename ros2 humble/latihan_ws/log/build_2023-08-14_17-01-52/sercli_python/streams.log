@@ -1,0 +1,35 @@
+[1.737s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/sercli_python': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/sercli_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/install.log --single-version-externally-managed
+[2.614s] running egg_info
+[2.614s] writing ../../build/sercli_python/sercli_python.egg-info/PKG-INFO
+[2.614s] writing dependency_links to ../../build/sercli_python/sercli_python.egg-info/dependency_links.txt
+[2.614s] writing entry points to ../../build/sercli_python/sercli_python.egg-info/entry_points.txt
+[2.614s] writing requirements to ../../build/sercli_python/sercli_python.egg-info/requires.txt
+[2.614s] writing top-level names to ../../build/sercli_python/sercli_python.egg-info/top_level.txt
+[2.614s] reading manifest file '../../build/sercli_python/sercli_python.egg-info/SOURCES.txt'
+[2.619s] writing manifest file '../../build/sercli_python/sercli_python.egg-info/SOURCES.txt'
+[2.619s] running build
+[2.619s] running build_py
+[2.620s] running install
+[2.621s] /home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[2.621s] !!
+[2.621s] 
+[2.621s]         ********************************************************************************
+[2.621s]         Please avoid running ``setup.py`` directly.
+[2.622s]         Instead, use pypa/build, pypa/installer, pypa/build or
+[2.622s]         other standards-based tools.
+[2.622s] 
+[2.622s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[2.622s]         ********************************************************************************
+[2.623s] 
+[2.623s] !!
+[2.623s]   self.initialize_options()
+[2.635s] running install_lib
+[2.684s] running install_data
+[2.715s] running install_egg_info
+[2.748s] removing '/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python-0.0.0-py3.8.egg-info' (and everything under it)
+[2.749s] Copying ../../build/sercli_python/sercli_python.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages/sercli_python-0.0.0-py3.8.egg-info
+[2.750s] running install_scripts
+[2.895s] Installing client script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/sercli_python
+[2.896s] Installing service script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/sercli_python
+[2.896s] writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/install.log'
+[2.946s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/sercli_python' returned '0': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/sercli_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_python/install.log --single-version-externally-managed

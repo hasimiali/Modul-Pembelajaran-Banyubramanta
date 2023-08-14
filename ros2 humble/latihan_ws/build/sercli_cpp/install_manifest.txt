@@ -1,0 +1,17 @@
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/lib/sercli_cpp/service
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/lib/sercli_cpp/client
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/ament_index/resource_index/package_run_dependencies/sercli_cpp
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/ament_index/resource_index/parent_prefix_path/sercli_cpp
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/environment/ament_prefix_path.sh
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/environment/ament_prefix_path.dsv
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/environment/path.sh
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/environment/path.dsv
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/local_setup.bash
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/local_setup.sh
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/local_setup.zsh
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/local_setup.dsv
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/package.dsv
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/ament_index/resource_index/packages/sercli_cpp
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/cmake/sercli_cppConfig.cmake
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/cmake/sercli_cppConfig-version.cmake
+/home/cimi/Documents/Workspace/humble/latihan_ws/install/sercli_cpp/share/sercli_cpp/package.xml

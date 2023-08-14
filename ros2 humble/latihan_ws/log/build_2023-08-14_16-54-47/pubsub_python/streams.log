@@ -1,0 +1,54 @@
+[7.374s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/pubsub_python': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/pubsub_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log --single-version-externally-managed
+[8.093s] running egg_info
+[8.099s] creating ../../build/pubsub_python/pubsub_python.egg-info
+[8.139s] writing ../../build/pubsub_python/pubsub_python.egg-info/PKG-INFO
+[8.139s] writing dependency_links to ../../build/pubsub_python/pubsub_python.egg-info/dependency_links.txt
+[8.140s] writing entry points to ../../build/pubsub_python/pubsub_python.egg-info/entry_points.txt
+[8.140s] writing requirements to ../../build/pubsub_python/pubsub_python.egg-info/requires.txt
+[8.140s] writing top-level names to ../../build/pubsub_python/pubsub_python.egg-info/top_level.txt
+[8.368s] writing manifest file '../../build/pubsub_python/pubsub_python.egg-info/SOURCES.txt'
+[8.457s] reading manifest file '../../build/pubsub_python/pubsub_python.egg-info/SOURCES.txt'
+[8.458s] writing manifest file '../../build/pubsub_python/pubsub_python.egg-info/SOURCES.txt'
+[8.458s] running build
+[8.458s] running build_py
+[8.459s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build
+[8.459s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib
+[8.459s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python
+[8.459s] copying pubsub_python/publisher.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python
+[8.460s] copying pubsub_python/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python
+[8.460s] copying pubsub_python/subscriber.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python
+[8.460s] running install
+[8.460s] /home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[8.460s] !!
+[8.461s] 
+[8.461s]         ********************************************************************************
+[8.461s]         Please avoid running ``setup.py`` directly.
+[8.461s]         Instead, use pypa/build, pypa/installer, pypa/build or
+[8.461s]         other standards-based tools.
+[8.461s] 
+[8.462s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[8.462s]         ********************************************************************************
+[8.462s] 
+[8.462s] !!
+[8.462s]   self.initialize_options()
+[8.482s] running install_lib
+[8.524s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python
+[8.524s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python/publisher.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python
+[8.524s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python
+[8.524s] copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build/lib/pubsub_python/subscriber.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python
+[8.528s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python/publisher.py to publisher.cpython-38.pyc
+[8.529s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python/__init__.py to __init__.cpython-38.pyc
+[8.529s] byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python/subscriber.py to subscriber.cpython-38.pyc
+[8.529s] running install_data
+[8.575s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/share/ament_index
+[8.585s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/share/ament_index/resource_index
+[8.585s] creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/share/ament_index/resource_index/packages
+[8.585s] copying resource/pubsub_python -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/share/ament_index/resource_index/packages
+[8.585s] copying package.xml -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/share/pubsub_python
+[8.587s] running install_egg_info
+[8.628s] Copying ../../build/pubsub_python/pubsub_python.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python-0.0.0-py3.8.egg-info
+[8.629s] running install_scripts
+[8.799s] Installing listener script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/pubsub_python
+[8.799s] Installing talker script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/pubsub_python
+[8.799s] writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log'
+[8.852s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/pubsub_python' returned '0': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/pubsub_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log --single-version-externally-managed

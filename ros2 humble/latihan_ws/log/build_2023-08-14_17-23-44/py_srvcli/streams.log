@@ -1,0 +1,35 @@
+[7.468s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/py_srvcli': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/py_srvcli build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log --single-version-externally-managed
+[8.548s] running egg_info
+[8.607s] writing ../../build/py_srvcli/py_srvcli.egg-info/PKG-INFO
+[8.607s] writing dependency_links to ../../build/py_srvcli/py_srvcli.egg-info/dependency_links.txt
+[8.608s] writing entry points to ../../build/py_srvcli/py_srvcli.egg-info/entry_points.txt
+[8.608s] writing requirements to ../../build/py_srvcli/py_srvcli.egg-info/requires.txt
+[8.608s] writing top-level names to ../../build/py_srvcli/py_srvcli.egg-info/top_level.txt
+[8.885s] reading manifest file '../../build/py_srvcli/py_srvcli.egg-info/SOURCES.txt'
+[9.014s] writing manifest file '../../build/py_srvcli/py_srvcli.egg-info/SOURCES.txt'
+[9.014s] running build
+[9.014s] running build_py
+[9.016s] running install
+[9.017s] /home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[9.018s] !!
+[9.019s] 
+[9.019s]         ********************************************************************************
+[9.020s]         Please avoid running ``setup.py`` directly.
+[9.020s]         Instead, use pypa/build, pypa/installer, pypa/build or
+[9.021s]         other standards-based tools.
+[9.021s] 
+[9.021s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[9.022s]         ********************************************************************************
+[9.022s] 
+[9.023s] !!
+[9.023s]   self.initialize_options()
+[9.037s] running install_lib
+[9.084s] running install_data
+[9.133s] running install_egg_info
+[9.183s] removing '/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli-0.0.0-py3.8.egg-info' (and everything under it)
+[9.184s] Copying ../../build/py_srvcli/py_srvcli.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages/py_srvcli-0.0.0-py3.8.egg-info
+[9.185s] running install_scripts
+[9.351s] Installing client script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/py_srvcli
+[9.351s] Installing service script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/py_srvcli
+[9.352s] writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log'
+[9.412s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/py_srvcli' returned '0': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/py_srvcli build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/py_srvcli/install.log --single-version-externally-managed

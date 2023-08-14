@@ -1,0 +1,176 @@
+[0.162s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python:/home/cimi/ros2_humble/install/rqt_bag_plugins:/home/cimi/ros2_humble/install/rqt_bag:/home/cimi/ros2_humble/install/ros2bag:/home/cimi/ros2_humble/install/tracetools_test:/home/cimi/ros2_humble/install/tracetools_launch:/home/cimi/ros2_humble/install/topic_monitor:/home/cimi/ros2_humble/install/tf2_tools:/home/cimi/ros2_humble/install/examples_tf2_py:/home/cimi/ros2_humble/install/tf2_ros_py:/home/cimi/ros2_humble/install/sros2:/home/cimi/ros2_humble/install/rqt_topic:/home/cimi/ros2_humble/install/rqt_srv:/home/cimi/ros2_humble/install/rqt_shell:/home/cimi/ros2_humble/install/rqt_service_caller:/home/cimi/ros2_humble/install/rqt_reconfigure:/home/cimi/ros2_humble/install/rqt_py_console:/home/cimi/ros2_humble/install/rqt_publisher:/home/cimi/ros2_humble/install/rqt_plot:/home/cimi/ros2_humble/install/rqt_action:/home/cimi/ros2_humble/install/rqt_msg:/home/cimi/ros2_humble/install/rqt_console:/home/cimi/ros2_humble/install/rqt:/home/cimi/ros2_humble/install/rqt_graph:/home/cimi/ros2_humble/install/rqt_gui_py:/home/cimi/ros2_humble/install/rqt_gui:/home/cimi/ros2_humble/install/ros2trace:/home/cimi/ros2_humble/install/ros2topic:/home/cimi/ros2_humble/install/ros2test:/home/cimi/ros2_humble/install/ros2component:/home/cimi/ros2_humble/install/ros2param:/home/cimi/ros2_humble/install/ros2lifecycle:/home/cimi/ros2_humble/install/ros2service:/home/cimi/ros2_humble/install/ros2run:/home/cimi/ros2_humble/install/ros2launch:/home/cimi/ros2_humble/install/ros2pkg:/home/cimi/ros2_humble/install/ros2node:/home/cimi/ros2_humble/install/ros2multicast:/home/cimi/ros2_humble/install/ros2interface:/home/cimi/ros2_humble/install/ros2doctor:/home/cimi/ros2_humble/install/ros2action:/home/cimi/ros2_humble/install/ros2cli:/home/cimi/ros2_humble/install/quality_of_service_demo_py:/home/cimi/ros2_humble/install/lifecycle_py:/home/cimi/ros2_humble/install/launch_testing_ros:/home/cimi/ros2_humble/install/launch_ros:/home/cimi/ros2_humble/install/examples_rclpy_pointcloud_publisher:/home/cimi/ros2_humble/install/examples_rclpy_minimal_subscriber:/home/cimi/ros2_humble/install/examples_rclpy_minimal_service:/home/cimi/ros2_humble/install/examples_rclpy_minimal_publisher:/home/cimi/ros2_humble/install/examples_rclpy_minimal_client:/home/cimi/ros2_humble/install/examples_rclpy_minimal_action_server:/home/cimi/ros2_humble/install/examples_rclpy_minimal_action_client:/home/cimi/ros2_humble/install/examples_rclpy_guard_conditions:/home/cimi/ros2_humble/install/examples_rclpy_executors:/home/cimi/ros2_humble/install/demo_nodes_py:/home/cimi/ros2_humble/install/action_tutorials_py:/home/cimi/ros2_humble/install/ament_uncrustify:/home/cimi/ros2_humble/install/tracetools_trace:/home/cimi/ros2_humble/install/tracetools_read:/home/cimi/ros2_humble/install/test_tracetools_launch:/home/cimi/ros2_humble/install/test_launch_ros:/home/cimi/ros2_humble/install/sensor_msgs_py:/home/cimi/ros2_humble/install/rpyutils:/home/cimi/ros2_humble/install/rosidl_runtime_py:/home/cimi/ros2_humble/install/rosidl_cli:/home/cimi/ros2_humble/install/launch_pytest:/home/cimi/ros2_humble/install/launch_testing:/home/cimi/ros2_humble/install/launch_yaml:/home/cimi/ros2_humble/install/launch_xml:/home/cimi/ros2_humble/install/launch:/home/cimi/ros2_humble/install/osrf_pycommon:/home/cimi/ros2_humble/install/launch_testing_examples:/home/cimi/ros2_humble/install/domain_coordinator:/home/cimi/ros2_humble/install/ament_xmllint:/home/cimi/ros2_humble/install/ament_pyflakes:/home/cimi/ros2_humble/install/ament_pycodestyle:/home/cimi/ros2_humble/install/ament_pep257:/home/cimi/ros2_humble/install/ament_pclint:/home/cimi/ros2_humble/install/ament_package:/home/cimi/ros2_humble/install/ament_mypy:/home/cimi/ros2_humble/install/ament_lint_cmake:/home/cimi/ros2_humble/install/ament_flake8:/home/cimi/ros2_humble/install/ament_copyright:/home/cimi/ros2_humble/install/ament_lint:/home/cimi/ros2_humble/install/ament_index_python:/home/cimi/ros2_humble/install/ament_cpplint:/home/cimi/ros2_humble/install/ament_cppcheck:/home/cimi/ros2_humble/install/ament_clang_tidy:/home/cimi/ros2_humble/install/ament_clang_format /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8
+[0.230s] -- Found ament_cmake: 1.3.5 (/home/cimi/ros2_humble/install/ament_cmake/share/ament_cmake/cmake)
+[0.977s] -- Found rclcpp: 16.0.4 (/home/cimi/ros2_humble/install/rclcpp/share/rclcpp/cmake)
+[1.039s] -- Found rosidl_generator_c: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_generator_c/share/rosidl_generator_c/cmake)
+[1.043s] -- Found rosidl_adapter: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_adapter/share/rosidl_adapter/cmake)
+[1.053s] -- Found rosidl_generator_cpp: 3.1.4 (/home/cimi/ros2_humble/install/rosidl_generator_cpp/share/rosidl_generator_cpp/cmake)
+[1.108s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_introspection_c;rosidl_typesupport_fastrtps_c
+[1.166s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_introspection_cpp;rosidl_typesupport_fastrtps_cpp
+[1.279s] -- Found rmw_implementation_cmake: 6.1.1 (/home/cimi/ros2_humble/install/rmw_implementation_cmake/share/rmw_implementation_cmake/cmake)
+[1.313s] -- Found rmw_fastrtps_cpp: 6.2.2 (/home/cimi/ros2_humble/install/rmw_fastrtps_cpp/share/rmw_fastrtps_cpp/cmake)
+[1.623s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.845s] -- Found geometry_msgs: 4.2.3 (/home/cimi/ros2_humble/install/geometry_msgs/share/geometry_msgs/cmake)
+[1.904s] -- Found rosidl_default_generators: 1.2.0 (/home/cimi/ros2_humble/install/rosidl_default_generators/share/rosidl_default_generators/cmake)
+[2.012s] -- Found custom_message: 0.0.0 (/home/cimi/Documents/Workspace/humble/latihan_ws/install/custom_message/share/custom_message/cmake)
+[3.595s] -- Found ament_cmake_ros: 0.10.0 (/home/cimi/ros2_humble/install/ament_cmake_ros/share/ament_cmake_ros/cmake)
+[6.168s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_introspection_c;rosidl_typesupport_fastrtps_c
+[7.201s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_introspection_cpp;rosidl_typesupport_fastrtps_cpp
+[7.266s] -- Found python_cmake_module: 0.10.0 (/home/cimi/ros2_humble/install/python_cmake_module/share/python_cmake_module/cmake)
+[7.344s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[7.344s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.8
+[7.344s] -- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.8.so
+[8.015s] -- Found ament_lint_auto: 0.12.6 (/home/cimi/ros2_humble/install/ament_lint_auto/share/ament_lint_auto/cmake)
+[8.028s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[8.029s] -- Configured cppcheck include dirs: 
+[8.029s] -- Configured cppcheck exclude dirs and/or files: 
+[8.030s] -- Added test 'lint_cmake' to check CMake code style
+[8.031s] -- Added test 'uncrustify' to check C / C++ code style
+[8.031s] -- Configured uncrustify additional arguments: 
+[8.032s] -- Added test 'xmllint' to check XML markup files
+[8.039s] -- Configuring done
+[8.139s] -- Generating done
+[8.148s] -- Build files have been written to: /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message
+[8.266s] [35m[1mScanning dependencies of target listener[0m
+[8.277s] [35m[1mScanning dependencies of target talker[0m
+[8.333s] [  1%] Built target custom_message__cpp
+[8.337s] [ 11%] Built target custom_message__rosidl_generator_c
+[8.366s] [ 11%] Built target ament_cmake_python_copy_custom_message
+[8.460s] [ 21%] Built target custom_message__rosidl_typesupport_c
+[8.460s] [ 35%] Built target custom_message__rosidl_typesupport_cpp
+[8.460s] [ 41%] Built target custom_message__rosidl_typesupport_fastrtps_c
+[8.463s] [ 50%] Built target custom_message__rosidl_typesupport_fastrtps_cpp
+[8.463s] [ 60%] Built target custom_message__rosidl_typesupport_introspection_cpp
+[8.496s] [ 70%] Built target custom_message__rosidl_typesupport_introspection_c
+[8.635s] [ 70%] Built target custom_message
+[8.644s] [ 72%] [32mBuilding CXX object CMakeFiles/talker.dir/src/publisher.cpp.o[0m
+[8.668s] [ 74%] [32mBuilding CXX object CMakeFiles/listener.dir/src/subscriber.cpp.o[0m
+[8.769s] [ 76%] Built target custom_message__py
+[8.899s] [ 84%] Built target custom_message__rosidl_generator_py
+[9.004s] [ 88%] Built target custom_message__rosidl_typesupport_fastrtps_c__pyext
+[9.028s] [ 92%] Built target custom_message__rosidl_typesupport_introspection_c__pyext
+[9.042s] [ 96%] Built target custom_message__rosidl_typesupport_c__pyext
+[9.420s] running egg_info
+[9.475s] writing custom_message.egg-info/PKG-INFO
+[9.475s] writing dependency_links to custom_message.egg-info/dependency_links.txt
+[9.476s] writing top-level names to custom_message.egg-info/top_level.txt
+[9.927s] reading manifest file 'custom_message.egg-info/SOURCES.txt'
+[9.929s] writing manifest file 'custom_message.egg-info/SOURCES.txt'
+[10.005s] [ 96%] Built target ament_cmake_python_build_custom_message_egg
+[16.542s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:29:21:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_interfaces[m[K’?
+[16.543s]    29 |   rclcpp::Publisher<[01;31m[Ktutorial_interfaces[m[K::msg::Num>::SharedPtr publisher_; // CHANGE
+[16.543s]       |                     [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.543s]       |                     [32m[Krcl_interfaces[m[K
+[16.543s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:29:50:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[16.543s]    29 |   rclcpp::Publisher<tutorial_interfaces::msg::Num[01;31m[K>[m[K::SharedPtr publisher_; // CHANGE
+[16.543s]       |                                                  [01;31m[K^[m[K
+[16.544s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:29:53:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ at end of member declaration
+[16.544s]    29 |   rclcpp::Publisher<tutorial_interfaces::msg::Num>::[01;31m[KSharedPtr[m[K publisher_; // CHANGE
+[16.544s]       |                                                     [01;31m[K^~~~~~~~~[m[K
+[16.544s]       |                                                              [32m[K;[m[K
+[16.546s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:29:63:[m[K [01;31m[Kerror: [m[K‘[01m[Kpublisher_[m[K’ does not name a type; did you mean ‘[01m[Krcl_publisher_t[m[K’?
+[16.546s]    29 |   rclcpp::Publisher<tutorial_interfaces::msg::Num>::SharedPtr [01;31m[Kpublisher_[m[K; // CHANGE
+[16.546s]       |                                                               [01;31m[K^~~~~~~~~~[m[K
+[16.547s]       |                                                               [32m[Krcl_publisher_t[m[K
+[16.551s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:[m[K In constructor ‘[01m[KMinimalPublisher::MinimalPublisher()[m[K’:
+[16.551s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:15:5:[m[K [01;31m[Kerror: [m[K‘[01m[Kpublisher_[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_publisher_t[m[K’?
+[16.552s]    15 |     [01;31m[Kpublisher_[m[K = this->create_publisher<tutorial_interfaces::msg::Num>("topic", 10); // CHANGE
+[16.552s]       |     [01;31m[K^~~~~~~~~~[m[K
+[16.552s]       |     [32m[Krcl_publisher_t[m[K
+[16.556s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:15:41:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_interfaces[m[K’?
+[16.556s]    15 |     publisher_ = this->create_publisher<[01;31m[Ktutorial_interfaces[m[K::msg::Num>("topic", 10); // CHANGE
+[16.556s]       |                                         [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.557s]       |                                         [32m[Krcl_interfaces[m[K
+[16.557s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:15:24:[m[K [01;31m[Kerror: [m[Kparse error in template argument list
+[16.557s]    15 |     publisher_ = this->[01;31m[Kcreate_publisher<tutorial_interfaces::msg::Num>[m[K("topic", 10); // CHANGE
+[16.557s]       |                        [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[16.557s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:15:83:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KMinimalPublisher::create_publisher<<expression error> >(const char [6], int)[m[K’
+[16.558s]    15 |     publisher_ = this->create_publisher<tutorial_interfaces::msg::Num>("topic", 10[01;31m[K)[m[K; // CHANGE
+[16.558s]       |                                                                                   [01;31m[K^[m[K
+[16.558s] In file included from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28[m[K,
+[16.558s]                  from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/executors.hpp:22[m[K,
+[16.558s]                  from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/rclcpp.hpp:155[m[K,
+[16.558s]                  from [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:4[m[K:
+[16.559s] [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/node.hpp:195:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)[m[K’
+[16.559s]   195 |   [01;36m[Kcreate_publisher[m[K(
+[16.560s]       |   [01;36m[K^~~~~~~~~~~~~~~~[m[K
+[16.561s] [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/node.hpp:195:3:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[16.561s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:15:83:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[16.561s]    15 |     publisher_ = this->create_publisher<tutorial_interfaces::msg::Num>("topic", 10[01;31m[K)[m[K; // CHANGE
+[16.561s]       |                                                                                   [01;31m[K^[m[K
+[16.574s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:[m[K In member function ‘[01m[Kvoid MinimalPublisher::timer_callback()[m[K’:
+[16.574s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:23:20:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ has not been declared
+[16.575s]    23 |     auto message = [01;31m[Ktutorial_interfaces[m[K::msg::Num();                                // CHANGE
+[16.575s]       |                    [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.579s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/publisher.cpp:26:5:[m[K [01;31m[Kerror: [m[K‘[01m[Kpublisher_[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_publisher_t[m[K’?
+[16.579s]    26 |     [01;31m[Kpublisher_[m[K->publish(message);
+[16.580s]       |     [01;31m[K^~~~~~~~~~[m[K
+[16.580s]       |     [32m[Krcl_publisher_t[m[K
+[16.646s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:20:29:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ does not name a type; did you mean ‘[01m[Krcl_interfaces[m[K’?
+[16.646s]    20 |   void topic_callback(const [01;31m[Ktutorial_interfaces[m[K::msg::Num &msg) const // CHANGE
+[16.646s]       |                             [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.646s]       |                             [32m[Krcl_interfaces[m[K
+[16.647s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:20:53:[m[K [01;31m[Kerror: [m[Kexpected unqualified-id before ‘[01m[K::[m[K’ token
+[16.647s]    20 |   void topic_callback(const tutorial_interfaces::msg[01;31m[K::[m[KNum &msg) const // CHANGE
+[16.647s]       |                                                     [01;31m[K^~[m[K
+[16.647s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:20:53:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K)[m[K’ before ‘[01m[K::[m[K’ token
+[16.647s]    20 |   void topic_callback[34m[K([m[Kconst tutorial_interfaces::msg[01;31m[K:[m[K[32m[K:[m[KNum &msg) const // CHANGE
+[16.648s]       |                      [34m[K~[m[K                              [01;31m[K^[m[K[32m[K~[m[K
+[16.648s]       |                                                     [32m[K)[m[K
+[16.648s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:20:50:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ at end of member declaration
+[16.648s]    20 |   void topic_callback(const tutorial_interfaces::[01;31m[Kmsg[m[K::Num &msg) const // CHANGE
+[16.648s]       |                                                  [01;31m[K^~~[m[K
+[16.648s]       |                                                     [32m[K;[m[K
+[16.649s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:20:55:[m[K [01;31m[Kerror: [m[K‘[01m[KNum[m[K’ in namespace ‘[01m[K::[m[K’ does not name a type
+[16.649s]    20 |   void topic_callback(const tutorial_interfaces::msg::[01;31m[KNum[m[K &msg) const // CHANGE
+[16.649s]       |                                                       [01;31m[K^~~[m[K
+[16.651s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:24:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_interfaces[m[K’?
+[16.651s]    24 |   rclcpp::Subscription<[01;31m[Ktutorial_interfaces[m[K::msg::Num>::SharedPtr subscription_; // CHANGE
+[16.651s]       |                        [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.652s]       |                        [32m[Krcl_interfaces[m[K
+[16.652s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:53:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[16.652s]    24 |   rclcpp::Subscription<tutorial_interfaces::msg::Num[01;31m[K>[m[K::SharedPtr subscription_; // CHANGE
+[16.652s]       |                                                     [01;31m[K^[m[K
+[16.652s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:53:[m[K [01;31m[Kerror: [m[Ktemplate argument 3 is invalid
+[16.652s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:53:[m[K [01;31m[Kerror: [m[Ktemplate argument 4 is invalid
+[16.653s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:53:[m[K [01;31m[Kerror: [m[Ktemplate argument 5 is invalid
+[16.653s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:56:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ at end of member declaration
+[16.653s]    24 |   rclcpp::Subscription<tutorial_interfaces::msg::Num>::[01;31m[KSharedPtr[m[K subscription_; // CHANGE
+[16.653s]       |                                                        [01;31m[K^~~~~~~~~[m[K
+[16.653s]       |                                                                 [32m[K;[m[K
+[16.654s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:24:66:[m[K [01;31m[Kerror: [m[K‘[01m[Ksubscription_[m[K’ does not name a type; did you mean ‘[01m[Krcl_subscription_t[m[K’?
+[16.654s]    24 |   rclcpp::Subscription<tutorial_interfaces::msg::Num>::SharedPtr [01;31m[Ksubscription_[m[K; // CHANGE
+[16.655s]       |                                                                  [01;31m[K^~~~~~~~~~~~~[m[K
+[16.655s]       |                                                                  [32m[Krcl_subscription_t[m[K
+[16.658s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:[m[K In constructor ‘[01m[KMinimalSubscriber::MinimalSubscriber()[m[K’:
+[16.659s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:15:5:[m[K [01;31m[Kerror: [m[K‘[01m[Ksubscription_[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_subscription_t[m[K’?
+[16.659s]    15 |     [01;31m[Ksubscription_[m[K = this->create_subscription<tutorial_interfaces::msg::Num>( // CHANGE
+[16.659s]       |     [01;31m[K^~~~~~~~~~~~~[m[K
+[16.659s]       |     [32m[Krcl_subscription_t[m[K
+[16.663s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:15:47:[m[K [01;31m[Kerror: [m[K‘[01m[Ktutorial_interfaces[m[K’ was not declared in this scope; did you mean ‘[01m[Krcl_interfaces[m[K’?
+[16.664s]    15 |     subscription_ = this->create_subscription<[01;31m[Ktutorial_interfaces[m[K::msg::Num>( // CHANGE
+[16.664s]       |                                               [01;31m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.664s]       |                                               [32m[Krcl_interfaces[m[K
+[16.664s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:15:27:[m[K [01;31m[Kerror: [m[Kparse error in template argument list
+[16.664s]    15 |     subscription_ = this->[01;31m[Kcreate_subscription<tutorial_interfaces::msg::Num>[m[K( // CHANGE
+[16.665s]       |                           [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[16.675s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:16:77:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KMinimalSubscriber::create_subscription<<expression error> >(const char [6], int, std::_Bind_helper<false, void (MinimalSubscriber::*)(...), MinimalSubscriber*, const std::_Placeholder<1>&>::type)[m[K’
+[16.675s]    16 |         "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1)[01;31m[K)[m[K;
+[16.675s]       |                                                                             [01;31m[K^[m[K
+[16.676s] In file included from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28[m[K,
+[16.676s]                  from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/executors.hpp:22[m[K,
+[16.676s]                  from [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/rclcpp.hpp:155[m[K,
+[16.676s]                  from [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:4[m[K:
+[16.676s] [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/node.hpp:219:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class MessageT, class CallbackT, class AllocatorT, class SubscriptionT, class MessageMemoryStrategyT> std::shared_ptr<ROSMessageT> rclcpp::Node::create_subscription(const string&, const rclcpp::QoS&, CallbackT&&, const rclcpp::SubscriptionOptionsWithAllocator<AllocatorT>&, typename MessageMemoryStrategyT::SharedPtr)[m[K’
+[16.676s]   219 |   [01;36m[Kcreate_subscription[m[K(
+[16.676s]       |   [01;36m[K^~~~~~~~~~~~~~~~~~~[m[K
+[16.677s] [01m[K/home/cimi/ros2_humble/install/rclcpp/include/rclcpp/rclcpp/node.hpp:219:3:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[16.677s] [01m[K/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message/src/subscriber.cpp:16:77:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[16.677s]    16 |         "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1)[01;31m[K)[m[K;
+[16.677s]       |                                                                             [01;31m[K^[m[K
+[17.205s] make[2]: *** [CMakeFiles/talker.dir/build.make:63: CMakeFiles/talker.dir/src/publisher.cpp.o] Error 1
+[17.205s] make[1]: *** [CMakeFiles/Makefile2:497: CMakeFiles/talker.dir/all] Error 2
+[17.205s] make[1]: *** Waiting for unfinished jobs....
+[17.260s] make[2]: *** [CMakeFiles/listener.dir/build.make:63: CMakeFiles/listener.dir/src/subscriber.cpp.o] Error 1
+[17.260s] make[1]: *** [CMakeFiles/Makefile2:270: CMakeFiles/listener.dir/all] Error 2
+[17.260s] make: *** [Makefile:141: all] Error 2
+[17.276s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/cimi/Documents/Workspace/humble/latihan_ws/install/py_srvcli:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python:/home/cimi/ros2_humble/install/rqt_bag_plugins:/home/cimi/ros2_humble/install/rqt_bag:/home/cimi/ros2_humble/install/ros2bag:/home/cimi/ros2_humble/install/tracetools_test:/home/cimi/ros2_humble/install/tracetools_launch:/home/cimi/ros2_humble/install/topic_monitor:/home/cimi/ros2_humble/install/tf2_tools:/home/cimi/ros2_humble/install/examples_tf2_py:/home/cimi/ros2_humble/install/tf2_ros_py:/home/cimi/ros2_humble/install/sros2:/home/cimi/ros2_humble/install/rqt_topic:/home/cimi/ros2_humble/install/rqt_srv:/home/cimi/ros2_humble/install/rqt_shell:/home/cimi/ros2_humble/install/rqt_service_caller:/home/cimi/ros2_humble/install/rqt_reconfigure:/home/cimi/ros2_humble/install/rqt_py_console:/home/cimi/ros2_humble/install/rqt_publisher:/home/cimi/ros2_humble/install/rqt_plot:/home/cimi/ros2_humble/install/rqt_action:/home/cimi/ros2_humble/install/rqt_msg:/home/cimi/ros2_humble/install/rqt_console:/home/cimi/ros2_humble/install/rqt:/home/cimi/ros2_humble/install/rqt_graph:/home/cimi/ros2_humble/install/rqt_gui_py:/home/cimi/ros2_humble/install/rqt_gui:/home/cimi/ros2_humble/install/ros2trace:/home/cimi/ros2_humble/install/ros2topic:/home/cimi/ros2_humble/install/ros2test:/home/cimi/ros2_humble/install/ros2component:/home/cimi/ros2_humble/install/ros2param:/home/cimi/ros2_humble/install/ros2lifecycle:/home/cimi/ros2_humble/install/ros2service:/home/cimi/ros2_humble/install/ros2run:/home/cimi/ros2_humble/install/ros2launch:/home/cimi/ros2_humble/install/ros2pkg:/home/cimi/ros2_humble/install/ros2node:/home/cimi/ros2_humble/install/ros2multicast:/home/cimi/ros2_humble/install/ros2interface:/home/cimi/ros2_humble/install/ros2doctor:/home/cimi/ros2_humble/install/ros2action:/home/cimi/ros2_humble/install/ros2cli:/home/cimi/ros2_humble/install/quality_of_service_demo_py:/home/cimi/ros2_humble/install/lifecycle_py:/home/cimi/ros2_humble/install/launch_testing_ros:/home/cimi/ros2_humble/install/launch_ros:/home/cimi/ros2_humble/install/examples_rclpy_pointcloud_publisher:/home/cimi/ros2_humble/install/examples_rclpy_minimal_subscriber:/home/cimi/ros2_humble/install/examples_rclpy_minimal_service:/home/cimi/ros2_humble/install/examples_rclpy_minimal_publisher:/home/cimi/ros2_humble/install/examples_rclpy_minimal_client:/home/cimi/ros2_humble/install/examples_rclpy_minimal_action_server:/home/cimi/ros2_humble/install/examples_rclpy_minimal_action_client:/home/cimi/ros2_humble/install/examples_rclpy_guard_conditions:/home/cimi/ros2_humble/install/examples_rclpy_executors:/home/cimi/ros2_humble/install/demo_nodes_py:/home/cimi/ros2_humble/install/action_tutorials_py:/home/cimi/ros2_humble/install/ament_uncrustify:/home/cimi/ros2_humble/install/tracetools_trace:/home/cimi/ros2_humble/install/tracetools_read:/home/cimi/ros2_humble/install/test_tracetools_launch:/home/cimi/ros2_humble/install/test_launch_ros:/home/cimi/ros2_humble/install/sensor_msgs_py:/home/cimi/ros2_humble/install/rpyutils:/home/cimi/ros2_humble/install/rosidl_runtime_py:/home/cimi/ros2_humble/install/rosidl_cli:/home/cimi/ros2_humble/install/launch_pytest:/home/cimi/ros2_humble/install/launch_testing:/home/cimi/ros2_humble/install/launch_yaml:/home/cimi/ros2_humble/install/launch_xml:/home/cimi/ros2_humble/install/launch:/home/cimi/ros2_humble/install/osrf_pycommon:/home/cimi/ros2_humble/install/launch_testing_examples:/home/cimi/ros2_humble/install/domain_coordinator:/home/cimi/ros2_humble/install/ament_xmllint:/home/cimi/ros2_humble/install/ament_pyflakes:/home/cimi/ros2_humble/install/ament_pycodestyle:/home/cimi/ros2_humble/install/ament_pep257:/home/cimi/ros2_humble/install/ament_pclint:/home/cimi/ros2_humble/install/ament_package:/home/cimi/ros2_humble/install/ament_mypy:/home/cimi/ros2_humble/install/ament_lint_cmake:/home/cimi/ros2_humble/install/ament_flake8:/home/cimi/ros2_humble/install/ament_copyright:/home/cimi/ros2_humble/install/ament_lint:/home/cimi/ros2_humble/install/ament_index_python:/home/cimi/ros2_humble/install/ament_cpplint:/home/cimi/ros2_humble/install/ament_cppcheck:/home/cimi/ros2_humble/install/ament_clang_tidy:/home/cimi/ros2_humble/install/ament_clang_format /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8

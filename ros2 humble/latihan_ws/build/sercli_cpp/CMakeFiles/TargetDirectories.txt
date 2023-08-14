@@ -1,0 +1,11 @@
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/install/strip.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/install.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/list_install_components.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/rebuild_cache.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/edit_cache.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/test.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/client.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/install/local.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/sercli_cpp_uninstall.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/service.dir
+/home/cimi/Documents/Workspace/humble/latihan_ws/build/sercli_cpp/CMakeFiles/uninstall.dir

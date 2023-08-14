@@ -1,0 +1,2 @@
+Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message': /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8
+Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message' returned '2': /usr/bin/cmake --build /home/cimi/Documents/Workspace/humble/latihan_ws/build/custom_message -- -j8 -l8

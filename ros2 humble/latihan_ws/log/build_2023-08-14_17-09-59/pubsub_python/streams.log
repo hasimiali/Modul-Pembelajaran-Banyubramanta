@@ -1,0 +1,35 @@
+[3.690s] Invoking command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/pubsub_python': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/pubsub_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log --single-version-externally-managed
+[8.955s] running egg_info
+[9.009s] writing ../../build/pubsub_python/pubsub_python.egg-info/PKG-INFO
+[9.009s] writing dependency_links to ../../build/pubsub_python/pubsub_python.egg-info/dependency_links.txt
+[9.010s] writing entry points to ../../build/pubsub_python/pubsub_python.egg-info/entry_points.txt
+[9.010s] writing requirements to ../../build/pubsub_python/pubsub_python.egg-info/requires.txt
+[9.010s] writing top-level names to ../../build/pubsub_python/pubsub_python.egg-info/top_level.txt
+[9.319s] reading manifest file '../../build/pubsub_python/pubsub_python.egg-info/SOURCES.txt'
+[9.411s] writing manifest file '../../build/pubsub_python/pubsub_python.egg-info/SOURCES.txt'
+[9.412s] running build
+[9.412s] running build_py
+[9.413s] running install
+[9.413s] /home/cimi/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[9.414s] !!
+[9.415s] 
+[9.415s]         ********************************************************************************
+[9.415s]         Please avoid running ``setup.py`` directly.
+[9.416s]         Instead, use pypa/build, pypa/installer, pypa/build or
+[9.416s]         other standards-based tools.
+[9.417s] 
+[9.417s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[9.417s]         ********************************************************************************
+[9.418s] 
+[9.418s] !!
+[9.418s]   self.initialize_options()
+[9.429s] running install_lib
+[9.479s] running install_data
+[9.520s] running install_egg_info
+[9.585s] removing '/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python-0.0.0-py3.8.egg-info' (and everything under it)
+[9.586s] Copying ../../build/pubsub_python/pubsub_python.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages/pubsub_python-0.0.0-py3.8.egg-info
+[9.587s] running install_scripts
+[9.775s] Installing listener script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/pubsub_python
+[9.775s] Installing talker script to /home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/pubsub_python
+[9.775s] writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log'
+[9.832s] Invoked command in '/home/cimi/Documents/Workspace/humble/latihan_ws/src/pubsub_python' returned '0': PYTHONPATH=/home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/prefix_override:/home/cimi/Documents/Workspace/humble/latihan_ws/install/pubsub_python/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/pubsub_python build --build-base /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/build install --record /home/cimi/Documents/Workspace/humble/latihan_ws/build/pubsub_python/install.log --single-version-externally-managed

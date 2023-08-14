@@ -1,0 +1,8 @@
+{
+  "package_name": "custom_message",
+  "non_idl_tuples": [
+    "/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message:msg/Num.msg",
+    "/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message:msg/Sphere.msg",
+    "/home/cimi/Documents/Workspace/humble/latihan_ws/src/custom_message:srv/AddThreeInts.srv"
+  ]
+}

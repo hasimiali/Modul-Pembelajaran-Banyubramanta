@@ -1,0 +1,3 @@
+source;share/sercli_python/hook/pythonpath.ps1
+source;share/sercli_python/hook/pythonpath.dsv
+source;share/sercli_python/hook/pythonpath.sh
