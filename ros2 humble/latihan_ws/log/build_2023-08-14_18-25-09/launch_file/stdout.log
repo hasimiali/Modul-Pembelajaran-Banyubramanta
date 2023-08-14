@@ -1,0 +1,30 @@
+running egg_info
+creating ../../build/launch_file/launch_file.egg-info
+writing ../../build/launch_file/launch_file.egg-info/PKG-INFO
+writing dependency_links to ../../build/launch_file/launch_file.egg-info/dependency_links.txt
+writing requirements to ../../build/launch_file/launch_file.egg-info/requires.txt
+writing top-level names to ../../build/launch_file/launch_file.egg-info/top_level.txt
+writing manifest file '../../build/launch_file/launch_file.egg-info/SOURCES.txt'
+reading manifest file '../../build/launch_file/launch_file.egg-info/SOURCES.txt'
+writing manifest file '../../build/launch_file/launch_file.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/build
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/build/lib
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/build/lib/launch_file
+copying launch_file/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/build/lib/launch_file
+running install
+running install_lib
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/lib/python3.8/site-packages/launch_file
+copying /home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/build/lib/launch_file/__init__.py -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/lib/python3.8/site-packages/launch_file
+byte-compiling /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/lib/python3.8/site-packages/launch_file/__init__.py to __init__.cpython-38.pyc
+running install_data
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/share/ament_index
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/share/ament_index/resource_index
+creating /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/share/ament_index/resource_index/packages
+copying resource/launch_file -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/share/ament_index/resource_index/packages
+copying package.xml -> /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/share/launch_file
+running install_egg_info
+Copying ../../build/launch_file/launch_file.egg-info to /home/cimi/Documents/Workspace/humble/latihan_ws/install/launch_file/lib/python3.8/site-packages/launch_file-0.0.0-py3.8.egg-info
+running install_scripts
+writing list of installed files to '/home/cimi/Documents/Workspace/humble/latihan_ws/build/launch_file/install.log'
